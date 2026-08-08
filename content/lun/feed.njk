@@ -1,0 +1,24 @@
+---
+layout: false
+permalink: /lun/feed.xml
+eleventyExcludeFromCollections: true
+---
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Linux User Net — weekly links</title>
+  <subtitle>Read on the Monday Night Linux User Net, ARRG K7RPT repeater system</subtitle>
+  <link href="{{ siteUrl }}/lun/feed.xml" rel="self"/>
+  <link href="{{ siteUrl }}/lun/"/>
+  <id>{{ siteUrl }}/lun/</id>
+  <updated>{% if collections.lun.length %}{{ collections.lun | getNewestCollectionItemDate | dateToRfc3339 }}{% else %}{{ buildTime }}{% endif %}</updated>
+  <author><name>Linux User Net</name></author>
+{%- for week in collections.lun %}
+  <entry>
+    <title>Week of {{ week.date | dateHeading }}</title>
+    <link href="{{ siteUrl }}/lun/{{ week.date | isoDate }}/"/>
+    <id>{{ siteUrl }}/lun/{{ week.date | isoDate }}/</id>
+    <updated>{{ week.date | dateToRfc3339 }}</updated>
+    <content type="html">{{ week.templateContent }}</content>
+  </entry>
+{%- endfor %}
+</feed>

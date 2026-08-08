@@ -1,0 +1,12 @@
+---
+layout: false
+eleventyExcludeFromCollections: true
+pagination:
+  data: collections.lun
+  size: 1
+  alias: week
+permalink: "/lun/{{ week.date | isoDate }}.txt"
+---
+Linux User Net — weekly links · kd7swh.com/lun
+
+{{ week.rawInput | safe }}

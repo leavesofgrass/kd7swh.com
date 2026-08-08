@@ -15,6 +15,27 @@ export default function (eleventyConfig) {
       .sort((a, b) => b.date - a.date)
   );
 
+  // Prior years, newest first, for /lun/archive/. The current year renders
+  // at /lun/ instead.
+  eleventyConfig.addCollection("lunArchiveYears", (collectionApi) => {
+    const current = new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/Los_Angeles",
+      year: "numeric",
+    }).format(new Date());
+    const byYear = new Map();
+    for (const week of collectionApi
+      .getFilteredByGlob("content/lun/*.md")
+      .sort((a, b) => b.date - a.date)) {
+      const year = week.date.toISOString().slice(0, 4);
+      if (year === current) continue;
+      if (!byYear.has(year)) byYear.set(year, []);
+      byYear.get(year).push(week);
+    }
+    return [...byYear.entries()]
+      .map(([year, items]) => ({ year, items }))
+      .sort((a, b) => b.year.localeCompare(a.year));
+  });
+
   // All date formatting happens in UTC. Week files carry date: YYYY-MM-DD,
   // which front matter parses as midnight UTC — formatting in any other zone
   // shifts every heading a day.
@@ -34,6 +55,16 @@ export default function (eleventyConfig) {
     }).format(new Date(d))
   );
 
+  eleventyConfig.addFilter("isoDate", (d) =>
+    new Date(d).toISOString().slice(0, 10)
+  );
+
+  eleventyConfig.addFilter("inYear", (weeks, year) =>
+    (weeks || []).filter(
+      (w) => w.date.toISOString().slice(0, 4) === String(year)
+    )
+  );
+
   // The year "now", Pacific — /lun/ uses it to pick which weeks render
   // inline; older years live under /lun/archive/.
   eleventyConfig.addGlobalData("currentYear", () =>
@@ -42,6 +73,13 @@ export default function (eleventyConfig) {
       year: "numeric",
     }).format(new Date())
   );
+
+  // The one place the canonical origin lives. A successor rehosting the
+  // archive changes this line and nothing else (see CONTRIBUTING.md).
+  eleventyConfig.addGlobalData("siteUrl", "https://kd7swh.com");
+
+  // Fallback timestamp so feeds stay valid before any week exists.
+  eleventyConfig.addGlobalData("buildTime", () => new Date().toISOString());
 
   return {
     dir: {

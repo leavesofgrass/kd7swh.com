@@ -1,0 +1,22 @@
+---
+layout: base.njk
+title: Linux User Net — archive
+eleventyExcludeFromCollections: true
+permalink: /lun/archive/index.html
+---
+<h1>Linux User Net — archive</h1>
+
+<p>Past years of the weekly link list. The current year lives at
+<a href="/lun/">/lun/</a>. The archive is a record of what was covered —
+links are left as they were read, even when they have since rotted.</p>
+
+{% if collections.lunArchiveYears.length %}
+<ul>
+{% for y in collections.lunArchiveYears %}
+  <li><a href="/lun/archive/{{ y.year }}/">{{ y.year }}</a> —
+    {{ y.items.length }} week{% if y.items.length != 1 %}s{% endif %}</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>No prior years yet.</p>
+{% endif %}

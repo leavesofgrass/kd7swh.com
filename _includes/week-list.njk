@@ -1,0 +1,10 @@
+{# Shared week rendering — /lun/, /lun/archive/YYYY/, and the week
+   permalinks all pass a `weeks` array through here so they cannot drift
+   apart. Each week's Markdown body already carries its own h2 heading. #}
+{% for week in weeks %}
+<section class="lun-week">
+{{ week.templateContent | safe }}
+<p class="lun-week-meta"><a href="/lun/{{ week.date | isoDate }}/">Permalink</a>
+  · <a href="/lun/{{ week.date | isoDate }}.txt">Plain text</a></p>
+</section>
+{% endfor %}

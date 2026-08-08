@@ -1,0 +1,18 @@
+---
+layout: base.njk
+eleventyExcludeFromCollections: true
+pagination:
+  data: collections.lun
+  size: 1
+  alias: week
+permalink: "/lun/{{ week.date | isoDate }}/"
+eleventyComputed:
+  title: "Linux User Net — {{ week.date | dateHeading }}"
+---
+<h1>Linux User Net — week of {{ week.date | dateHeading }}</h1>
+
+{% set weeks = [week] %}
+{% include "week-list.njk" %}
+
+<p><a href="/lun/">All weeks this year</a>
+· <a href="/lun/archive/">Archive</a></p>

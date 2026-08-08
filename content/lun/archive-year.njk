@@ -1,0 +1,18 @@
+---
+layout: base.njk
+eleventyExcludeFromCollections: true
+pagination:
+  data: collections.lunArchiveYears
+  size: 1
+  alias: yearGroup
+permalink: "/lun/archive/{{ yearGroup.year }}/"
+eleventyComputed:
+  title: "Linux User Net — {{ yearGroup.year }} archive"
+---
+<h1>Linux User Net — {{ yearGroup.year }}</h1>
+
+{% set weeks = yearGroup.items %}
+{% include "week-list.njk" %}
+
+<p><a href="/lun/archive/">All years</a>
+· <a href="/lun/">Current year</a></p>

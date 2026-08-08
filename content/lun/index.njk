@@ -1,0 +1,23 @@
+---
+layout: base.njk
+title: Linux User Net — weekly links
+eleventyExcludeFromCollections: true
+permalink: /lun/index.html
+---
+<h1>Linux User Net</h1>
+
+<p class="lun-intro">Links read on the Monday Night Linux User Net —
+Mondays, 8:10–9:00 PM Pacific, on the
+<a href="https://arrg.org">ARRG</a> K7RPT repeater system.
+<a href="/lun/info/">About the net</a>
+· <a href="/lun/archive/">Archive</a>
+· <a href="/lun/feed.xml">Feed</a>
+· <a href="https://groups.io/g/the-linux-user-net/topics">Discuss on groups.io</a></p>
+
+{% set weeks = collections.lun | inYear(currentYear) %}
+{% if weeks.length %}
+{% include "week-list.njk" %}
+{% else %}
+<p>No editions yet this year. Prior years live in the
+<a href="/lun/archive/">archive</a>.</p>
+{% endif %}
