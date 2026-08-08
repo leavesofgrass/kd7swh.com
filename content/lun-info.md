@@ -14,10 +14,6 @@ lives at [kd7swh.com/lun](/lun/).
 - **When:** Mondays, 8:10–9:00 PM Pacific
 - **Where:** the Amateur Radio Relay Group's K7RPT repeater system, Oregon
 - **Net manager:** Russ, KC7MM
-- **Between nets:** [the-linux-user-net on groups.io](https://groups.io/g/the-linux-user-net/topics)
-- **On digital voice:** [talkgroup 50352 on the TGIF Network](https://tgif.network/tgprofile.php?id=50352)
-  — a DMR (Digital Mobile Radio) talkgroup for casual chats between nets.
-  Quiet most days, but there when you need it.
 
 ## Repeaters
 
@@ -54,6 +50,26 @@ ways:
   147.040.
 - **EchoLink K7RPT-L** — tied to 147.320.
 
+## The infrastructure
+
+The Amateur Radio Relay Group is a volunteer-run nonprofit that operates
+the K7RPT system at no cost to its users. The net exists because their
+repeaters do — if the net is useful to you, [arrg.org](https://arrg.org)
+is where to support it.
+
+## Between nets
+
+The conversation doesn't stop when the net closes Monday night.
+
+- **The forum:**
+  [the-linux-user-net on groups.io](https://groups.io/g/the-linux-user-net/topics)
+  — announcements, story suggestions, and the discussion that didn't fit
+  in fifty minutes.
+- **On digital voice:**
+  [talkgroup 50352 on the TGIF Network](https://tgif.network/tgprofile.php?id=50352)
+  — a DMR (Digital Mobile Radio) talkgroup for casual chats. Quiet most
+  days, but there when you need it.
+
 ## Suggesting a story
 
 The best place is the
@@ -62,10 +78,3 @@ net already talks between sessions. GitHub users can also
 [open an issue](https://github.com/leavesofgrass/kd7swh.com/issues/new/choose).
 What runs is an editorial call — the bar is written down in
 [EDITORIAL.md](https://github.com/leavesofgrass/kd7swh.com/blob/main/EDITORIAL.md).
-
-## The infrastructure
-
-The Amateur Radio Relay Group is a volunteer-run nonprofit that operates
-the K7RPT system at no cost to its users. The net exists because their
-repeaters do — if the net is useful to you, [arrg.org](https://arrg.org)
-is where to support it.
