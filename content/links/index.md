@@ -33,6 +33,10 @@ rather than everything I've ever read. (Distinct from the
   both senses
 - [ArchWiki](https://wiki.archlinux.org/) — the best system documentation
   in the Linux world, whatever distribution you actually run
+- [Phoronix](https://www.phoronix.com/) — Linux hardware, benchmarks, and
+  development news, daily and relentless
+- [Linuxiac](https://linuxiac.com/) — Linux news and distribution coverage,
+  a regular source on the [net's weekly list](/lun/)
 
 ## Microcontrollers and electronics
 
@@ -80,3 +84,23 @@ rather than everything I've ever read. (Distinct from the
   gates up; the single best bridge between EE and CS
 - [All About Circuits](https://www.allaboutcircuits.com/) — free textbook
   series from DC fundamentals through semiconductors
+
+## YouTube channels
+
+Favorites, in no particular order.
+
+- [Jeff Geerling](https://www.youtube.com/c/JeffGeerling) — Raspberry Pi,
+  homelabs, and rigorous hardware testing, with the source code to match
+- [Save It For Parts](https://www.youtube.com/@saveitforparts) — salvaged
+  satellite dishes and thrift-store RF gear, talking to spacecraft on a
+  budget
+- [Adrian's Digital Basement](https://www.youtube.com/@adriansdigitalbasement)
+  — board-level repair of vintage computers, one probe at a time
+- [Tech Tangents](https://www.youtube.com/@TechTangents) — restoring and
+  documenting the computing hardware history almost forgot
+- [Cathode Ray Dude](https://www.youtube.com/@CathodeRayDude) — gloriously
+  deep dives into weird video gear and orphaned formats
+- [Asianometry](https://www.youtube.com/@Asianometry) — video essays on
+  the semiconductor industry and the economics of technology
+- [Techmoan](https://www.youtube.com/@Techmoan) — vintage audio and the
+  consumer formats that time left behind
