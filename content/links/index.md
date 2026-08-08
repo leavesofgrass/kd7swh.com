@@ -37,6 +37,8 @@ rather than everything I've ever read. (Distinct from the
   development news, daily and relentless
 - [Linuxiac](https://linuxiac.com/) — Linux news and distribution coverage,
   a regular source on the [net's weekly list](/lun/)
+- [LXer](https://lxer.com/) — Linux news gathered from across the web,
+  running longer than most of the distributions it covers
 
 ## Microcontrollers and electronics
 
