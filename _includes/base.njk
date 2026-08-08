@@ -32,12 +32,14 @@
 {{ content | safe }}
   </main>
   <footer class="site-footer">
+    {% if lunFooter %}
+    <p><a href="https://groups.io/g/the-linux-user-net/topics">Linux User Net on groups.io</a>
+      · <a href="https://arrg.org">ARRG</a></p>
+    {% endif %}
     <p>Text and the Linux User Net archive:
       <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>,
       except where otherwise noted.</p>
-    <p><a href="https://groups.io/g/the-linux-user-net/topics">Linux User Net on groups.io</a>
-      · <a href="https://arrg.org">ARRG</a>
-      · <a href="/accessibility/">Accessibility</a>
+    <p><a href="/accessibility/">Accessibility</a>
       · <a href="https://github.com/leavesofgrass/kd7swh.com">Site source</a></p>
   </footer>
 </body>

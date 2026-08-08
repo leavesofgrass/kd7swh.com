@@ -9,7 +9,7 @@ eleventyExcludeFromCollections: true
 project states its own code license on its page; the site footer's
 CC&nbsp;BY-NC-SA notice covers prose, not code.</p>
 
-{% set projects = collections.projects %}
+{% set projects = collections.projects | sort(attribute="data.order") %}
 {% if projects.length %}
 <ul>
 {% for p in projects %}

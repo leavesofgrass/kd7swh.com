@@ -2,6 +2,7 @@
 layout: base.njk
 title: About the Linux User Net
 permalink: /lun/info/index.html
+lunFooter: true
 ---
 
 # The Linux User Net

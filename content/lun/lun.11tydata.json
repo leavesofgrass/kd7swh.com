@@ -1,5 +1,6 @@
 {
   "tags": ["lun"],
   "layout": "base.njk",
-  "permalink": false
+  "permalink": false,
+  "lunFooter": true
 }
