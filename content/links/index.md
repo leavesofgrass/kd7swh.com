@@ -16,10 +16,10 @@ rather than everything I've ever read. (Distinct from the
 - [Multnomah County ARES](https://multnomahares.org/) — the Amateur Radio
   Emergency Service field organization for Multnomah County
 - [Willamette Valley Mesh Network](https://willamettevalleymesh.net/) —
-  high-speed emergency data over the AREDN amateur radio mesh
+  high-speed emergency data over an amateur radio mesh network (AREDN)
 - [Portland NET radio](https://www.portland.gov/pbem/neighborhood-emergency-teams/crtradio)
   — the amateur radio path for Portland's Neighborhood Emergency Team
-  volunteers (PBEM)
+  volunteers, run by the city's Bureau of Emergency Management
 - [Cascadia Mesh](https://cascadiamesh.org/) — mesh networking community
   in the Pacific Northwest
 - [ARRG](https://arrg.org/) — the Amateur Radio Relay Group, whose K7RPT
@@ -50,7 +50,8 @@ rather than everything I've ever read. (Distinct from the
 ## Signals and sound
 
 - [The Scientist and Engineer's Guide to DSP](https://www.dspguide.com/) —
-  the classic free text; waveform analysis from first principles
+  the classic free digital-signal-processing text; waveform analysis from
+  first principles
 - [Julius O. Smith's online books](https://ccrma.stanford.edu/~jos/) —
   filters, spectral audio, and physical modeling, free from CCRMA
 - [SuperCollider](https://supercollider.github.io/) — a language for sound
@@ -90,8 +91,8 @@ rather than everything I've ever read. (Distinct from the
 - [Jeff Geerling](https://www.youtube.com/c/JeffGeerling) — Raspberry Pi,
   homelabs, and rigorous hardware testing, with the source code to match
 - [Save It For Parts](https://www.youtube.com/@saveitforparts) — salvaged
-  satellite dishes and thrift-store RF gear, talking to spacecraft on a
-  budget
+  satellite dishes and thrift-store radio gear, talking to spacecraft on
+  a budget
 - [Adrian's Digital Basement](https://www.youtube.com/@adriansdigitalbasement)
   — board-level repair of vintage computers, one probe at a time
 - [Tech Tangents](https://www.youtube.com/@TechTangents) — restoring and

@@ -12,14 +12,15 @@ meet radio. On the air since long before this site — the weekly link list
 lives at [kd7swh.com/lun](/lun/).
 
 - **When:** Mondays, 8:10–9:00 PM Pacific
-- **Where:** the ARRG K7RPT repeater system, Oregon
+- **Where:** the Amateur Radio Relay Group's K7RPT repeater system, Oregon
 - **Net manager:** Russ, KC7MM
 - **Between nets:** [the-linux-user-net on groups.io](https://groups.io/g/the-linux-user-net/topics)
 
 ## Repeaters
 
-The net runs on these linked K7RPT machines. Program the PL tone with the
-frequency — frequency alone is not enough.
+The net runs on these linked K7RPT machines. Program the PL tone — the
+sub-audible tone that tells the repeater to listen — along with the
+frequency; frequency alone is not enough.
 
 | Frequency | PL tone | Notes |
 |---|---|---|
@@ -40,8 +41,9 @@ is [arrg.org/nets/](https://arrg.org/nets/).
 
 ## Checking in from anywhere
 
-No radio in range? The system carries **IRLP node 7959** (on 147.040) and
-**EchoLink K7RPT-L** (on 147.320).
+No radio in range? The system can be reached over the internet two ways:
+**IRLP node 7959** (the Internet Radio Linking Project, tied to 147.040)
+and **EchoLink K7RPT-L** (tied to 147.320).
 
 ## Suggesting a story
 
@@ -54,7 +56,7 @@ What runs is an editorial call — the bar is written down in
 
 ## The infrastructure
 
-The Amateur Radio Relay Group (ARRG) is a 501(c)(3) nonprofit that runs the
-K7RPT system at no cost to its users. The net exists because their
+The Amateur Radio Relay Group is a volunteer-run nonprofit that operates
+the K7RPT system at no cost to its users. The net exists because their
 repeaters do — if the net is useful to you, [arrg.org](https://arrg.org)
 is where to support it.
