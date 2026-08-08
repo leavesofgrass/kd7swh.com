@@ -23,6 +23,7 @@ jobs:
           context: .
           target: artifact
           outputs: type=local,dest=_site
+          provenance: false
           cache-from: type=gha
       - name: Build toolchain image (for guard)
         uses: docker/build-push-action@v6

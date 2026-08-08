@@ -10,7 +10,7 @@ eleventyExcludeFromCollections: true
   <link href="{{ siteUrl }}/lun/feed.xml" rel="self"/>
   <link href="{{ siteUrl }}/lun/"/>
   <id>{{ siteUrl }}/lun/</id>
-  <updated>{% if collections.lun.length %}{{ collections.lun | getNewestCollectionItemDate | dateToRfc3339 }}{% else %}{{ buildTime }}{% endif %}</updated>
+  <updated>{% if collections.lun.length %}{{ collections.lun | getNewestCollectionItemDate | dateToRfc3339 }}{% else %}{{ siteEpoch }}{% endif %}</updated>
   <author><name>Linux User Net</name></author>
 {%- for week in collections.lun %}
   <entry>

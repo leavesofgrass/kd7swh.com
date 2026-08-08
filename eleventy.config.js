@@ -78,8 +78,16 @@ export default function (eleventyConfig) {
   // archive changes this line and nothing else (see CONTRIBUTING.md).
   eleventyConfig.addGlobalData("siteUrl", "https://kd7swh.com");
 
-  // Fallback timestamp so feeds stay valid before any week exists.
-  eleventyConfig.addGlobalData("buildTime", () => new Date().toISOString());
+  // Fallback timestamp so feeds stay valid before any week exists. A fixed
+  // value, not build time — builds must be byte-identical locally and in CI.
+  eleventyConfig.addGlobalData("siteEpoch", "2026-08-08T00:00:00Z");
+
+  // Headlines are published verbatim, and real Linux headlines contain
+  // template syntax ("Ansible's {{ lookup }}") and angle-bracket tokens
+  // ("Option<T>"). Markdown must therefore be pure Markdown: no Liquid
+  // preprocessing (a {% raw %}{% if %}{% endraw %} headline would abort
+  // the Monday build), and no raw-HTML passthrough (a <T> would vanish).
+  eleventyConfig.amendLibrary("md", (md) => md.set({ html: false }));
 
   return {
     dir: {
@@ -87,5 +95,6 @@ export default function (eleventyConfig) {
       output: "_site",
       includes: "../_includes",
     },
+    markdownTemplateEngine: false,
   };
 }

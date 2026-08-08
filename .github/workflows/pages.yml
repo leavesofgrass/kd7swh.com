@@ -29,6 +29,9 @@ jobs:
           context: .
           target: artifact
           outputs: type=local,dest=_site
+          # No provenance attestation: it writes provenance.json into the
+          # local output, which would get deployed with the site.
+          provenance: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build toolchain image (for guard)
