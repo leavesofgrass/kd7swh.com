@@ -69,15 +69,35 @@ rather than everything I've ever read. (Distinct from the
   checklist culture for shipping accessible work
 - [RFC Editor](https://www.rfc-editor.org/) — where the internet writes
   down how it works
+- [Emacspeak](https://emacspeak.sourceforge.net/) — the complete audio
+  desktop: Emacs that speaks, going strong for three decades
+- [Orca](https://orca.gnome.org/) — the screen reader for the Linux
+  desktop
+- [BRLTTY](https://brltty.app/) — refreshable braille displays on the
+  Linux console
+- [Liblouis](https://liblouis.io/) — the open braille translation
+  library working inside most software that produces braille
+- [eSpeak NG](https://github.com/espeak-ng/espeak-ng) — the compact
+  open-source speech synthesizer that can talk on almost anything
 
-## Statistics and data
+## Statistics, data, and public health
 
+- [The R Project](https://www.r-project.org/) — the lingua franca of
+  statistical computing
+- [Tidyverse](https://www.tidyverse.org/) — the R dialect most modern
+  data work speaks
+- [The Epidemiologist R Handbook](https://epirhandbook.com/) — free,
+  field-tested R for outbreak response and public-health practice
+- [CRAN Task View: Epidemiology](https://cran.r-project.org/web/views/Epidemiology.html)
+  — a curated map of R's epidemiology packages
+- [Python for Data Analysis](https://wesmckinney.com/book/) — the pandas
+  book, open edition, from the library's own author
 - [OpenIntro Statistics](https://www.openintro.org/) — free, rigorous
   textbooks for real statistical thinking
 - [Seeing Theory](https://seeing-theory.brown.edu/) — probability and
   statistics, made visual and interactive
-- [The R Project](https://www.r-project.org/) — the lingua franca of
-  statistical computing
+- [Our World in Data](https://ourworldindata.org/) — public health and
+  global development, charted and sourced
 
 ## Computer science and electrical engineering
 

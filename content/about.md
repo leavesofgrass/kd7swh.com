@@ -6,17 +6,26 @@ permalink: /about/index.html
 
 # Jon — KD7SWH
 
-Amateur radio operator in Oregon. My time goes where Linux,
-microcontrollers, and radio overlap — and into the rooms next door:
-old computers brought back to life (the eight-bit machines especially),
-synthesizers that make music and synthesizers that talk, waveform
-analysis, and statistics. This site is where that gets written down.
+Amateur radio operator in Oregon. The bench holds Linux boxes,
+microcontrollers, radios, eight-bit computers being brought back to life,
+and synthesizers — the kind that make music and the kind that talk.
 
-Two threads run through all of it: **accessibility** and **open
-standards**. Tools should work for everyone, on anything, and the formats
-that matter should be the ones anyone can implement. This site practices
-that — no JavaScript, system fonts, real contrast, and a plain-text
-edition of everything that matters.
+I'm not an engineer or a computer scientist. I come to all of this from
+**sociology** and **assistive technology**: statistics by way of social
+research, computing by way of making machines work for people they
+weren't designed for. My research interests live there — disability
+studies, human input devices, vision loss, and text-to-speech systems.
+
+The data side is just as much home: data science in **Python and R**,
+particularly as they are used in epidemiology, public health, and
+biomedical engineering research. That practice is the basis of
+[abax](/projects/abax/), a keyboard-first statistics workstation.
+
+Accessibility and open standards aren't side commitments here — they're
+where I come from. Tools should work for everyone, on anything, and the
+formats that matter should be the ones anyone can implement. This site
+practices that: no JavaScript, system fonts, real contrast, and a
+plain-text edition of everything that matters.
 
 I write C, Node.js, Python, and Rust, mostly for small machines and small
 tools. On the air you'll find me on the Amateur Radio Relay Group's

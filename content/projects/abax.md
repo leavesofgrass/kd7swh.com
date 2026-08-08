@@ -8,8 +8,13 @@ order: 2
 
 A keyboard-first statistics and data-science workstation: a scriptable
 spreadsheet and kernel with built-in statistics, analysis, and
-visualization. For the kind of work that outgrows a spreadsheet but
-doesn't want to become a notebook server.
+visualization.
+
+It grows out of real practice — data science in Python and R as they are
+used in epidemiology, public health, and biomedical engineering
+research. That kind of work outgrows a spreadsheet quickly but doesn't
+want to become a notebook server. abax aims at the middle: fast to open,
+honest about its statistics, and driven entirely from the keyboard.
 
 Python. Full write-up to come; the code and README live at
 [github.com/leavesofgrass/abax](https://github.com/leavesofgrass/abax).
