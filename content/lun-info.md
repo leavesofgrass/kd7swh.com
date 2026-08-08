@@ -15,6 +15,9 @@ lives at [kd7swh.com/lun](/lun/).
 - **Where:** the Amateur Radio Relay Group's K7RPT repeater system, Oregon
 - **Net manager:** Russ, KC7MM
 - **Between nets:** [the-linux-user-net on groups.io](https://groups.io/g/the-linux-user-net/topics)
+- **On digital voice:** [talkgroup 50352 on the TGIF Network](https://tgif.network/tgprofile.php?id=50352)
+  — a DMR (Digital Mobile Radio) talkgroup for casual chats between nets.
+  Quiet most days, but there when you need it.
 
 ## Repeaters
 
@@ -41,9 +44,15 @@ is [arrg.org/nets/](https://arrg.org/nets/).
 
 ## Checking in from anywhere
 
-No radio in range? The system can be reached over the internet two ways:
-**IRLP node 7959** (the Internet Radio Linking Project, tied to 147.040)
-and **EchoLink K7RPT-L** (tied to 147.320).
+No radio in range? The system can be reached over the internet three
+ways:
+
+- **AllStarLink node 551581** — in Forest Grove, part of the K7RPT
+  network ([node details](https://stats.allstarlink.org/nodeinfo.cgi?node=551581)).
+  The route that has worked best for me personally.
+- **IRLP node 7959** — the Internet Radio Linking Project, tied to
+  147.040.
+- **EchoLink K7RPT-L** — tied to 147.320.
 
 ## Suggesting a story
 
