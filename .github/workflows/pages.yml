@@ -1,5 +1,6 @@
-# Placeholder deploy. The build job later gets replaced by the real
-# Docker-based Eleventy build from the same Dockerfile as local dev.
+# Build and deploy kd7swh.com. The site is built by the SAME Dockerfile as
+# local dev — CI does not reimplement the build with setup-node and hope it
+# matches. Same stages, same lockfile, same digest-pinned base image.
 name: pages
 
 on:
@@ -21,48 +22,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Write placeholder page
-        run: |
-          mkdir -p _site
-          cat > _site/index.html <<'HTML'
-          <!doctype html>
-          <html lang="en">
-          <head>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          <meta name="color-scheme" content="light dark">
-          <title>KD7SWH — on the air soon</title>
-          <style>
-            body { font-family: ui-monospace, Consolas, Menlo, monospace;
-                   display: grid; place-items: center; min-height: 100vh;
-                   margin: 0; }
-            main { text-align: center; }
-            pre  { display: inline-block; text-align: left; line-height: 1.25; }
-          </style>
-          </head>
-          <body>
-          <main>
-          <pre aria-hidden="true">
-              |
-             /|\
-            / | \
-           /  |  \
-          /___|___\
-              |
-              |
-           ~~~|~~~
-          </pre>
-          <h1>KD7SWH</h1>
-          <p>kd7swh.com — on the air soon.</p>
-          </main>
-          </body>
-          </html>
-          HTML
+      - uses: docker/setup-buildx-action@v3
+      - name: Build site (artifact stage)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: artifact
+          outputs: type=local,dest=_site
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build toolchain image (for guard)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: dev
+          load: true
+          tags: kd7swh-toolchain:ci
+          cache-from: type=gha
+      - name: Guard — leakage and shape checks
+        run: docker run --rm -v "$PWD:/site" kd7swh-toolchain:ci node tools/guard.mjs
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
 
   deploy:
+    # Deploys run ONLY from main.
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     environment:

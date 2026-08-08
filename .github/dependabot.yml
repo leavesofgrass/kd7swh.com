@@ -1,0 +1,17 @@
+# npm: security updates only. Weekly minor-bump noise is not wanted;
+# open-pull-requests-limit: 0 disables version-update PRs while GitHub's
+# security updates (repo settings) continue to open PRs for advisories.
+#
+# docker: bumps the digest-pinned base image so the pin stays current.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
