@@ -6,13 +6,12 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks! The bar every story has to clear (from
-        [EDITORIAL.md](https://github.com/leavesofgrass/kd7swh.com/blob/main/EDITORIAL.md)):
-        does it change what a Linux user or a radio operator can **do** or
-        should **do**, and is there something to **discuss**, not just
-        announce? Point releases, CVE lists, and unshipped speculation
-        don't run. Inclusion is editorial — an unmerged suggestion is not
-        a rejection of you.
+        Thanks! The bar every story has to clear: does it change what a
+        Linux user or a radio operator can **do** or should **do**, and
+        is there something to **discuss**, not just announce? Point
+        releases, CVE lists, and unshipped speculation don't run.
+        Inclusion is editorial — an unmerged suggestion is not a
+        rejection of you.
 
         (No GitHub account or prefer conversation? Suggest it on
         [groups.io](https://groups.io/g/the-linux-user-net/topics) instead —

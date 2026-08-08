@@ -9,8 +9,9 @@ research every week. No GitHub account needed.
 
 GitHub works too: open a
 [story suggestion](https://github.com/leavesofgrass/kd7swh.com/issues/new/choose)
-issue. Either way, the bar a story has to clear is written down in
-[EDITORIAL.md](EDITORIAL.md) — worth a skim before suggesting.
+issue. Either way, the bar a story has to clear is simple to state: it
+should change what a Linux user or a radio operator can **do**, and give
+the net something to **discuss**, not just announce.
 
 **Inclusion is editorial.** Suggestions are genuinely welcome, and most of
 what makes the list started as one — but the list is curated by hand, and

@@ -91,7 +91,7 @@ for (const file of lunFiles) {
   }
 }
 
-const NEVER_TRACKED = ["drafts/", ".env", ".guard-denylist", "AGENT-HANDOFF.md", "kd7swh-site-plan.md"];
+const NEVER_TRACKED = ["drafts/", ".env", ".guard-denylist", "AGENT-HANDOFF.md", "kd7swh-site-plan.md", "EDITORIAL.md"];
 try {
   const tracked = execFileSync("git", ["ls-files"], { cwd: ROOT, encoding: "utf8" })
     .split("\n")

@@ -29,8 +29,7 @@ nothing else on the host is ever read.
 ## Contributing and licenses
 
 Story suggestions and corrections are welcome — see
-[CONTRIBUTING.md](CONTRIBUTING.md); the editorial bar is written down in
-[EDITORIAL.md](EDITORIAL.md). Code is MIT ([LICENSE-code](LICENSE-code));
+[CONTRIBUTING.md](CONTRIBUTING.md). Code is MIT ([LICENSE-code](LICENSE-code));
 site text and the net archive are CC BY-NC-SA 4.0
 ([LICENSE-content](LICENSE-content)) and built to be rehostable by
 whoever runs the net after us.

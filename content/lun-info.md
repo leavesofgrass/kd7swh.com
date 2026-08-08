@@ -76,5 +76,6 @@ The best place is the
 [groups.io forum](https://groups.io/g/the-linux-user-net/topics), where the
 net already talks between sessions. GitHub users can also
 [open an issue](https://github.com/leavesofgrass/kd7swh.com/issues/new/choose).
-What runs is an editorial call — the bar is written down in
-[EDITORIAL.md](https://github.com/leavesofgrass/kd7swh.com/blob/main/EDITORIAL.md).
+What runs is an editorial call — the short version of the bar: a story
+has to change what someone can do, and give the net something to
+discuss.
