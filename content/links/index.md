@@ -115,13 +115,21 @@ rather than everything I've ever read. (Distinct from the
 - [Save It For Parts](https://www.youtube.com/@saveitforparts) — salvaged
   satellite dishes and thrift-store radio gear, talking to spacecraft on
   a budget
+- [Dave Casler](https://www.youtube.com/@davecasler) — patient answers to
+  the questions every radio operator eventually asks
+- [Temporarily Offline](https://www.youtube.com/@temporarilyoffline) —
+  amateur radio without the stuffiness: gear, experiments, straight talk
 - [Adrian's Digital Basement](https://www.youtube.com/@adriansdigitalbasement)
   — board-level repair of vintage computers, one probe at a time
 - [Tech Tangents](https://www.youtube.com/@TechTangents) — restoring and
   documenting the computing hardware history almost forgot
+- [Usagi Electric](https://www.youtube.com/@UsagiElectric) — bringing
+  vacuum-tube and minicomputer-era machines back to life, rack by rack
 - [Cathode Ray Dude](https://www.youtube.com/@CathodeRayDude) — gloriously
   deep dives into weird video gear and orphaned formats
 - [Techmoan](https://www.youtube.com/@Techmoan) — vintage audio and the
   consumer formats that time left behind
+- [Louis Rossmann](https://www.youtube.com/@rossmanngroup) — board-level
+  repair and the fight for the right to repair what you own
 - [Asianometry](https://www.youtube.com/@Asianometry) — video essays on
   the semiconductor industry and the economics of technology
