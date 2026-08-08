@@ -1,0 +1,21 @@
+# Known-unreachable links in the imported LUN archive (checked 2026-08-08).
+# The archive records what was read on the air; dead links stay in the
+# content and are excluded here so link checks stay meaningful for new
+# material. A few of these are alive in browsers but block automated
+# checkers (fsf.org TLS handshake, reuters/bashscript bot walls).
+https://bashscript.net/
+https://nerds.xyz/2025/07/brave-blocks-microsoft-recall/
+https://nerds.xyz/2025/07/gparted-live-1-7-0-linux-distro-drops-32-bit-support-and-improves-device-handling/
+https://nerds.xyz/2025/07/lumo-ai-assistant-privacy-first/
+https://nerds.xyz/2025/08/aol-dial-up-internet-shutdown-2025/
+https://nerds.xyz/2025/10/nordvpn-linux-gui-open-source-snap/
+https://nerds.xyz/2025/10/signal-spqr-quantum-encryption/
+https://nerds.xyz/2025/11/firefox-145-better-privacy-pdf-notes/
+https://nerds.xyz/2026/01/wine-11-linux-windows/
+https://nerds.xyz/2026/03/chrome-arm64-linux/
+https://nerds.xyz/2026/03/mozilla-mila-open-source-ai/
+https://nerds.xyz/2026/04/mozilla-microsoft-firefox-copilot-windows/
+https://nerds.xyz/2026/05/flipper-one-linux-cyberdeck/
+https://nerds.xyz/ubuntu-linux-25-10-quietly-kills-off-gnome-on-xorg-as-wayland-takes-over/
+https://www.fsf.org/blogs/licensing/llama-3-1-community-license-is-not-a-free-software-license/
+https://www.reuters.com/world/asia-pacific/sk-hynix-ceo-sees-worst-ever-memory-supply-shortage-2027-says-demand-outstrip-2026-07-10/

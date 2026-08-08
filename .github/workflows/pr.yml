@@ -44,8 +44,10 @@ jobs:
       - name: Link check — every link in the built site resolves
         run: >
           docker run --rm -v "$PWD/_site:/data:ro"
+          -v "$PWD/.lycheeignore:/ignore:ro"
           lycheeverse/lychee:latest@sha256:eaff3e0a13603c9a701accfcc84f44158bb77bf36ecfa4622b626056c3463892
           --no-progress --max-concurrency 8 --root-dir /data
+          --exclude-file /ignore
           --exclude '^https://kd7swh\.com'
           --accept 200,206,301,302,403
           /data

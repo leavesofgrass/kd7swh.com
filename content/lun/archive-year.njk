@@ -14,5 +14,12 @@ eleventyComputed:
 {% set weeks = yearGroup.items %}
 {% include "week-list.njk" %}
 
+{% if yearGroup.year <= "2025" %}
+<p class="lun-attribution">The weeks of {{ yearGroup.year }} were compiled
+by Russ, KC7MM, at
+<a href="https://kc7mm.com/wiki/doku.php?id=linuxusernet:linuxnews">kc7mm.com</a>.
+Links are left exactly as they were read — some have rotted since.</p>
+{% endif %}
+
 <p><a href="/lun/archive/">All years</a>
 · <a href="/lun/">Current year</a></p>
