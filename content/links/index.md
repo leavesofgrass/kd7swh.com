@@ -35,8 +35,8 @@ rather than everything I've ever read. (Distinct from the
   in the Linux world, whatever distribution you actually run
 - [Phoronix](https://www.phoronix.com/) — Linux hardware, benchmarks, and
   development news, daily and relentless
-- [Linuxiac](https://linuxiac.com/) — Linux news and distribution coverage,
-  a regular source on the [net's weekly list](/lun/)
+- [Linuxiac](https://linuxiac.com/) — Linux news, reviews, and
+  distribution coverage
 - [LXer](https://lxer.com/) — Linux news gathered from across the web,
   running longer than most of the distributions it covers
 
