@@ -33,8 +33,15 @@ repeater system, including the Monday night
 [Linux User Net](/lun/info/), whose [weekly link list](/lun/) this site
 carries.
 
+I also build with AI tools, and I'd rather say that plainly than leave
+you wondering — this site and projects like star and abax included. I
+know there are good reasons some people are wary. For me it's a powerful
+tool that has let me do more than I could have alone, and the control
+never leaves my hands: what ships is what I chose, reviewed, and
+understood.
+
 - **Callsign:** KD7SWH
 - **Net:** [Linux User Net](/lun/info/), Mondays 8:10 PM Pacific
 - **Code:** [github.com/leavesofgrass](https://github.com/leavesofgrass)
-- **This site:** hand-built with [Eleventy](https://www.11ty.dev/), no
+- **This site:** built with [Eleventy](https://www.11ty.dev/), no
   JavaScript, [source public](https://github.com/leavesofgrass/kd7swh.com)
