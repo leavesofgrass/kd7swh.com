@@ -1,0 +1,20 @@
+---
+layout: base.njk
+title: Notes
+eleventyExcludeFromCollections: true
+---
+<h1>Notes</h1>
+
+<p>Technical writing — the things worth writing down so the next person
+(usually future me) doesn't have to rediscover them.</p>
+
+{% set notes = collections.notes %}
+{% if notes.length %}
+<ul>
+{% for n in notes %}
+  <li><a href="{{ n.url }}">{{ n.data.title }}</a></li>
+{% endfor %}
+</ul>
+{% else %}
+<p><em>Nothing here yet.</em></p>
+{% endif %}

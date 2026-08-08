@@ -1,0 +1,31 @@
+name: Correction
+description: Report an error in a published week
+title: "[correction] "
+labels: []
+body:
+  - type: input
+    id: week
+    attributes:
+      label: Which week
+      description: The date of the edition, YYYY-MM-DD (it's in the page URL).
+    validations:
+      required: true
+  - type: textarea
+    id: wrong
+    attributes:
+      label: What is wrong
+      description: The error as published — wrong attribution, wrong headline, mislabeled source.
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source for the correction
+      description: A link that shows the correct information.
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        Note: dead links in past weeks aren't errors — the archive records
+        what was read, and links are left as they were.

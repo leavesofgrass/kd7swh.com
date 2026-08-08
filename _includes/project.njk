@@ -1,0 +1,15 @@
+---
+layout: base.njk
+---
+{# Project page layout. The license line is part of the template so it
+   cannot be forgotten: the site footer says CC BY-NC-SA, which must never
+   be mistaken for a code license. A project page without `license:` in
+   its front matter renders a loud placeholder instead of nothing. #}
+<h1>{{ title }}</h1>
+
+<p class="project-license"><strong>License:</strong>
+{% if license %}{{ license }}{% else %}<em>not yet stated — front matter
+needs a <code>license:</code> line before this page should ship</em>{% endif %}
+{% if repo %} · <a href="{{ repo }}">source</a>{% endif %}</p>
+
+{{ content | safe }}

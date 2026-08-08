@@ -1,0 +1,48 @@
+name: Suggest a story
+description: Propose a story for the Linux User Net weekly list
+title: "[story] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks! The bar every story has to clear (from
+        [EDITORIAL.md](https://github.com/leavesofgrass/kd7swh.com/blob/main/EDITORIAL.md)):
+        does it change what a Linux user or a radio operator can **do** or
+        should **do**, and is there something to **discuss**, not just
+        announce? Point releases, CVE lists, and unshipped speculation
+        don't run. Inclusion is editorial — an unmerged suggestion is not
+        a rejection of you.
+
+        (No GitHub account or prefer conversation? Suggest it on
+        [groups.io](https://groups.io/g/the-linux-user-net/topics) instead —
+        that's the primary route.)
+  - type: input
+    id: link
+    attributes:
+      label: Link
+      description: The story itself — the primary source, not an aggregator rewrite.
+      placeholder: "https://…"
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source
+      description: Who published it (e.g. LWN, the project's own blog).
+    validations:
+      required: true
+  - type: input
+    id: pubdate
+    attributes:
+      label: Publication date
+      description: YYYY-MM-DD. Recent enough to still be news on Monday.
+    validations:
+      required: true
+  - type: input
+    id: why
+    attributes:
+      label: Why it matters
+      description: One line, concrete, in terms of what someone can do.
+    validations:
+      required: true

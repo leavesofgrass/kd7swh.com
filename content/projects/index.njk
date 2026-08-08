@@ -1,0 +1,22 @@
+---
+layout: base.njk
+title: Projects
+eleventyExcludeFromCollections: true
+---
+<h1>Projects</h1>
+
+<p>Things built and being built — radio, Linux, microcontrollers. Each
+project states its own code license on its page; the site footer's
+CC&nbsp;BY-NC-SA notice covers prose, not code.</p>
+
+{% set projects = collections.projects %}
+{% if projects.length %}
+<ul>
+{% for p in projects %}
+  <li><a href="{{ p.url }}">{{ p.data.title }}</a>{% if p.data.summary %} — {{ p.data.summary }}{% endif %}</li>
+{% endfor %}
+</ul>
+{% else %}
+<p><em>Nothing written up yet. The bench is not empty — the write-ups
+just haven't caught up.</em></p>
+{% endif %}
