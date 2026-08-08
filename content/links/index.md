@@ -87,8 +87,6 @@ rather than everything I've ever read. (Distinct from the
 
 ## YouTube channels
 
-Favorites, in no particular order.
-
 - [Jeff Geerling](https://www.youtube.com/c/JeffGeerling) — Raspberry Pi,
   homelabs, and rigorous hardware testing, with the source code to match
 - [Save It For Parts](https://www.youtube.com/@saveitforparts) — salvaged
@@ -100,7 +98,7 @@ Favorites, in no particular order.
   documenting the computing hardware history almost forgot
 - [Cathode Ray Dude](https://www.youtube.com/@CathodeRayDude) — gloriously
   deep dives into weird video gear and orphaned formats
-- [Asianometry](https://www.youtube.com/@Asianometry) — video essays on
-  the semiconductor industry and the economics of technology
 - [Techmoan](https://www.youtube.com/@Techmoan) — vintage audio and the
   consumer formats that time left behind
+- [Asianometry](https://www.youtube.com/@Asianometry) — video essays on
+  the semiconductor industry and the economics of technology
