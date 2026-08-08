@@ -67,9 +67,14 @@ services:
       - "8"
       - "--root-dir"
       - "/data"
+      # Self-origin absolute URLs (the feeds' entry links) point at pages
+      # that only exist after this very build deploys — skip them; the
+      # same pages are checked as files via --root-dir.
+      - "--exclude"
+      - '^https://kd7swh\.com'
       - "--accept"
       - "200,206,301,302,403"
-      - "/data/lun/index.html"
+      - "/data"
 
 volumes:
   node_modules:
