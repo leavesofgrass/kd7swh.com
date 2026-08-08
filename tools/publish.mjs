@@ -23,10 +23,12 @@ const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 // Matches ONLY a checked task-list item; captures the payload verbatim.
 const CHECKED = /^\s*-\s*\[[xX]\]\s+(.+?)\s*$/;
 
-// A publication-date suffix: em dash + ISO date, at end of line or
-// immediately before an appended " | [Label](url)" second link. Curation
-// metadata, stripped before emitting. Nothing else is ever altered.
-const PUB_DATE = /\s+—\s+\d{4}-\d{2}-\d{2}(?=$|\s+\|)/;
+// A publication-date suffix: em dash + ISO date, ONLY in the trailing
+// metadata position — at end of line, or followed by nothing but the
+// optional " | [Label](url)" second link and then end of line. Curation
+// metadata, stripped before emitting. An em-dash date inside a headline
+// (even one sitting just before a pipe) is content and survives untouched.
+const PUB_DATE = /\s+—\s+\d{4}-\d{2}-\d{2}(?=$|\s+\|\s*\[[^\]]*\]\(https?:\/\/[^)\s]+\)\s*$)/;
 
 // Every published line must carry at least one markdown link to http(s).
 const LINK = /\[[^\]]*\]\(https?:\/\/[^)\s]+\)/;

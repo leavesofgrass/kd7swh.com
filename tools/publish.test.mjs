@@ -85,4 +85,11 @@ assert.deepEqual(
   ["- [Kernel — 2026-01-01 retrospective](https://example.com/k) *LWN*"],
   "only the trailing metadata date is stripped, not dates inside headlines");
 
+// The nastier variant: an in-headline em-dash date sitting right before a
+// pipe must also survive — only the true trailing metadata date goes.
+assert.deepEqual(
+  extractChecked("- [x] [Roundup — 2026-01-01 | what changed](https://example.com/a) *LWN* — 2026-08-05"),
+  ["- [Roundup — 2026-01-01 | what changed](https://example.com/a) *LWN*"],
+  "date-before-pipe inside a headline is content, not metadata");
+
 console.log("publish.test: all assertions passed");

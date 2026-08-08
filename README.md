@@ -31,6 +31,7 @@ checkboxes render while you curate.
 | Dev server, live reload | `docker compose up dev` → http://localhost:8080 |
 | Production build to `./_site` | `docker compose run --rm build` |
 | Turn this week's checked items into a page | `docker compose run --rm publish` |
+| Inject a late-breaking story into this week's drafts | `tools\add-story.ps1 <url>` |
 | Leakage and shape checks | `docker compose run --rm guard` |
 | Check every link resolves | `docker compose run --rm links` |
 | Text-browser check | `docker compose exec dev w3m http://localhost:8080/lun/` |
@@ -54,6 +55,11 @@ git add content/lun && git commit && git push
 ```
 
 Live and verified by 7:00 PM. Net at 8:10.
+
+Story breaks after you've already published? `tools\add-story.ps1 <url>`,
+check its box in the drafts file (or pass `--checked`), then run
+`tools\monday.ps1` again — its publish step uses `--force` so re-running
+regenerates the week from the same drafts file.
 
 ## Gotchas
 

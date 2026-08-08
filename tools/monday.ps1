@@ -21,7 +21,13 @@ Write-Host @'
 
 foreach ($step in @("publish", "build", "guard", "links")) {
     Write-Host "=== $step ===" -ForegroundColor Cyan
-    docker compose run --rm $step
+    if ($step -eq "publish") {
+        # --force so a late story (tools\add-story.ps1) can be injected and
+        # the pipeline re-run; same drafts file in, same page out.
+        docker compose run --rm publish node tools/publish.mjs --force
+    } else {
+        docker compose run --rm $step
+    }
     if ($LASTEXITCODE -ne 0) {
         Write-Host ""
         Write-Host "'$step' failed (exit $LASTEXITCODE). Nothing was committed." -ForegroundColor Red
