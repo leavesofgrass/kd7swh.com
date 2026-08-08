@@ -56,9 +56,9 @@ services:
     command: ["node", "tools/guard.mjs"]
 
   # Link checker. Run against the built site before the 7:00 PM checkpoint.
-  # Pin this tag to a release rather than leaving it floating.
+  # Digest-pinned (read from `docker buildx imagetools inspect` 2026-08-08).
   links:
-    image: lycheeverse/lychee:latest
+    image: lycheeverse/lychee:latest@sha256:eaff3e0a13603c9a701accfcc84f44158bb77bf36ecfa4622b626056c3463892
     volumes:
       - ./_site:/data:ro
     command:

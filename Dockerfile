@@ -7,15 +7,12 @@
 #   build     one-shot production build, output in /site/_site
 #   artifact  scratch image containing only _site, for `--output type=local`
 #
-# PIN THE BASE IMAGE before you rely on this for reproducibility. A moving tag
-# is not reproducible. Get the current digest with:
-#
-#   docker buildx imagetools inspect node:22-bookworm-slim
-#
-# then set NODE_IMAGE below to node:22-bookworm-slim@sha256:<digest>.
-# Dependabot can keep a pinned digest current once it is pinned.
+# Base image is digest-pinned for reproducibility (digest read from
+# `docker buildx imagetools inspect node:22-bookworm-slim` on 2026-08-08;
+# this is the multi-arch index digest). Dependabot keeps it current.
+# To refresh manually, rerun the inspect command and update the digest.
 
-ARG NODE_IMAGE=node:22-bookworm-slim
+ARG NODE_IMAGE=node:22-bookworm-slim@sha256:d649c27dae7ba0137b3cef5dd75baa422c08dc3d9e3fc0c23dfb172dc3cc6436
 
 # --------------------------------------------------------------------- base
 FROM ${NODE_IMAGE} AS base
@@ -54,9 +51,12 @@ RUN git config --global --add safe.directory /site
 
 # inotify events do not cross the Windows bind mount into the Linux VM,
 # so the file watcher has to poll or live reload silently never fires.
+# TZ matters: on a Pacific Monday evening the UTC date is already Tuesday,
+# and "which Monday is this?" must not land a week ahead.
 ENV CHOKIDAR_USEPOLLING=1 \
     CHOKIDAR_INTERVAL=400 \
-    NODE_ENV=development
+    NODE_ENV=development \
+    TZ=America/Los_Angeles
 
 EXPOSE 8080
 CMD ["npx", "@11ty/eleventy", "--serve", "--incremental", "--port=8080"]
