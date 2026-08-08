@@ -6,9 +6,17 @@ permalink: /about/index.html
 
 # Jon — KD7SWH
 
-Amateur radio operator in Oregon. I spend my hobby time where Linux,
-microcontrollers, and radio overlap — and this site is where that gets
-written down.
+Amateur radio operator in Oregon. I spend my time where Linux,
+microcontrollers, and radio overlap — and in the rooms next door:
+waveform analysis and sound synthesis, statistical analysis, and the
+broader reaches of electrical engineering and computer science. This
+site is where that gets written down.
+
+Two threads run through all of it: **accessibility** and **open
+standards**. Tools should work for everyone, on anything, and the formats
+that matter should be the ones anyone can implement. This site practices
+that — zero JavaScript, system fonts, real contrast, plain-text editions
+of everything that matters.
 
 I write C, Node.js, Python, and Rust, mostly for small machines and small
 tools. On the air you'll find me on the ARRG K7RPT system, including the
