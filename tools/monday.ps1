@@ -1,11 +1,10 @@
-# tools/monday.ps1 — the Monday pipeline for kd7swh.com/lun
+# tools/monday.ps1 — PowerShell twin of tools/monday.sh.
 #
 # Runs publish -> build -> guard -> links in order, stops at the first
 # failure, then shows what changed and asks before committing anything.
 # The commit prompt is the human gate — nothing publishes without a yes.
 #
-# Usage, from anywhere:   D:\kd7swh\tools\monday.ps1
-# Prereqs: Docker Desktop running; Phases 2-4 built (publish.mjs exists).
+# Usage:   .\tools\monday.ps1
 
 $ErrorActionPreference = "Stop"
 Set-Location (Split-Path $PSScriptRoot -Parent)

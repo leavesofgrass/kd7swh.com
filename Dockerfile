@@ -44,13 +44,13 @@ RUN chown -R node:node /site
 
 USER node
 
-# git inside a container on a Windows bind mount otherwise trips
-# "detected dubious ownership". Git itself is expected to run on Windows;
-# this is only so in-container git commands don't fail confusingly.
+# The repo arrives as a bind mount owned by a different uid, which trips
+# git's "detected dubious ownership" check; this keeps in-container git
+# commands from failing confusingly.
 RUN git config --global --add safe.directory /site
 
-# inotify events do not cross the Windows bind mount into the Linux VM,
-# so the file watcher has to poll or live reload silently never fires.
+# On hosts where file-change events don't cross the bind mount, the
+# watcher has to poll or live reload silently never fires.
 # TZ matters: on a Pacific Monday evening the UTC date is already Tuesday,
 # and "which Monday is this?" must not land a week ahead.
 ENV CHOKIDAR_USEPOLLING=1 \

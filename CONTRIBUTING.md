@@ -27,9 +27,10 @@ stay, because they were what was read.
 
 ## Working on the site itself
 
-The whole toolchain runs in Docker — no local Node needed. See
-[README.md](README.md) for the command reference. PRs run build, guard,
-tests, and a link check in CI; all four need to pass.
+The whole toolchain runs in containers — nothing installs on the host.
+The command reference lives in [docs/development.md](docs/development.md).
+PRs run build, guard, tests, and a link check in CI; all four need to
+pass.
 
 ## Rehosting this archive
 

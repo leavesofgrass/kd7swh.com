@@ -67,7 +67,7 @@ assert.ok(!lines.join("\n").includes("Why it might matter"), "no rationale leaks
 assert.ok(!lines.join("\n").includes("Unchecked"), "no unchecked leaks");
 assert.ok(!lines.join("\n").includes("2026-08-0"), "no publication dates leak");
 
-// CRLF input (Windows-edited drafts) parses identically.
+// CRLF input (drafts touched by an editor that writes CRLF) parses identically.
 assert.deepEqual(
   extractChecked("- [x] [A](https://example.com/a) *S* — 2026-08-05\r\n- [ ] [B](https://example.com/b) *S*\r\n"),
   ["- [A](https://example.com/a) *S*"],

@@ -1,10 +1,9 @@
-# tools/add-story.ps1 — one-command late-story injection, from Windows.
+# tools/add-story.ps1 — PowerShell twin of tools/add-story.sh.
 #
-#   D:\kd7swh\tools\add-story.ps1 https://example.com/story
-#   D:\kd7swh\tools\add-story.ps1 https://example.com/story --checked
-#   D:\kd7swh\tools\add-story.ps1 https://example.com/story --source="LWN"
+#   .\tools\add-story.ps1 https://example.com/story [--checked] [--source="LWN"]
 #
-# Runs the Node tool inside the container (no Node on Windows, ever).
+# Runs the Node tool inside the container — the toolchain never runs on
+# the host.
 
 $ErrorActionPreference = "Stop"
 Set-Location (Split-Path $PSScriptRoot -Parent)

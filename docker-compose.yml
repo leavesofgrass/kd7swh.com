@@ -16,8 +16,8 @@ services:
       target: dev
     volumes:
       - .:/site
-      # Named volume, not a bind mount. node_modules lives in the Linux VM's
-      # filesystem instead of crossing the Windows boundary on every read.
+      # Named volume, not a bind mount — node_modules stays on the
+      # container-side filesystem instead of crossing the mount on every read.
       - node_modules:/site/node_modules
     ports:
       - "8080:8080"
