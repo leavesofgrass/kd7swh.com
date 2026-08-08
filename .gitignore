@@ -1,0 +1,17 @@
+node_modules/
+_site/
+.cache/
+.env
+*.log
+
+# Weekly candidate lists. Working material, not published output.
+# Also covers drafts/.obsidian if you open this folder as a small vault.
+drafts/
+
+# Terms the guard script checks the built site for. Keeping the list itself
+# public would defeat the point.
+.guard-denylist
+
+# Local planning documents. Not tracked, by decision.
+AGENT-HANDOFF.md
+kd7swh-site-plan.md

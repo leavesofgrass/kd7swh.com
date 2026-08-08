@@ -1,0 +1,14 @@
+# Windows host, Linux containers. CRLF sneaking into a shell script or a
+# config file read inside the container produces failures that look like
+# anything except a line-ending problem. Normalize everything.
+
+* text=auto eol=lf
+
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.woff  binary
+*.woff2 binary
+*.pdf   binary

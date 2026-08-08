@@ -1,0 +1,73 @@
+# Placeholder deploy. The build job later gets replaced by the real
+# Docker-based Eleventy build from the same Dockerfile as local dev.
+name: pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Write placeholder page
+        run: |
+          mkdir -p _site
+          cat > _site/index.html <<'HTML'
+          <!doctype html>
+          <html lang="en">
+          <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <meta name="color-scheme" content="light dark">
+          <title>KD7SWH — on the air soon</title>
+          <style>
+            body { font-family: ui-monospace, Consolas, Menlo, monospace;
+                   display: grid; place-items: center; min-height: 100vh;
+                   margin: 0; }
+            main { text-align: center; }
+            pre  { display: inline-block; text-align: left; line-height: 1.25; }
+          </style>
+          </head>
+          <body>
+          <main>
+          <pre aria-hidden="true">
+              |
+             /|\
+            / | \
+           /  |  \
+          /___|___\
+              |
+              |
+           ~~~|~~~
+          </pre>
+          <h1>KD7SWH</h1>
+          <p>kd7swh.com — on the air soon.</p>
+          </main>
+          </body>
+          </html>
+          HTML
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

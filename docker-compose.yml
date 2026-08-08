@@ -1,0 +1,73 @@
+name: kd7swh
+
+# No service mounts anything outside this folder. Not read-only, not narrowly
+# scoped — nothing. The weekly candidate list lives in ./drafts, which is part
+# of this project and is gitignored. Nothing else on the host is ever involved.
+#
+# If a future change appears to require mounting a path from outside this
+# directory, stop and reconsider. That is the invariant.
+
+services:
+
+  # Dev server with live reload. http://localhost:8080
+  dev:
+    build:
+      context: .
+      target: dev
+    volumes:
+      - .:/site
+      # Named volume, not a bind mount. node_modules lives in the Linux VM's
+      # filesystem instead of crossing the Windows boundary on every read.
+      - node_modules:/site/node_modules
+    ports:
+      - "8080:8080"
+
+  # One-shot production build into ./_site
+  build:
+    build:
+      context: .
+      target: dev
+    volumes:
+      - .:/site
+      - node_modules:/site/node_modules
+    environment:
+      NODE_ENV: production
+    command: ["npx", "@11ty/eleventy"]
+
+  # ./drafts/YYYY-MM-DD.md  ->  ./content/lun/YYYY-MM-DD.md
+  # Reads only checked [x] items; everything else is ignored by construction.
+  publish:
+    build:
+      context: .
+      target: dev
+    volumes:
+      - .:/site
+      - node_modules:/site/node_modules
+    command: ["node", "tools/publish.mjs"]
+
+  # Leakage and shape checks before publishing.
+  guard:
+    build:
+      context: .
+      target: dev
+    volumes:
+      - .:/site
+      - node_modules:/site/node_modules
+    command: ["node", "tools/guard.mjs"]
+
+  # Link checker. Run against the built site before the 7:00 PM checkpoint.
+  # Pin this tag to a release rather than leaving it floating.
+  links:
+    image: lycheeverse/lychee:latest
+    volumes:
+      - ./_site:/data:ro
+    command:
+      - "--no-progress"
+      - "--max-concurrency"
+      - "8"
+      - "--accept"
+      - "200,206,301,302,403"
+      - "/data/lun/index.html"
+
+volumes:
+  node_modules:
