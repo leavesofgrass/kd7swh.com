@@ -15,8 +15,10 @@ two classic synthesizers many blind users grew up on, instead of eSpeak.
 archive. **Software DECtalk** needs no license and, in the project's own
 words, sounds like 1985 in the best way.
 
-On a Debian-family system it's one script. On any other Linux, the same
-script after a short package list. Anywhere else, the Docker container —
+On Debian-, Arch-, or Fedora-family systems it's one script — the
+installer detects your distribution and speaks apt, pacman, or dnf
+accordingly. On any other Linux, the same script after a short package
+list. Anywhere else, the Docker container —
 the ViaVoice engine only exists as Linux binary code, so it runs happily
 inside the container and can never run bare-metal outside one. The
 installer narrates each step, self-tests the speech engines before it
