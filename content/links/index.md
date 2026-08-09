@@ -3,6 +3,9 @@ layout: base.njk
 title: Links
 permalink: /links/index.html
 eleventyExcludeFromCollections: true
+# Ordering rule: alphabetical within each cluster, ignoring a leading
+# "The." Keep it that way when adding entries. (This comment never
+# renders — raw HTML in the body does, escaped, because html:false.)
 ---
 
 # Links
@@ -134,6 +137,3 @@ is what got read on the air.)
   amateur radio without the stuffiness: gear, experiments, straight talk
 - [Usagi Electric](https://www.youtube.com/@UsagiElectric) — bringing
   vacuum-tube and minicomputer-era machines back to life, rack by rack
-
-<!-- Ordering rule: alphabetical within each cluster, ignoring a leading
-     "The." Keep it that way when adding entries. -->
