@@ -126,6 +126,18 @@ button:focus-visible {
   font-weight: 600;
 }
 
+/* ----------------------------------------------------------- note list */
+
+.note-list { list-style: none; padding-left: 0; }
+
+.note-list li { margin-block: 0.6rem; }
+
+.note-date {
+  display: block;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
 /* ---------------------------------------------------------------- footer */
 
 .site-footer {

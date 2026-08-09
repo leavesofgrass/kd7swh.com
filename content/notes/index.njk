@@ -8,11 +8,12 @@ eleventyExcludeFromCollections: true
 <p>Technical writing — the things worth writing down so the next person
 (usually future me) doesn't have to rediscover them.</p>
 
-{% set notes = collections.notes %}
+{% set notes = collections.notes | reverse %}
 {% if notes.length %}
-<ul>
+<ul class="note-list">
 {% for n in notes %}
-  <li><a href="{{ n.url }}">{{ n.data.title }}</a></li>
+  <li><a href="{{ n.url }}">{{ n.data.title }}</a>
+    <span class="note-date">{{ n.date | dateHeading }}</span></li>
 {% endfor %}
 </ul>
 {% else %}
