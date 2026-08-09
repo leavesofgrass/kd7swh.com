@@ -3,7 +3,8 @@ title: abax
 license: GPL-3.0
 repo: https://github.com/leavesofgrass/abax
 summary: a keyboard-first statistics and data-science workstation
-order: 2
+group: Data
+order: 3
 ---
 
 **abax** is a statistics and data-science workstation built on a fast,

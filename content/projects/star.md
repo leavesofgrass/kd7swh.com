@@ -3,6 +3,7 @@ title: star
 license: GPL-3.0-or-later
 repo: https://github.com/leavesofgrass/star
 summary: a document reader and writing tool that speaks, built for print disabilities
+group: Assistive technology
 order: 1
 ---
 

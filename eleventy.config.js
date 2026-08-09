@@ -65,6 +65,12 @@ export default function (eleventyConfig) {
     )
   );
 
+  // Project-page grouping for /projects/ — plain JS beats Nunjucks
+  // set-inside-loop scoping games.
+  eleventyConfig.addFilter("inGroup", (items, group) =>
+    (items || []).filter((p) => p.data.group === group)
+  );
+
   // The year "now", Pacific — /lun/ uses it to pick which weeks render
   // inline; older years live under /lun/archive/.
   eleventyConfig.addGlobalData("currentYear", () =>

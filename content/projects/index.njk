@@ -9,13 +9,23 @@ eleventyExcludeFromCollections: true
 project states its own code license on its page; the site footer's
 CC&nbsp;BY-NC-SA notice covers prose, not code.</p>
 
+{# Projects are grouped to match the about page's arc: assistive
+   technology first, then data, then radio. Every project's front matter
+   needs a `group` (one of the names below) and an `order` within it. #}
+{% set groups = ["Assistive technology", "Data", "Amateur radio"] %}
 {% set projects = collections.projects | sort(attribute="data.order") %}
 {% if projects.length %}
+{% for g in groups %}
+{% set grouped = projects | inGroup(g) %}
+{% if grouped.length %}
+<h2>{{ g }}</h2>
 <ul>
-{% for p in projects %}
+{% for p in grouped %}
   <li><a href="{{ p.url }}">{{ p.data.title }}</a>{% if p.data.summary %} — {{ p.data.summary }}{% endif %}</li>
 {% endfor %}
 </ul>
+{% endif %}
+{% endfor %}
 {% else %}
 <p><em>Nothing written up yet. The bench is not empty — the write-ups
 just haven't caught up.</em></p>
