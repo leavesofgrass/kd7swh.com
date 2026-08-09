@@ -92,4 +92,27 @@ assert.deepEqual(
   ["- [Roundup — 2026-01-01 | what changed](https://example.com/a) *LWN*"],
   "date-before-pipe inside a headline is content, not metadata");
 
+// Candidate numbers ("- [x] 7. [Headline]...") are curation metadata for
+// voice-based selection — stripped on publish, in both one- and two-link
+// forms, and harmless when absent.
+assert.deepEqual(
+  extractChecked([
+    "- [x] 1. [First numbered](https://example.com/1) *Src* — 2026-08-05",
+    "- [x] 12. [Two links](https://example.com/2) *Src* — 2026-08-06 | [Primary](https://example.com/p)",
+    "- [x] [Unnumbered still fine](https://example.com/3) *Src* — 2026-08-07",
+  ].join("\n")),
+  [
+    "- [First numbered](https://example.com/1) *Src*",
+    "- [Two links](https://example.com/2) *Src* | [Primary](https://example.com/p)",
+    "- [Unnumbered still fine](https://example.com/3) *Src*",
+  ],
+  "candidate numbers stripped; unnumbered entries unaffected");
+
+// A headline that merely BEGINS with digits keeps them — the number
+// marker only matches before the opening bracket.
+assert.deepEqual(
+  extractChecked("- [x] [3. The best kernel releases, ranked](https://example.com/k) *Src* — 2026-08-05"),
+  ["- [3. The best kernel releases, ranked](https://example.com/k) *Src*"],
+  "digits inside a headline are content");
+
 console.log("publish.test: all assertions passed");

@@ -30,6 +30,13 @@ const CHECKED = /^\s*-\s*\[[xX]\]\s+(.+?)\s*$/;
 // (even one sitting just before a pipe) is content and survives untouched.
 const PUB_DATE = /\s+—\s+\d{4}-\d{2}-\d{2}(?=$|\s+\|\s*\[[^\]]*\]\(https?:\/\/[^)\s]+\)\s*$)/;
 
+// A candidate number: digits + dot immediately before the headline link.
+// Jon numbers candidates so a week can be curated by voice ("run 1, 4, 9")
+// instead of by checkbox. Curation metadata, stripped like the date; the
+// lookahead for "[" means a headline that merely starts with digits is
+// never touched.
+const CANDIDATE_NUM = /^\d{1,2}\.\s+(?=\[)/;
+
 // Every published line must carry at least one markdown link to http(s).
 const LINK = /\[[^\]]*\]\(https?:\/\/[^)\s]+\)/;
 
@@ -66,7 +73,7 @@ export function extractChecked(raw) {
   for (const line of raw.split(/\r?\n/)) {
     const match = CHECKED.exec(line);
     if (!match) continue; // unchecked items and rationale lines land here
-    const entry = match[1].replace(PUB_DATE, "");
+    const entry = match[1].replace(CANDIDATE_NUM, "").replace(PUB_DATE, "");
     if (!LINK.test(entry)) {
       throw new Error(`checked line has no [text](https://...) link:\n  ${line}`);
     }

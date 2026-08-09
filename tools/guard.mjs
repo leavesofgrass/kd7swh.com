@@ -30,6 +30,7 @@ const MARKERS = [
   { name: "unchecked task item ('- [ ]')", re: /^\s*-\s*\[ \]/m },
   { name: "publication-date suffix (em dash + ISO date at end of line)", re: /—\s*\d{4}-\d{2}-\d{2}\s*$/m },
   { name: "Obsidian wikilink ('[[')", re: /\[\[/ },
+  { name: "candidate number residue ('- 7. [')", re: /^\s*-\s+\d{1,2}\.\s+\[/m },
 ];
 
 const lunDir = path.join(ROOT, "content", "lun");

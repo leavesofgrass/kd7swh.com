@@ -182,27 +182,33 @@ never read on the air.
 `;
 }
 
+// Candidates carry a number so a week can be curated by voice ("run 1,
+// 4, 9"). A late addition continues the sequence from what the file
+// already holds.
+const num = (text.match(/^- \[[ xX]\]/gm) || []).length + 1;
+
 // Belt and suspenders: the finished line must survive the publish gate
-// UNCHANGED except for the stripped date suffix. If any future format
-// drift would alter it, refuse now — not at 7 PM on a Monday.
+// UNCHANGED except for the stripped number and date suffix. If any
+// future format drift would alter it, refuse now — not at 7 PM on a
+// Monday.
 const publishedForm = `- [${headline}](${finalUrl}) *${source}*`;
 let roundTrip;
 try {
-  roundTrip = extractChecked(`- [x] [${headline}](${finalUrl}) *${source}* — ${pubDate}`);
+  roundTrip = extractChecked(`- [x] ${num}. [${headline}](${finalUrl}) *${source}* — ${pubDate}`);
 } catch (err) {
   fail(`this entry would fail the publish gate (${err.message}) — add it to the drafts file by hand`);
 }
 if (roundTrip[0] !== publishedForm) {
   fail(
     `this entry would be altered at publish time — add it by hand instead:\n` +
-      `  written:   ${publishedForm}\n` +
+      `  expected:  ${publishedForm}\n` +
       `  publishes: ${roundTrip[0]}`
   );
 }
 
 const box = checked ? "x" : " ";
 const entry =
-  `- [${box}] [${headline}](${finalUrl}) *${source}* — ${pubDate}\n` +
+  `- [${box}] ${num}. [${headline}](${finalUrl}) *${source}* — ${pubDate}\n` +
   `      Why it might matter: late addition, ${todayPacific()} — fill in before the net.\n`;
 
 await mkdir(draftsDir, { recursive: true });
@@ -210,6 +216,6 @@ await writeFile(draftsPath, text + entry, "utf8");
 
 console.log(`add-story: drafts/${date}.md`);
 console.log(`add-story: added ${checked ? "CHECKED" : "unchecked"}:`);
-console.log(`  - [${box}] [${headline}](${finalUrl}) *${source}* — ${pubDate}`);
+console.log(`  - [${box}] ${num}. [${headline}](${finalUrl}) *${source}* — ${pubDate}`);
 if (!checked) console.log("add-story: check its box when you decide it runs.");
 console.log("add-story: then publish as usual (tools\\monday.ps1).");
