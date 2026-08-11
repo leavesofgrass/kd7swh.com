@@ -24,7 +24,7 @@ jobs:
           target: artifact
           outputs: type=local,dest=_site
           provenance: false
-          cache-from: type=gha
+          cache-from: type=gha,scope=artifact
       - name: Build toolchain image (for guard)
         uses: docker/build-push-action@v6
         with:
@@ -32,11 +32,13 @@ jobs:
           target: dev
           load: true
           tags: kd7swh-toolchain:ci
-          cache-from: type=gha
+          cache-from: type=gha,scope=dev
       - name: Guard — leakage and shape checks
         run: docker run --rm -v "$PWD:/site" kd7swh-toolchain:ci node tools/guard.mjs
       - name: Unit tests — publish.mjs
         run: docker run --rm -v "$PWD:/site" kd7swh-toolchain:ci node tools/publish.test.mjs
+      - name: Unit tests — spaceweather.mjs
+        run: docker run --rm -v "$PWD:/site" kd7swh-toolchain:ci node tools/spaceweather.test.mjs
       # Whole built site, not just /lun/ — a dead link in an archive year
       # must fail too. Self-origin absolute URLs (feed entry links) are
       # excluded: they only exist on the live site after deploy, and the

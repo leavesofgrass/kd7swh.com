@@ -138,6 +138,132 @@ button:focus-visible {
   font-size: 0.85rem;
 }
 
+/* ------------------------------------------------------- space weather */
+
+/* Condition colors are a colorblind-safe palette (Okabe-Ito family), used
+ * ONLY as an extra cue: every rating also carries a word and a symbol, and
+ * the cell text itself stays high-contrast, so nothing depends on color.
+ * Applied to the symbol/marker and a faint cell tint, never to the words. */
+:root {
+  --cond-good: #0a6ebd;      /* blue   */
+  --cond-fair: #9a6700;      /* amber  */
+  --cond-poor: #b3450f;      /* rust   */
+  --cond-good-bg: #e7f1fb;
+  --cond-fair-bg: #fbf1dd;
+  --cond-poor-bg: #fbe6dc;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --cond-good: #7fb8e6;
+    --cond-fair: #e6b34d;
+    --cond-poor: #f0895e;
+    --cond-good-bg: #14232f;
+    --cond-fair-bg: #2a2312;
+    --cond-poor-bg: #2c1a12;
+  }
+}
+:root[data-theme="light"] {
+  --cond-good: #0a6ebd; --cond-fair: #9a6700; --cond-poor: #b3450f;
+  --cond-good-bg: #e7f1fb; --cond-fair-bg: #fbf1dd; --cond-poor-bg: #fbe6dc;
+}
+:root[data-theme="dark"] {
+  --cond-good: #7fb8e6; --cond-fair: #e6b34d; --cond-poor: #f0895e;
+  --cond-good-bg: #14232f; --cond-fair-bg: #2a2312; --cond-poor-bg: #2c1a12;
+}
+
+table.bands { border-collapse: collapse; width: 100%; margin-block: 1rem; }
+table.bands th, table.bands td {
+  text-align: left; padding: 0.35rem 0.6rem; border-bottom: 1px solid var(--rule);
+}
+table.bands th[scope="row"] { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.cond-mark { font-weight: 700; }
+.cond-good { background: var(--cond-good-bg); }
+.cond-fair { background: var(--cond-fair-bg); }
+.cond-poor { background: var(--cond-poor-bg); }
+.cond-good .cond-mark { color: var(--cond-good); }
+.cond-fair .cond-mark { color: var(--cond-fair); }
+.cond-poor .cond-mark { color: var(--cond-poor); }
+.cond-closed .cond-mark { color: var(--muted); }
+.vhf-note { margin-block: 0.75rem; }
+
+/* Scale badges: a colored left border by severity, alongside the number+text. */
+.badge-caution { border-left: 4px solid var(--cond-fair); }
+.badge-alert { border-left: 4px solid var(--cond-poor); }
+
+/* Kp meter: color the filled cells by activity band (decorative; aria-hidden). */
+.kp-good .kp-filled { color: var(--cond-good); }
+.kp-fair .kp-filled { color: var(--cond-fair); }
+.kp-alert .kp-filled { color: var(--cond-poor); }
+
+.provenance { color: var(--muted); font-size: 0.95rem; }
+
+.banner {
+  border: 2px solid var(--rule);
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+}
+
+table.conditions, table.outlook {
+  border-collapse: collapse;
+  width: 100%;
+  margin-block: 1rem;
+}
+
+table.conditions th, table.conditions td,
+table.outlook th, table.outlook td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+table.conditions th[scope="row"],
+table.outlook th[scope="row"] { white-space: nowrap; }
+
+caption {
+  text-align: left;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+}
+
+/* Severity is carried by the text after the badge, never by color. */
+.badge {
+  display: inline-block;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 0 0.4rem;
+  font-variant-numeric: tabular-nums;
+}
+
+ul.scales { list-style: none; padding-left: 0; }
+ul.scales li { margin-block: 0.5rem; }
+
+.kp-meter {
+  font-family: ui-monospace, Consolas, monospace;
+  letter-spacing: 0.1em;
+}
+.kp-meter-text, .muted { color: var(--muted); font-size: 0.9rem; }
+
+.stale-note { color: var(--muted); font-style: italic; }
+
+pre.wwv {
+  border: 1px solid var(--rule);
+  padding: 0.75rem 1rem;
+  overflow-x: auto;
+  font-size: 0.95rem;
+}
+
+dl.glossary dt { font-weight: 600; margin-top: 0.8rem; }
+dl.glossary dd { margin-left: 0; margin-bottom: 0.4rem; }
+
+.notice { color: var(--muted); font-size: 0.85rem; }
+ul.sources { font-size: 0.9rem; }
+
+@media print {
+  table.conditions, table.outlook, pre.wwv { break-inside: avoid; }
+}
+
 /* ---------------------------------------------------------------- footer */
 
 .site-footer {

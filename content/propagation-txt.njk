@@ -1,0 +1,91 @@
+---
+layout: false
+permalink: /propagation.txt
+eleventyExcludeFromCollections: true
+---
+{%- set sw = spaceweather -%}
+{%- set m = sw.metrics if sw else false -%}
+SPACE WEATHER AND PROPAGATION - kd7swh.com/propagation
+======================================================
+{% if not m or sw.fetch_meta.total_outage %}
+Space-weather data is currently unavailable.
+Live dashboards: https://www.spaceweather.gov/
+{%- else %}
+Generated {{ sw.fetch_meta.generated_at | utcStamp }} - rebuilds about every 3 hours.
+Live graphics: https://www.spaceweather.gov/
+
+RIGHT NOW
+---------
+Solar flux (SFI) : {% if m.sfi.unavailable %}unavailable{% else %}{{ m.sfi.words | ascii }}{% endif %}
+Sunspot number   : {% if m.ssn.unavailable %}unavailable{% else %}{{ m.ssn.words | ascii }}{% endif %}
+Geomagnetic (Kp) : {% if m.kp.unavailable %}unavailable{% else %}{{ m.kp.words_ascii | ascii }}{% endif %}
+Solar wind       : {% if m.solar_wind.unavailable %}unavailable{% else %}{{ m.solar_wind.words | ascii }}{% endif %}
+Latest flare     : {% if m.flare.unavailable %}unavailable{% else %}{{ m.flare.words | ascii }}{% endif %}
+
+ESTIMATED BAND CONDITIONS (rough guide from flux + Kp, not a measurement)
+------------------------------------------------------------------------
+{% if not m.bands.unavailable and m.bands.hf -%}
+Key: [#] Good  [+] Fair  [-] Poor  [.] Closed
+Band     Day            Night
+{% for b in m.bands.hf -%}
+{{ b.band | padEnd(9) }}[{{ b.day.ascii }}] {{ b.day.label | padEnd(11) }}[{{ b.night.ascii }}] {{ b.night.label }}
+{% endfor -%}
+VHF (not flux-driven): 6m - {{ m.bands.vhf.six_m }}. 2m - {{ m.bands.vhf.two_m }}.
+Real-time truth: prop.kc2g.com and pskreporter.info
+{%- else -%}
+unavailable (needs both solar flux and Kp)
+{%- endif %}
+
+NOAA SCALES (0 = none; NOAA wording)
+------------------------------------
+{% if not m.scales_now.unavailable -%}
+R{{ m.scales_now.R.scale or "0" }} radio blackouts | S{{ m.scales_now.S.scale or "0" }} radiation storms | G{{ m.scales_now.G.scale or "0" }} geomagnetic storms
+{%- else -%}
+unavailable
+{%- endif %}
+
+GEOMAGNETIC DETAIL
+------------------
+{% if not m.kp.unavailable -%}
+{{ m.kp.words_ascii | ascii }}
+Kp 0-9: [{{ "#" | repeatChar(m.kp.cells) }}{{ "." | repeatChar(9 - m.kp.cells) }}] ({{ m.kp.cells }} of 9)
+{% endif -%}
+NOAA's storm scale: at Kp 7 (G3) aurora has been seen as far south as Oregon
+and Illinois (~50 deg geomagnetic latitude); at Kp 6 (G2), New York and Idaho.
+{% if not m.aurora_power.unavailable %}Aurora power now: {{ m.aurora_power.words | ascii }}.{% endif %}
+
+THREE-DAY OUTLOOK (dates UTC; "-" = not forecast that far)
+----------------------------------------------------------
+{% if not m.outlook.unavailable and m.outlook.days -%}
+Date      Highest Kp   Blackout    Storm
+{% for d in m.outlook.days -%}
+{{ (d.label or d.date) | padEnd(10) }}{{ (d.max_kp if d.max_kp != null else "-") | string | padEnd(13) }}{{ ((d.r_minor_prob | string + "%") if d.r_minor_prob != null else "-") | padEnd(12) }}{{ ("G" + d.g_scale) if d.g_scale != null else "-" }}
+{% endfor -%}
+{%- else -%}
+unavailable
+{%- endif %}
+
+READING THIS PAGE
+-----------------
+Nothing here depends on color; every reading is in words.
+SFI (solar flux): Sun's 10.7 cm radio output; higher opens the upper HF bands.
+  Band verdicts follow N0NBH (hamqsl.com); NOAA publishes the raw number.
+Sunspot number: daily sunspot count; rises and falls with the 11-year cycle.
+Kp: how disturbed Earth's field is, 0 (calm) to 9 (extreme). 5+ is a storm.
+Solar wind / Bz: particle stream and its field tilt; Bz at -5 nT or lower
+  (southward) drives storms; northward keeps things quiet.
+Times are UTC.
+{% if not m.wwv.unavailable and m.wwv.text %}
+LATEST WWV BULLETIN (issued {{ m.wwv.issued | utcStamp }})
+----------------------------------------------------------
+{{ m.wwv.text | ascii }}
+{%- endif %}
+SOURCES AND NOTICE
+------------------
+Data from NOAA Space Weather Prediction Center. Readings as of:
+{% for a in sw.fetch_meta.attempts %}{% set x = m[a.id] %}{% if not x.unavailable %}- {{ a.id | replace("_", " ") }}: {% if x.time_tag %}{{ x.time_tag | utcStamp }}{% else %}n/a{% endif %}{% if a.carried_forward %} (carried forward){% endif %}
+{% endif %}{% endfor %}
+NOAA data is a U.S. Government work not subject to copyright (17 USC 105);
+this site's copyright does not extend to it. Solar-flux band interpretations
+are N0NBH's. Not affiliated with or endorsed by NOAA.
+{%- endif %}

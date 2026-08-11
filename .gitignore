@@ -16,3 +16,8 @@ drafts/
 AGENT-HANDOFF.md
 kd7swh-site-plan.md
 EDITORIAL.md
+
+# Build-time space-weather data, fetched from NOAA. Never committed —
+# CI carries it between runs via actions/cache, and it changes every
+# rebuild (this is the one page exempt from byte-identical builds).
+content/_data/spaceweather.json

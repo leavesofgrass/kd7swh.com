@@ -1,0 +1,236 @@
+---
+layout: base.njk
+title: Space weather and propagation
+permalink: /propagation/index.html
+eleventyExcludeFromCollections: true
+---
+{% set sw = spaceweather %}
+{% set m = sw.metrics if sw else false %}
+
+{# Staleness suffix for a metric, in words — never color. #}
+{% macro note(x) %}
+{%- if x.unavailable -%}
+{%- elif x.expired %} <span class="stale-note">(feed interrupted; last reading {{ x.time_tag | utcTime }})</span>
+{%- elif x.stale %} <span class="stale-note">(as of {{ x.time_tag | utcTime }}, older than usual)</span>
+{%- endif -%}
+{% endmacro %}
+
+<h1>Space weather and propagation</h1>
+
+{% if not m or sw.fetch_meta.total_outage %}
+
+<p class="banner">Space-weather data is currently unavailable. NOAA's live
+dashboards are at
+<a href="https://www.spaceweather.gov/">spaceweather.gov</a>.</p>
+
+{% else %}
+
+<p class="provenance">Conditions for amateur radio, read from NOAA data.
+Generated <time datetime="{{ sw.fetch_meta.generated_at }}">{{ sw.fetch_meta.generated_at | utcStamp }}</time>;
+this page rebuilds about every three hours. For live graphics — including
+color maps and the aurora oval — see NOAA's
+<a href="https://www.spaceweather.gov/">spaceweather.gov</a>. Everything
+here is also available as
+<a href="/propagation.txt">plain text</a> and
+<a href="/propagation.json">JSON</a>. New to these numbers?
+<a href="#reading">Start at the bottom.</a></p>
+
+<h2>Right now</h2>
+
+<table class="conditions">
+  <caption>Current space-weather readings and what each one means for radio.</caption>
+  <thead>
+    <tr><th scope="col">Measurement</th><th scope="col">Reading</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">Solar flux (SFI)</th>
+      <td>{% if m.sfi.unavailable %}unavailable{% else %}{{ m.sfi.words }}{{ note(m.sfi) }}{% endif %}</td>
+    </tr>
+    <tr>
+      <th scope="row">Sunspot number</th>
+      <td>{% if m.ssn.unavailable %}unavailable{% else %}{{ m.ssn.words }}{{ note(m.ssn) }}{% endif %}</td>
+    </tr>
+    <tr>
+      <th scope="row">Geomagnetic activity (Kp)</th>
+      <td>{% if m.kp.unavailable %}unavailable{% else %}{{ m.kp.words }}{{ note(m.kp) }}{% endif %}</td>
+    </tr>
+    <tr>
+      <th scope="row">Solar wind</th>
+      <td>{% if m.solar_wind.unavailable %}unavailable{% else %}{{ m.solar_wind.words }}{{ note(m.solar_wind) }}{% endif %}</td>
+    </tr>
+    <tr>
+      <th scope="row">Latest X-ray flare</th>
+      <td>{% if m.flare.unavailable %}unavailable{% else %}{{ m.flare.words }}{{ note(m.flare) }}{% endif %}</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Estimated band conditions</h2>
+
+{% if not m.bands.unavailable and m.bands.hf %}
+<p>A rough guide to the high-frequency bands, day and night, estimated from
+the solar flux and Kp above — <strong>not a measurement</strong>. Each rating
+is shown three ways: the word, a symbol (filled = better), and a color. For
+what's actually open right now, real-time reports beat any estimate:
+<a href="https://prop.kc2g.com/">prop.kc2g.com</a> and
+<a href="https://pskreporter.info/">PSK Reporter</a>.</p>
+
+<table class="bands">
+  <caption>Estimated HF conditions. ● Good, ◐ Fair, ○ Poor, · Closed.</caption>
+  <thead>
+    <tr><th scope="col">Band</th><th scope="col">Day</th><th scope="col">Night</th></tr>
+  </thead>
+  <tbody>
+    {% for b in m.bands.hf %}
+    <tr>
+      <th scope="row">{{ b.band }}</th>
+      <td class="cond cond-{{ b.day.cls }}"><span class="cond-mark" aria-hidden="true">{{ b.day.mark }}</span> {{ b.day.label }}</td>
+      <td class="cond cond-{{ b.night.cls }}"><span class="cond-mark" aria-hidden="true">{{ b.night.mark }}</span> {{ b.night.label }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<p class="vhf-note"><strong>VHF:</strong> the higher bands don't follow solar
+flux — they open on sporadic-E and aurora. <strong>6 m</strong> — {{ m.bands.vhf.six_m }}.
+<strong>2 m</strong> — {{ m.bands.vhf.two_m }}.</p>
+{% else %}
+<p>Band-condition estimates need both the solar flux and Kp; one of them is
+unavailable right now.</p>
+{% endif %}
+
+<h2>Radio blackout, radiation, and geomagnetic scales</h2>
+
+<p>NOAA rates three kinds of space weather on a 1-to-5 scale; level 0 means
+none. The scale names are NOAA's; the short radio notes are added here.</p>
+
+{% if not m.scales_now.unavailable %}
+<ul class="scales">
+  <li><strong class="badge badge-{{ m.scales_now.R.scale | sevClass }}">R{{ m.scales_now.R.scale or "0" }}</strong>
+    radio blackouts —
+    {% if (m.scales_now.R.scale or "0") == "0" %}none; HF is not being degraded by flares.{% else %}{{ m.scales_now.R.text }}: HF radio degraded on the sunlit side.{% endif %}</li>
+  <li><strong class="badge badge-{{ m.scales_now.S.scale | sevClass }}">S{{ m.scales_now.S.scale or "0" }}</strong>
+    solar radiation storms —
+    {% if (m.scales_now.S.scale or "0") == "0" %}none.{% else %}{{ m.scales_now.S.text }}: raised absorption near the poles.{% endif %}</li>
+  <li><strong class="badge badge-{{ m.scales_now.G.scale | sevClass }}">G{{ m.scales_now.G.scale or "0" }}</strong>
+    geomagnetic storms —
+    {% if (m.scales_now.G.scale or "0") == "0" %}none; the geomagnetic field is stable.{% else %}{{ m.scales_now.G.text }}: HF fades at higher latitudes, aurora more likely.{% endif %}</li>
+</ul>
+{% else %}
+<p>Scale data is unavailable right now.</p>
+{% endif %}
+
+<h2>Geomagnetic detail</h2>
+
+{% if not m.kp.unavailable %}
+<p>{{ m.kp.words }}.</p>
+<p class="kp-meter-row">Kp scale 0 to 9:
+  <span class="kp-meter kp-{{ m.kp.cls }}" aria-hidden="true"><span class="kp-filled">{{ "▮" | repeatChar(m.kp.cells) }}</span>{{ "▯" | repeatChar(9 - m.kp.cells) }}</span>
+  <span class="kp-meter-text">({{ m.kp.cells }} of 9)</span></p>
+{% endif %}
+<p>NOAA's storm scale notes how far south aurora has been seen: at Kp 7
+(G3), as far as Oregon and Illinois — around 50° geomagnetic latitude; at
+Kp 6 (G2), New York and Idaho. Below that it stays well to the north.</p>
+{% if not m.aurora_power.unavailable %}
+<p>Aurora power now: {{ m.aurora_power.words }}.{{ note(m.aurora_power) }}
+  (Higher power means a brighter, lower-reaching oval.)</p>
+{% endif %}
+
+<h2>Three-day outlook</h2>
+
+{% if not m.outlook.unavailable and m.outlook.days %}
+<table class="outlook">
+  <caption>NOAA forecast: highest Kp expected each day (higher means more
+    geomagnetic activity), the chance of an HF radio blackout, and the
+    expected geomagnetic storm level. Dates are UTC.</caption>
+  <thead>
+    <tr>
+      <th scope="col">Date (UTC)</th>
+      <th scope="col">Highest Kp</th>
+      <th scope="col">Radio-blackout chance</th>
+      <th scope="col">Geomagnetic storm</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for d in m.outlook.days %}
+    <tr>
+      <th scope="row">{{ d.label or d.date }}</th>
+      <td>{% if d.max_kp != null %}{{ d.max_kp }}{% else %}—{% endif %}</td>
+      <td>{% if d.r_minor_prob != null %}{{ d.r_minor_prob }}%{% else %}—{% endif %}</td>
+      <td>{% if d.g_scale != null %}G{{ d.g_scale }}{% else %}—{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<p class="muted">A dash means NOAA's forecast for that measure does not
+reach that day.</p>
+{% else %}
+<p>The three-day outlook is unavailable right now.</p>
+{% endif %}
+
+<h2 id="reading">Reading this page</h2>
+
+<p>None of the information here depends on color — every reading is written
+out in words, so it works the same in a screen reader, a text browser, or
+on paper. Here is what the numbers mean.</p>
+
+<dl class="glossary">
+  <dt><dfn>SFI, the solar flux index</dfn></dt>
+  <dd>A measure of the Sun's radio output at 10.7 cm, which tracks how well
+    the upper ionosphere reflects signals. Higher generally means the higher
+    HF bands (10, 12, 15 metres) open up. The band interpretations here follow
+    Paul Herrman, N0NBH (<a href="https://www.hamqsl.com/solar2.html">hamqsl.com</a>);
+    NOAA publishes the raw number, not the band verdicts.</dd>
+
+  <dt><dfn>Sunspot number</dfn></dt>
+  <dd>A daily count of sunspots and sunspot groups. It rises and falls with
+    the roughly 11-year solar cycle and moves with the solar flux.</dd>
+
+  <dt><dfn>Kp, the planetary K-index</dfn></dt>
+  <dd>How disturbed Earth's magnetic field is, from 0 (calm) to 9 (extreme
+    storm), averaged over three hours from magnetometers worldwide. Higher
+    Kp means more high-latitude HF trouble and a better chance of aurora.
+    NOAA counts Kp 5 and above as a geomagnetic storm.</dd>
+
+  <dt><dfn>Solar wind and Bz</dfn></dt>
+  <dd>The stream of particles from the Sun, and the north–south tilt of the
+    magnetic field it carries (Bz). A southward Bz, roughly −5 nanotesla or
+    lower, lets the solar wind pour energy into Earth's field and drive
+    storms; a northward Bz keeps things quiet.</dd>
+
+  <dt><dfn>WWV</dfn></dt>
+  <dd>The time-standard station whose hourly voice bulletins have carried
+    these numbers to operators for decades. NOAA's text version is quoted
+    below, unchanged.</dd>
+</dl>
+
+<p>Times on this page are in Coordinated Universal Time (UTC), the standard
+for space-weather data — the same clock the net's log and most radio
+operation use.</p>
+
+{% if not m.wwv.unavailable and m.wwv.text %}
+<h2>Latest WWV bulletin</h2>
+<p>NOAA's geophysical alert, issued {{ m.wwv.issued | utcStamp }}, quoted in
+full:</p>
+<pre class="wwv">{{ m.wwv.text }}</pre>
+{% endif %}
+
+<h2>Sources and notice</h2>
+
+<p>All data is from NOAA's Space Weather Prediction Center. Each reading is
+current as of the time shown:</p>
+
+<ul class="sources">
+  {% for a in sw.fetch_meta.attempts %}{% set x = m[a.id] %}{% if not x.unavailable %}
+  <li>{{ a.id | replace("_", " ") }} — <a href="{{ x.source_url }}">source</a>{% if x.time_tag %}, as of {{ x.time_tag | utcStamp }}{% endif %}{% if a.carried_forward %} (carried forward from a previous fetch){% endif %}</li>
+  {% endif %}{% endfor %}
+</ul>
+
+<p class="notice">Space-weather data on this page comes from NOAA's Space
+Weather Prediction Center, a work of the United States Government not subject
+to copyright (17 U.S.C. § 105); this site's own copyright does not extend to
+it. Band-condition interpretations for solar flux are Paul Herrman's, N0NBH.
+This page is not affiliated with or endorsed by NOAA.</p>
+
+{% endif %}

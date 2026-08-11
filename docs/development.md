@@ -7,6 +7,7 @@ Everything runs in containers; nothing installs on the host.
 | Dev server with live reload | `docker compose up dev` → http://localhost:8080 |
 | Production build to `./_site` | `docker compose run --rm build` |
 | Checked drafts → this week's page | `docker compose run --rm publish` |
+| Fetch NOAA data for /propagation/ | `docker compose run --rm fetch` |
 | Leakage and shape checks | `docker compose run --rm guard` |
 | Every link resolves | `docker compose run --rm links` |
 | Inject a late-breaking story | `./tools/add-story.sh <url>` |
@@ -45,6 +46,12 @@ Live and verified by 7:00 PM Pacific. Net at 8:10.
   unless it is explicitly marked `[x]`.
 - **A date looks off by one** — dates are formatted in UTC on purpose;
   format them any other way and every heading shifts a day.
+- **`/propagation/` differs between two builds** — expected. It is the one
+  page built from live NOAA data (`content/_data/spaceweather.json`, fetched
+  at build time, gitignored). Every other page is byte-identical between
+  local and CI; this one is a pure function of the fetched data, so it
+  matches CI only when built from the same fetch. Run
+  `docker compose run --rm fetch` before building to see current conditions.
 
 ## Rehosting
 

@@ -14,6 +14,7 @@ lives at [kd7swh.com/lun](/lun/).
 - **When:** Mondays, 8:10–9:00 PM Pacific
 - **Where:** the Amateur Radio Relay Group's K7RPT repeater system, Oregon
 - **Net manager:** Russ, KC7MM
+- **Band conditions:** [space weather and propagation](/propagation/), before you get on the air
 
 ## Repeaters
 

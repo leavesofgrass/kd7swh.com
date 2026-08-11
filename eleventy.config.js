@@ -1,4 +1,5 @@
 import pluginRss from "@11ty/eleventy-plugin-rss";
+import { existsSync } from "node:fs";
 
 export default function (eleventyConfig) {
   // Filters for the hand-written feed templates: dateToRfc3339,
@@ -7,6 +8,52 @@ export default function (eleventyConfig) {
 
   // Passthrough paths are relative to the project root, not the input dir.
   eleventyConfig.addPassthroughCopy({ "css": "css" });
+
+  // The machine-readable space-weather edition IS the build-time data file,
+  // copied verbatim to /propagation.json. Only when present — PR builds run
+  // no fetch step and simply omit it, which the page handles as no-data.
+  if (existsSync("content/_data/spaceweather.json")) {
+    eleventyConfig.addPassthroughCopy({
+      "content/_data/spaceweather.json": "propagation.json",
+    });
+  }
+
+  // Repeat a filled/empty block glyph n times — the aria-hidden Kp meter.
+  eleventyConfig.addFilter("repeatChar", (ch, n) =>
+    ch.repeat(Math.max(0, Math.min(9, Number(n) || 0)))
+  );
+
+  // Space-weather timestamps: everything shown in UTC (the data's own zone).
+  eleventyConfig.addFilter("utcStamp", (iso) =>
+    typeof iso === "string" && iso.length >= 16
+      ? `${iso.slice(0, 10)} ${iso.slice(11, 16)} UTC` : ""
+  );
+  eleventyConfig.addFilter("utcTime", (iso) =>
+    typeof iso === "string" && iso.length >= 16 ? `${iso.slice(11, 16)} UTC` : ""
+  );
+
+  // Fold typographic punctuation to ASCII for the plain-text edition, so it
+  // reads cleanly over packet radio and on legacy terminals.
+  eleventyConfig.addFilter("ascii", (s) =>
+    String(s == null ? "" : s)
+      .replace(/[—–−]/g, "-")
+      .replace(/[“”]/g, '"')
+      .replace(/[‘’]/g, "'")
+  );
+
+  // Fixed-width column padding for the plain-text outlook table.
+  eleventyConfig.addFilter("padEnd", (s, n) =>
+    String(s == null ? "" : s).padEnd(Number(n) || 0)
+  );
+
+  // Severity class for a NOAA R/S/G scale number — a color cue that always
+  // sits alongside the number and its text, never alone.
+  eleventyConfig.addFilter("sevClass", (scale) => {
+    const s = String(scale == null ? "0" : scale);
+    if (s === "0") return "none";
+    if (s === "1" || s === "2") return "caution";
+    return "alert";
+  });
 
   // One entry per week, newest first.
   eleventyConfig.addCollection("lun", (collectionApi) =>

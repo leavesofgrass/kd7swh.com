@@ -1,12 +1,27 @@
 # Build and deploy kd7swh.com. The site is built by the SAME Dockerfile as
 # local dev — CI does not reimplement the build with setup-node and hope it
 # matches. Same stages, same lockfile, same digest-pinned base image.
+#
+# Local and CI builds are byte-identical for a given source tree, with two
+# expected exceptions: /propagation/, /propagation.txt, and /propagation.json
+# are pure functions of the NOAA data fetched at build time into
+# content/_data/spaceweather.json (gitignored, carried between runs via
+# actions/cache — run `docker compose run --rm fetch` locally to match), and
+# /lun/ selects which weeks render inline by the current year, so it too is a
+# function of the build date. Everything else is reproducible byte-for-byte.
 name: pages
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    # Refresh space-weather data ~every 3 hours (matches the Kp cadence).
+    # Minute 17 dodges the top-of-hour crush; GitHub still delays scheduled
+    # runs by 5–30 min, which is fine here. NOTE: GitHub disables schedules
+    # after 60 days without repo activity — the weekly lun commits keep this
+    # alive, and the page's "Generated …" line is the tell if it ever freezes.
+    - cron: "17 */3 * * *"
 
 permissions:
   contents: read
@@ -23,6 +38,39 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-buildx-action@v3
+
+      # Toolchain image first: it runs the fetch and the guard, and the
+      # artifact build needs the fetched data file to exist beforehand.
+      # cache-to mode=max here so scheduled runs skip the apt layer.
+      - name: Build toolchain image (fetch + guard)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: dev
+          load: true
+          tags: kd7swh-toolchain:ci
+          cache-from: type=gha,scope=dev
+          cache-to: type=gha,mode=max,scope=dev
+
+      - name: Restore last-known-good space-weather data
+        uses: actions/cache/restore@v4
+        with:
+          path: content/_data/spaceweather.json
+          key: spaceweather-${{ github.run_id }}   # never matches; forces restore-keys
+          restore-keys: spaceweather-
+
+      - name: Fetch space weather (best-effort; merges over last-known-good)
+        # Run as the runner's uid so the container (USER node) can write the
+        # data file into the runner-owned workspace.
+        run: docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/site" kd7swh-toolchain:ci node tools/fetch-spaceweather.mjs
+
+      - name: Save last-known-good
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: content/_data/spaceweather.json
+          key: spaceweather-${{ github.run_id }}
+
       - name: Build site (artifact stage)
         uses: docker/build-push-action@v6
         with:
@@ -32,24 +80,19 @@ jobs:
           # No provenance attestation: it writes provenance.json into the
           # local output, which would get deployed with the site.
           provenance: false
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-      - name: Build toolchain image (for guard)
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          target: dev
-          load: true
-          tags: kd7swh-toolchain:ci
-          cache-from: type=gha
+          cache-from: type=gha,scope=artifact
+          cache-to: type=gha,mode=max,scope=artifact
+
       - name: Guard — leakage and shape checks
         run: docker run --rm -v "$PWD:/site" kd7swh-toolchain:ci node tools/guard.mjs
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
 
   deploy:
-    # Deploys run ONLY from main.
+    # Deploys run ONLY from main (push, workflow_dispatch, and schedule all
+    # carry ref refs/heads/main).
     if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest

@@ -45,6 +45,18 @@ services:
       - node_modules:/site/node_modules
     command: ["node", "tools/publish.mjs"]
 
+  # Fetch NOAA space-weather data into content/_data/spaceweather.json for
+  # the /propagation/ page. Best-effort; never fails the build. See
+  # tools/fetch-spaceweather.mjs.
+  fetch:
+    build:
+      context: .
+      target: dev
+    volumes:
+      - .:/site
+      - node_modules:/site/node_modules
+    command: ["node", "tools/fetch-spaceweather.mjs"]
+
   # Leakage and shape checks before publishing.
   guard:
     build:
