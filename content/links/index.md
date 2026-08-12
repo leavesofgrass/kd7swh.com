@@ -15,7 +15,7 @@ cluster — a few good doors into each room rather than everything I've
 ever read. (Distinct from the [Linux User Net weekly list](/lun/), which
 is what got read on the air.)
 
-## Ham radio — Pacific Northwest
+## Amateur radio — Pacific Northwest
 
 - [ARRG](https://arrg.org/) — the Amateur Radio Relay Group, whose K7RPT
   repeater system carries the [Linux User Net](/lun/info/)
@@ -65,10 +65,11 @@ is what got read on the air.)
 
 ## Accessibility and standards
 
-- [The A11Y Project](https://www.a11yproject.com/) — a community-driven
-  checklist culture for shipping accessible work
 - [BRLTTY](https://brltty.app/) — refreshable braille displays on the
   Linux console
+- [DAISY Consortium](https://daisy.org/) — the international standards body
+  for accessible publishing and reading, from talking books to accessible
+  EPUB
 - [Emacspeak](https://emacspeak.sourceforge.net/) — the complete audio
   desktop: Emacs that speaks, going strong for three decades
 - [eSpeak NG](https://github.com/espeak-ng/espeak-ng) — the compact
