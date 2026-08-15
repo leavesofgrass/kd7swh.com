@@ -46,6 +46,9 @@ Live and verified by 7:00 PM Pacific. Net at 8:10.
   unless it is explicitly marked `[x]`.
 - **A date looks off by one** — dates are formatted in UTC on purpose;
   format them any other way and every heading shifts a day.
+- **A new page is missing from `/sitemap.xml`** — pages marked
+  `eleventyExcludeFromCollections` are invisible to `collections.all`,
+  so `content/sitemap.njk` lists them by hand. Add the URL there.
 - **`/propagation/` differs between two builds** — expected. It is the one
   page built from live NOAA data (`content/_data/spaceweather.json`, fetched
   at build time, gitignored). Every other page is byte-identical between

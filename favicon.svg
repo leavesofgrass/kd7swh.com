@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <!-- A station on the air: one dot, three arcs. Colors match the site's
+       text color in each scheme; browsers without media-query support in
+       favicons just get the light-scheme mark. -->
+  <style>
+    .wave { stroke: #1b1b1b; stroke-width: 1.8; stroke-linecap: round; fill: none; }
+    .dot { fill: #1b1b1b; }
+    @media (prefers-color-scheme: dark) {
+      .wave { stroke: #e8e8e8; }
+      .dot { fill: #e8e8e8; }
+    }
+  </style>
+  <circle class="dot" cx="3.2" cy="12.8" r="2"/>
+  <path class="wave" d="M3.2 8.3 A4.5 4.5 0 0 1 7.7 12.8"/>
+  <path class="wave" d="M3.2 4.8 A8 8 0 0 1 11.2 12.8"/>
+  <path class="wave" d="M3.2 1.3 A11.5 11.5 0 0 1 14.7 12.8"/>
+</svg>

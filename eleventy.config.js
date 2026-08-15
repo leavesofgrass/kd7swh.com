@@ -8,6 +8,7 @@ export default function (eleventyConfig) {
 
   // Passthrough paths are relative to the project root, not the input dir.
   eleventyConfig.addPassthroughCopy({ "css": "css" });
+  eleventyConfig.addPassthroughCopy({ "favicon.svg": "favicon.svg" });
 
   // The machine-readable space-weather edition IS the build-time data file,
   // copied verbatim to /propagation.json. Only when present — PR builds run
@@ -116,6 +117,17 @@ export default function (eleventyConfig) {
   // set-inside-loop scoping games.
   eleventyConfig.addFilter("inGroup", (items, group) =>
     (items || []).filter((p) => p.data.group === group)
+  );
+
+  // Sitemap enumeration: directory-style HTML pages only, sorted by URL.
+  // collections.all orders by date, and pages without a front-matter date
+  // fall back to file mtime — which a fresh CI checkout resets — so the
+  // sort keeps /sitemap.xml byte-identical between local and CI builds.
+  eleventyConfig.addFilter("sitemapUrls", (items) =>
+    (items || [])
+      .map((p) => p.url)
+      .filter((u) => typeof u === "string" && u.endsWith("/"))
+      .sort()
   );
 
   // The year "now", Pacific — /lun/ uses it to pick which weeks render

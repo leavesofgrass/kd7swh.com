@@ -1,0 +1,28 @@
+---
+layout: false
+permalink: /sitemap.xml
+eleventyExcludeFromCollections: true
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{%- for u in collections.all | sitemapUrls %}
+  <url><loc>{{ siteUrl }}{{ u }}</loc></url>
+{%- endfor %}
+{#- Pages excluded from collections are invisible to the loop above, and
+    each exclusion is load-bearing (index pages would otherwise list
+    themselves; the week and archive templates paginate). They are listed
+    by hand here instead — add to this list when adding such a page.
+    /net/ is a redirect stub and stays out on purpose. #}
+  <url><loc>{{ siteUrl }}/links/</loc></url>
+  <url><loc>{{ siteUrl }}/lun/</loc></url>
+  <url><loc>{{ siteUrl }}/lun/archive/</loc></url>
+{%- for y in collections.lunArchiveYears %}
+  <url><loc>{{ siteUrl }}/lun/archive/{{ y.year }}/</loc></url>
+{%- endfor %}
+{%- for week in collections.lun %}
+  <url><loc>{{ siteUrl }}/lun/{{ week.date | isoDate }}/</loc></url>
+{%- endfor %}
+  <url><loc>{{ siteUrl }}/notes/</loc></url>
+  <url><loc>{{ siteUrl }}/projects/</loc></url>
+  <url><loc>{{ siteUrl }}/propagation/</loc></url>
+</urlset>
