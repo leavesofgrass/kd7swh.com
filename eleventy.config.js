@@ -63,6 +63,17 @@ export default function (eleventyConfig) {
       .sort((a, b) => b.date - a.date)
   );
 
+  // The site feed: every dated thing on the site — notes and LUN weeks —
+  // newest first. Undated pages (projects, about) stay out: a feed entry
+  // needs a real date, and their only candidate, file mtime, differs on
+  // every CI checkout, which would break byte-identical builds.
+  eleventyConfig.addCollection("siteFeed", (collectionApi) =>
+    [
+      ...collectionApi.getFilteredByTag("notes"),
+      ...collectionApi.getFilteredByGlob("content/lun/*.md"),
+    ].sort((a, b) => b.date - a.date)
+  );
+
   // Prior years, newest first, for /lun/archive/. The current year renders
   // at /lun/ instead.
   eleventyConfig.addCollection("lunArchiveYears", (collectionApi) => {

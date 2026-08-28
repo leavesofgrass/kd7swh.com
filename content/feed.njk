@@ -10,15 +10,21 @@ eleventyExcludeFromCollections: true
   <link href="{{ siteUrl }}/feed.xml" rel="self"/>
   <link href="{{ siteUrl }}/"/>
   <id>{{ siteUrl }}/</id>
-  <updated>{% if collections.lun.length %}{{ collections.lun | getNewestCollectionItemDate | dateToRfc3339 }}{% else %}{{ siteEpoch }}{% endif %}</updated>
+  <updated>{% if collections.siteFeed.length %}{{ collections.siteFeed | getNewestCollectionItemDate | dateToRfc3339 }}{% else %}{{ siteEpoch }}{% endif %}</updated>
   <author><name>KD7SWH</name></author>
-{%- for week in collections.lun %}
+{%- for item in collections.siteFeed %}
   <entry>
-    <title>Linux User Net — week of {{ week.date | dateHeading }}</title>
-    <link href="{{ siteUrl }}/lun/{{ week.date | isoDate }}/"/>
-    <id>{{ siteUrl }}/lun/{{ week.date | isoDate }}/</id>
-    <updated>{{ week.date | dateToRfc3339 }}</updated>
-    <content type="html">{{ week.templateContent }}</content>
+  {%- if item.data.tags and "notes" in item.data.tags %}
+    <title>{{ item.data.title }}</title>
+    <link href="{{ siteUrl }}{{ item.url }}"/>
+    <id>{{ siteUrl }}{{ item.url }}</id>
+  {%- else %}
+    <title>Linux User Net — week of {{ item.date | dateHeading }}</title>
+    <link href="{{ siteUrl }}/lun/{{ item.date | isoDate }}/"/>
+    <id>{{ siteUrl }}/lun/{{ item.date | isoDate }}/</id>
+  {%- endif %}
+    <updated>{{ item.date | dateToRfc3339 }}</updated>
+    <content type="html">{{ item.templateContent }}</content>
   </entry>
 {%- endfor %}
 </feed>

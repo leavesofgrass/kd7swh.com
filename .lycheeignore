@@ -21,3 +21,8 @@ https://nerds.xyz/2026/05/flipper-one-linux-cyberdeck/
 https://nerds.xyz/ubuntu-linux-25-10-quietly-kills-off-gnome-on-xorg-as-wayland-takes-over/
 https://www.fsf.org/blogs/licensing/llama-3-1-community-license-is-not-a-free-software-license/
 https://www.reuters.com/world/asia-pacific/sk-hynix-ceo-sees-worst-ever-memory-supply-shortage-2027-says-demand-outstrip-2026-07-10/
+# groups.io hosts the net's own forum (linked from every LUN footer). It
+# blocks automated clients even when healthy, and a site-wide outage on
+# 2026-08-28 turned every check into a 404 — 103 at once. Excluded so
+# net-night sanity gates never hang on a third party's weather.
+https://groups.io/
