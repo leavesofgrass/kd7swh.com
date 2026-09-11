@@ -19,8 +19,9 @@ is what got read on the air.)
 
 - [ARRG](https://arrg.org/) — the Amateur Radio Relay Group, whose K7RPT
   repeater system carries the [Linux User Net](/lun/info/)
-- [Cascadia Mesh](https://cascadiamesh.org/) — mesh networking community
-  in the Pacific Northwest
+- [Cascadia Mesh](https://cascadiamesh.org/) — the Pacific Northwest's
+  mesh networking community, running on MeshCore rather than
+  [Meshtastic](https://meshtastic.org/), the other LoRa mesh system
 - [Multnomah County ARES](https://multnomahares.org/) — the Amateur Radio
   Emergency Service field organization for Multnomah County
 - [Portland NET radio](https://www.portland.gov/pbem/neighborhood-emergency-teams/crtradio)
@@ -28,6 +29,18 @@ is what got read on the air.)
   volunteers, run by the city's Bureau of Emergency Management
 - [Willamette Valley Mesh Network](https://willamettevalleymesh.net/) —
   high-speed emergency data over an amateur radio mesh network (AREDN)
+
+## Software radio and digital voice
+
+- [FreeDV RADE](https://freedv.org/radio-autoencoder/) — open-source
+  digital voice for HF, rebuilt around machine learning
+- [rtl_433](https://github.com/merbanan/rtl_433/) — decodes weather
+  stations, utility meters, and other ISM-band chatter with a cheap
+  RTL-SDR dongle
+- [SDRconnect](https://sdrplay.com/sdrconnect/) — SDRplay's
+  cross-platform client for their RSP receivers, local or remote
+- [SDRoxide](https://sdroxide.com/) — a universal SDR transceiver
+  written in Rust, with text-to-speech for blind operators built in
 
 ## Linux
 

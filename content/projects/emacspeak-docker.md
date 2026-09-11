@@ -39,6 +39,10 @@ every trap, every undocumented assumption, every piece of the stack from
 Emacs down to the sound card, written out step by step with reasons — so
 this setup never has to be reverse-engineered again.
 
+The longer story — the voices, their history, and why a talking Emacs
+still matters in 2026 — is in the notes:
+[A Voice Worth Listening To](/notes/a-voice-worth-listening-to/).
+
 Shell scripts and a Dockerfile, under the same license as Emacspeak
 itself. Code and the complete guide at
 [github.com/leavesofgrass/emacspeak-docker](https://github.com/leavesofgrass/emacspeak-docker).

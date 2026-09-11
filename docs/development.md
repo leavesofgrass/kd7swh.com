@@ -46,6 +46,11 @@ Live and verified by 7:00 PM Pacific. Net at 8:10.
   unless it is explicitly marked `[x]`.
 - **A date looks off by one** — dates are formatted in UTC on purpose;
   format them any other way and every heading shifts a day.
+- **A note renders in dev but is missing from the deploy** — it's
+  untracked; deploys ride git, which never sees it. That's also the
+  preview trick: drop a draft, untracked, into `content/notes/` and the
+  dev server renders it like the real thing. `git add` it when it's
+  ready, or delete it — nothing ships by accident.
 - **A new page is missing from `/sitemap.xml`** — pages marked
   `eleventyExcludeFromCollections` are invisible to `collections.all`,
   so `content/sitemap.njk` lists them by hand. Add the URL there.
