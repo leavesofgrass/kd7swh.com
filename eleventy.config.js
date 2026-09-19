@@ -9,6 +9,10 @@ export default function (eleventyConfig) {
   // Passthrough paths are relative to the project root, not the input dir.
   eleventyConfig.addPassthroughCopy({ "css": "css" });
   eleventyConfig.addPassthroughCopy({ "favicon.svg": "favicon.svg" });
+  // Unlisted utility page (Jon, 2026-09-18): passthrough verbatim; never
+  // in collections, the sitemap, the feeds, or the nav. Link checks and
+  // the guard denylist exempt it by path.
+  eleventyConfig.addPassthroughCopy({ "nclex": "nclex" });
 
   // The machine-readable space-weather edition IS the build-time data file,
   // copied verbatim to /propagation.json. Only when present — PR builds run

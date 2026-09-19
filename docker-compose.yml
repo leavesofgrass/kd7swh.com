@@ -83,6 +83,10 @@ services:
       - "/data"
       - "--exclude-file"
       - "/ignore"
+      # /nclex/ is an unlisted utility page; its links point into
+      # auth-walled course systems that no checker can resolve.
+      - "--exclude-path"
+      - "/data/nclex"
       # Self-origin absolute URLs (the feeds' entry links) point at pages
       # that only exist after this very build deploys — skip them; the
       # same pages are checked as files via --root-dir.

@@ -1,0 +1,440 @@
+<title>NRS 332 Game Central</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root {
+  --bg: #F4F2EF;
+  --surface: #FFFFFF;
+  --text: #2A2D2E;
+  --text-muted: #71757A;
+  --accent: #2B7A78;
+  --accent-light: #E4F0EF;
+  --cta: #D96B4E;
+  --cta-hover: #C25A3F;
+  --border: #DDD9D4;
+  --pill-bg: #E8E5E1;
+  --pill-active-bg: #2B7A78;
+  --pill-active-text: #FFFFFF;
+  --ready-dot: #4CAF50;
+  --shot-bg: #ECEAE6;
+  --shadow: 0 1px 8px rgba(42,45,46,0.06);
+  --mono: 'Consolas', 'SF Mono', 'Courier New', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1B1E1F;
+    --surface: #262A2B;
+    --text: #E5E3E0;
+    --text-muted: #9A9EA3;
+    --accent: #52CFCA;
+    --accent-light: #1D3332;
+    --cta: #EB8E74;
+    --cta-hover: #D96B4E;
+    --border: #393D3E;
+    --pill-bg: #303435;
+    --pill-active-bg: #52CFCA;
+    --pill-active-text: #1B1E1F;
+    --ready-dot: #66BB6A;
+    --shot-bg: #303435;
+    --shadow: 0 1px 8px rgba(0,0,0,0.2);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #1B1E1F;
+  --surface: #262A2B;
+  --text: #E5E3E0;
+  --text-muted: #9A9EA3;
+  --accent: #52CFCA;
+  --accent-light: #1D3332;
+  --cta: #EB8E74;
+  --cta-hover: #D96B4E;
+  --border: #393D3E;
+  --pill-bg: #303435;
+  --pill-active-bg: #52CFCA;
+  --pill-active-text: #1B1E1F;
+  --ready-dot: #66BB6A;
+  --shot-bg: #303435;
+  --shadow: 0 1px 8px rgba(0,0,0,0.2);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+  padding-inline: 16px;
+  padding-block: 0;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 1.625rem;
+  font-weight: 700;
+  margin: 1.75rem 0 0.25rem;
+  text-wrap: balance;
+}
+
+.intro {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0 0 1.25rem;
+}
+
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1.25rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+
+.progress-track {
+  flex: 1;
+  height: 4px;
+  background: var(--pill-bg);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+.week-nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  margin-bottom: 1.25rem;
+  scrollbar-width: thin;
+}
+
+.week-pill {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  border-radius: 100px;
+  border: 1px solid transparent;
+  background: var(--pill-bg);
+  color: var(--text);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.825rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.week-pill:hover { border-color: var(--border); }
+
+.week-pill.active {
+  background: var(--pill-active-bg);
+  color: var(--pill-active-text);
+  border-color: transparent;
+}
+
+.week-pill .dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ready-dot);
+}
+
+.week-pill:focus-visible, .open-link:focus-visible, .copy-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.card-heading {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0 0 1rem;
+}
+
+.label {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin: 0 0 0.5rem;
+}
+
+.shot-box {
+  background: var(--shot-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.75rem;
+  margin-bottom: 1.25rem;
+  overflow-x: auto;
+}
+
+.shot-box img {
+  width: 100%;
+  max-height: 380px;
+  object-fit: cover;
+  object-position: center bottom;
+  border-radius: 4px;
+  display: block;
+}
+
+.links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.link-item {
+  background: var(--accent-light);
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.link-name {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+.pw-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pw-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.pw-value {
+  font-family: var(--mono);
+  font-size: 0.875rem;
+  background: var(--surface);
+  padding: 3px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  user-select: all;
+}
+
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.copy-btn:hover { color: var(--text); border-color: var(--accent); }
+
+.copy-btn svg { width: 12px; height: 12px; }
+
+.open-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background: var(--cta);
+  color: #fff;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.open-link:hover { background: var(--cta-hover); }
+
+.open-link svg { width: 15px; height: 15px; fill: currentColor; flex-shrink: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
+}
+</style>
+
+<h1>NRS 332 Game Central</h1>
+<p class="intro">Games and review activities from NRS 332 Acute Care Nursing (Spring 2026). Find the password for each game (if required), copy it, then click to open.</p>
+
+<div class="progress" role="status">
+  <span id="prog-label">11 / 11 weeks ready</span>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:100%"></div></div>
+</div>
+
+<nav class="week-nav" id="nav" role="tablist" aria-label="Select week"></nav>
+<main class="card" id="panel" role="tabpanel"></main>
+
+<script>
+var W = [
+  { n:1, shot:'images/week1.webp', links:[
+    { name:'Prioritization, Delegation, Sudden Death \x26 Failure to Rescue Jeopardy', pw:'Prioritization!', url:'https://view.genially.com/69b9e653c2296a69966334bb' },
+    { name:'Prioritization and Delegation Jeopardy Review #2', pw:'Prioritization#2', url:'https://view.genially.com/69b9e67f25809614988052fb' }
+  ]},
+  { n:2, shot:'images/week2.webp', links:[
+    { name:'Jeopardy Perioperative Game', pw:'Sp26Periop#1', url:'https://view.genially.com/69bdd52c24e1c2ad67bdb409' },
+    { name:'Jeopardy Hematology Game', pw:'Sp26Hematology#1', url:'https://view.genially.com/69bdd521b3af69256c22ae72' },
+    { name:'Jeopardy Periop \x26 Hematology Game', pw:'Sp26PeriopHema#1', url:'https://view.genially.com/69bdd559aab60b60d6a65da0' },
+    { name:'Perioperative CYOP Game', pw:'Sp26Periop', url:'https://view.genially.com/69bdd44fcc8ed350469b1370' }
+  ]},
+  { n:3, shot:'images/week3.png', links:[
+    { name:'Respiratory Alterations Jeopardy', pw:'Sp26Respiratory', url:'https://view.genially.com/69c03be424e1c2ad67302c06' }
+  ]},
+  { n:4, shot:'images/week4.webp', links:[
+    { name:'Electronic Fetal Monitoring Game', pw:null, url:'https://ncc-efm.org/game/efmgame.cfm' },
+    { name:'Newborn Jeopardy', pw:'Sp26Newborn#1', url:'https://view.genially.com/69c1903acd870d6a5fc78216' },
+    { name:'OB Jeopardy', pw:'Sp26MaternalOB#1', url:'https://view.genially.com/69c19038c24533e7941f193f' },
+    { name:'GI Jeopardy', pw:'Sp26Up\x26LowGI', url:'https://view.genially.com/69c42fe14b8dcf4e0b13dd7f' },
+    { name:'CYOP Game NEW!!', pw:'Sp26CYOPResp', url:'https://view.genially.com/69e29779af525b13525b90fd' }
+  ]},
+  { n:5, shot:'images/week5.webp', links:[
+    { name:'Cardiac Jeopardy #1', pw:'Sp26Cardiac', url:'https://view.genially.com/69b5dd65e36768f7cff51ab9' },
+    { name:'Cardiac Jeopardy #2', pw:'Sp26Cardiac#2', url:'https://view.genially.com/69c5814a872ac5e078e9757d' },
+    { name:'Newborn \x26 Congenital Heart Defects Jeopardy', pw:'Sp26RevCardNew', url:'https://view.genially.com/69c19058d873a9b3f5bb654d' },
+    { name:'EKG Rhythm Game', pw:'Optional Self Guided', url:'https://docs.google.com/presentation/d/1TqPDfwzAMfNeR72qcxATEaJFxNayxgBQ/present?slide=id.p1#slide=id.p1' },
+    { name:'Cardiac CYOP Game', pw:'Sp26CardiacCYOP', url:'https://view.genially.com/6984e691cdf853f71b120699' }
+  ]},
+  { n:6, shot:'images/week6.webp', links:[
+    { name:'Maternal Child Jeopardy', pw:'Sp26MaternalOB#1', url:'https://view.genially.com/69c19038c24533e7941f193f' },
+    { name:'Newborn Jeopardy', pw:'Sp26Newborn#1', url:'https://view.genially.com/69c1903acd870d6a5fc78216' },
+    { name:'Newborn \x26 Congenital Heart Defects Jeopardy', pw:'Sp26RevCardNew', url:'https://view.genially.com/69c19058d873a9b3f5bb654d' }
+  ]},
+  { n:7, shot:'images/week7.webp', links:[
+    { name:'Upper and Lower GI Jeopardy', pw:'Sp26Up\x26LowGI', url:'https://view.genially.com/69c42fe14b8dcf4e0b13dd7f' },
+    { name:'Liver Failure \x26 Nutrition Jeopardy', pw:'Sp26Liver\x26Nutri', url:'https://view.genially.com/69c42fd31dd1f0527993da71' },
+    { name:'GI\x26GU Jeopardy', pw:'Sp26GI\x26Renal', url:'https://view.genially.com/69c430154308b55c4a75adb0' },
+    { name:'Renal Jeopardy', pw:'Sp26Renal#1', url:'https://view.genially.com/69c430154308b55c4a75adb0' }
+  ]},
+  { n:8, shot:'images/week8.webp', links:[
+    { name:'Neurological Jeopardy #1', pw:'Sp26Neuro#1', url:'https://view.genially.com/69c59e4dfd2fff4e4f072c92' },
+    { name:'Neuro Review Jeopardy', pw:null, url:'https://docs.google.com/presentation/d/17ewL37tp0scE2bd25fm2EIDblrbgbfsml0BpOv6zZlY/present?slide=id.p1#slide=id.p1' },
+    { name:'Stroke/Seizure CYOP Game', pw:null, url:'https://docs.google.com/presentation/d/1j3i3Iaesbbb2wxL6-wM-lP5y1rtblbHExgBgGK1lV7o/present#slide=id.p1' }
+  ]},
+  { n:9, shot:'images/week9.webp', links:[
+    { name:'Endocrine CYOP', pw:null, url:'https://docs.google.com/presentation/d/1bH7cAskVlKUj2BFtXO7Kwkr6T8UL9X-2/present?slide=id.p1#slide=id.p1' },
+    { name:'DKA/HHNS CYOP', pw:null, url:'https://docs.google.com/presentation/d/18F3LAoW2h8dLkl55HQkXcBafJI-lH5j_/present?slide=id.p1#slide=id.p1' },
+    { name:'Endocrine Jeopardy PPT', pw:'Sp26Endocrine#1', url:'https://view.genially.com/69c1dcc774e6cf8ef6666a19' },
+    { name:'Arcade full of Endocrine', pw:'EndoArcade', url:'https://view.genially.com/69caa0ddff01bd31e2401078' }
+  ]},
+  { n:10, shot:'images/week10.webp', links:[
+    { name:'Shocks, Trauma, \x26 Disaster Nursing Jeopardy', pw:null, url:'https://docs.google.com/presentation/d/13iIi7GOoDeEFZ6-VP1Xu79s4JaP8EJa6/present?slide=id.p1#slide=id.p1' },
+    { name:'Harry Potter Mega World', pw:'Sp26PotterMega', url:'https://view.genially.com/69bb12a69ad214328e7cc7b2' }
+  ]},
+  { n:11, shot:'images/week11.webp', links:[
+    { name:'Final Study Blueprint', pw:null, url:'https://ohsuitg-my.sharepoint.com/:w:/g/personal/elliotte_ohsu_edu/IQCe8eppOAH8SK5o3QaYfrbrAS9Bl23kaJ7BX1hGmDletwY?e=OQD3GV' },
+    { name:'LABS/PEWS/MEWS', pw:null, url:'https://sakai.ohsu.edu/access/content/group/NRS-332-1-30752-Sp26/Instructor%20Resources/Emily%20Elliott/Exam_Test%20Materials/Spring%2026/332%20Acute%20Labs.MEWS.PEWS%20re.5.8.26.pdf' },
+    { name:'Newborn \x26 Pediatric Congenital Cardiac Jeopardy', pw:'Sp26RevCardNew', url:'https://view.genially.com/69c19058d873a9b3f5bb654d' },
+    { name:'MEGA CYOP #1', pw:null, url:'https://sakai.ohsu.edu/access/content/group/NRS-332-1-30752-Sp26/Instructor%20Resources/Emily%20Elliott/CYOP%20Options/CYOP%20Scenario%20One_IRB1.ppsx' },
+    { name:'MEGA CYOP #2', pw:null, url:'https://sakai.ohsu.edu/access/content/group/NRS-332-1-30752-Sp26/Instructor%20Resources/Emily%20Elliott/CYOP%20Options/CYOP%20Scenario%20Two%20IRB2.ppsx' },
+    { name:'MEGA CYOP #3', pw:null, url:'https://sakai.ohsu.edu/access/content/group/NRS-332-1-30752-Sp26/Instructor%20Resources/Emily%20Elliott/CYOP%20Options/CYOP%20Scenario%20Three%20IRB3.ppsx' },
+    { name:'Arcade Games', pw:null, url:'https://docs.google.com/presentation/d/1pNZ1aYG-hr-Zf-zeNgWdBBQtRVf0HjSWncGxO5nxWVU/present?slide=id.p' }
+  ]}
+];
+
+var cur = 1;
+try { var s = localStorage.getItem('nclex-wk'); if (s) cur = Math.max(1, Math.min(11, +s)); } catch(e){}
+
+var $ = function(id) { return document.getElementById(id); };
+
+function esc(s) {
+  var d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function nav() {
+  var el = $('nav');
+  el.innerHTML = '';
+  W.forEach(function(w) {
+    var b = document.createElement('button');
+    var ready = w.links.length > 0;
+    b.className = 'week-pill' + (w.n === cur ? ' active' : '');
+    b.setAttribute('role', 'tab');
+    b.setAttribute('aria-selected', String(w.n === cur));
+    b.setAttribute('aria-label', 'Week ' + w.n);
+    b.innerHTML = (ready ? '<span class="dot"></span>' : '') + 'Wk\u00a0' + w.n;
+    b.onclick = function() { cur = w.n; nav(); panel(); try{localStorage.setItem('nclex-wk',cur);}catch(e){} };
+    el.appendChild(b);
+  });
+}
+
+var COPY_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>';
+var EXT_SVG = '<svg viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V3h-6zM5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"/></svg>';
+
+function copyPw(btn) {
+  var pw = btn.getAttribute('data-pw');
+  try {
+    navigator.clipboard.writeText(pw).then(function() {
+      var orig = btn.innerHTML;
+      btn.textContent = 'Copied!';
+      setTimeout(function(){ btn.innerHTML = orig; }, 1200);
+    });
+  } catch(e) {}
+}
+
+function panel() {
+  var w = W[cur - 1];
+  var html = '<h2 class="card-heading">Week ' + w.n + '</h2>';
+
+  if (w.shot) {
+    html += '<p class="label">Reference Screenshot</p>' +
+      '<div class="shot-box"><img src="' + esc(w.shot) + '" alt="Week ' + w.n + ' course page"></div>';
+  }
+
+  if (w.links.length > 0) {
+    html += '<p class="label">Links (' + w.links.length + ')</p><div class="links-list">';
+    w.links.forEach(function(l) {
+      html += '<div class="link-item">';
+      html += '<div class="link-name">' + esc(l.name) + '</div>';
+      if (l.pw) {
+        html += '<div class="pw-row">' +
+          '<span class="pw-label">Password:</span>' +
+          '<code class="pw-value">' + esc(l.pw) + '</code>' +
+          '<button class="copy-btn" data-pw="' + esc(l.pw) + '" onclick="copyPw(this)" title="Copy password">' + COPY_SVG + 'Copy</button>' +
+        '</div>';
+      }
+      html += '<a href="' + esc(l.url) + '" target="_blank" rel="noopener" class="open-link">' + EXT_SVG + 'Open</a>';
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+
+  $('panel').innerHTML = html;
+}
+
+nav(); panel();
+</script>
