@@ -13,6 +13,9 @@ export default function (eleventyConfig) {
   // in collections, the sitemap, the feeds, or the nav. Link checks and
   // the guard denylist exempt it by path.
   eleventyConfig.addPassthroughCopy({ "nclex": "nclex" });
+  // Unlisted Extra-class study suite (Jon, 2026-09-28): same treatment as
+  // /nclex/ — passthrough verbatim, reachable only by direct URL.
+  eleventyConfig.addPassthroughCopy({ "study": "study" });
 
   // The machine-readable space-weather edition IS the build-time data file,
   // copied verbatim to /propagation.json. Only when present — PR builds run

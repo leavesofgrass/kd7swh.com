@@ -1,0 +1,1130 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex, nofollow"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Extra Class Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf8f5;
+  --text: #1b2838;
+  --text-secondary: #5a7089;
+  --accent: #d4a017;
+  --accent-light: rgba(212, 160, 23, 0.12);
+  --green: #2563eb;
+  --green-light: rgba(37, 99, 235, 0.12);
+  --amber: #e6a23c;
+  --amber-light: rgba(230, 162, 60, 0.12);
+  --coral: #d97706;
+  --coral-light: rgba(217, 119, 6, 0.12);
+  --border: #d0ccc5;
+  --card-bg: #ffffff;
+  --card-shadow: 0 1px 3px rgba(27, 40, 56, 0.06), 0 1px 2px rgba(27, 40, 56, 0.04);
+  --card-shadow-hover: 0 4px 12px rgba(27, 40, 56, 0.1);
+  --bar-bg: #e8e4de;
+  --bar-fill: var(--accent);
+  --hover: rgba(27, 40, 56, 0.03);
+  --divider: #e8e4de;
+  --check-border: #b0aaa0;
+  --mono: 'IBM Plex Mono', 'Consolas', monospace;
+  --sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #151b24;
+    --text: #eae6df;
+    --text-secondary: #8a9ab0;
+    --accent: #e6b422;
+    --accent-light: rgba(230, 180, 34, 0.15);
+    --green: #60a5fa;
+    --green-light: rgba(96, 165, 250, 0.15);
+    --amber: #f0b84a;
+    --amber-light: rgba(240, 184, 74, 0.15);
+    --coral: #fbbf24;
+    --coral-light: rgba(251, 191, 36, 0.15);
+    --border: #2e3a4a;
+    --card-bg: #1c2530;
+    --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
+    --card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --bar-bg: #2a3444;
+    --hover: rgba(255, 255, 255, 0.03);
+    --divider: #2a3444;
+    --check-border: #4a5568;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #151b24;
+  --text: #eae6df;
+  --text-secondary: #8a9ab0;
+  --accent: #e6b422;
+  --accent-light: rgba(230, 180, 34, 0.15);
+  --green: #3da86e;
+  --green-light: rgba(61, 168, 110, 0.15);
+  --amber: #f0b84a;
+  --amber-light: rgba(240, 184, 74, 0.15);
+  --coral: #e07070;
+  --coral-light: rgba(224, 112, 112, 0.15);
+  --border: #2e3a4a;
+  --card-bg: #1c2530;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
+  --card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --bar-bg: #2a3444;
+  --hover: rgba(255, 255, 255, 0.03);
+  --divider: #2a3444;
+  --check-border: #4a5568;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+.app {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+/* ---- Header ---- */
+.header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.callsign {
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 16px;
+  line-height: 1.25;
+}
+.header-stats {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.header-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.header-stat .num {
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 28px;
+  color: var(--accent);
+}
+.header-stat .label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+.progress-global {
+  max-width: 600px;
+  margin: 0 auto 8px;
+}
+.progress-bar-outer {
+  height: 10px;
+  background: var(--bar-bg);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 5px;
+  background: var(--bar-fill);
+  transition: width 0.4s ease-out, background-color 0.3s;
+  min-width: 0;
+}
+.progress-bar-fill.complete { background: var(--green); }
+.progress-pct {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-top: 4px;
+}
+.encouragement {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-top: 8px;
+}
+
+/* ---- Toolbench ---- */
+.toolbench {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--card-shadow);
+  padding: 14px 16px;
+  margin-bottom: 24px;
+}
+.toolbench h2 {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin: 0 0 10px;
+  text-align: center;
+}
+.toolbench-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+.tool-chip {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--green);
+  text-decoration: none;
+  border: 1.5px solid var(--green);
+  border-radius: 100px;
+  padding: 5px 14px;
+  transition: background 0.15s;
+}
+.tool-chip:hover { background: var(--green-light); }
+.tool-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tool-chip.featured {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.tool-chip.featured:hover { background: var(--accent-light); }
+
+/* ---- Cards Grid ---- */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+@media (max-width: 440px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Card ---- */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.card:hover {
+  box-shadow: var(--card-shadow-hover);
+}
+.card-header {
+  padding: 14px 16px 12px;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.card-header:hover { background: var(--hover); }
+.card-title-group { flex: 1; min-width: 0; }
+.card-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.3;
+}
+.card-count {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+.card-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.card-pct {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  min-width: 36px;
+  text-align: right;
+}
+.card-pct.low { color: var(--text-secondary); }
+.card-pct.mid { color: var(--amber); }
+.card-pct.high { color: var(--green); }
+.expand-icon {
+  font-size: 12px;
+  color: var(--text-secondary);
+  transition: transform 0.25s ease;
+  display: inline-block;
+}
+.card.expanded .expand-icon { transform: rotate(180deg); }
+.card-progress {
+  height: 4px;
+  background: var(--bar-bg);
+  margin: 0 16px 0;
+}
+.card-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.4s ease-out, background-color 0.3s;
+}
+.card-progress-fill.complete { background: var(--green); }
+.card-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease-out;
+}
+.card.expanded .card-body {
+  grid-template-rows: 1fr;
+}
+.card-body-inner {
+  overflow: hidden;
+}
+.card-topics {
+  padding: 8px 0 8px;
+}
+
+/* ---- Topic Row ---- */
+.topic-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 7px 16px;
+  transition: background 0.15s;
+  flex-wrap: wrap;
+}
+.topic-row:hover { background: var(--hover); }
+.topic-row.studied { background: var(--green-light); }
+.topic-row.studied:hover { background: var(--green-light); }
+
+.topic-check-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+}
+.topic-check {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.check-mark {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--check-border);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  font-size: 13px;
+  color: transparent;
+}
+.topic-check:checked + .check-mark {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+.topic-check:focus-visible + .check-mark {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.topic-name {
+  font-size: 14px;
+  line-height: 1.4;
+}
+.shared-badge {
+  font-size: 11px;
+  color: var(--text-secondary);
+  background: var(--hover);
+  border: 1px solid var(--border);
+  padding: 1px 6px;
+  border-radius: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ---- Topic resource links ---- */
+.topic-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-left: 30px;
+  width: 100%;
+  margin-top: 3px;
+}
+.res-chip {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--green);
+  text-decoration: none;
+  border: 1px solid var(--green);
+  border-radius: 100px;
+  padding: 1px 9px;
+  line-height: 1.6;
+}
+.res-chip:hover { background: var(--green-light); }
+.res-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.res-chip.math {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.res-chip.math:hover { background: var(--accent-light); }
+
+/* ---- Confidence Selector ---- */
+.conf-selector {
+  display: none;
+  gap: 4px;
+  padding-left: 30px;
+  width: 100%;
+  margin-top: 2px;
+}
+.topic-row.studied .conf-selector { display: flex; }
+.conf-btn {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1.5px solid;
+  background: transparent;
+  line-height: 1.5;
+}
+.conf-btn.shaky { border-color: var(--coral); color: var(--coral); }
+.conf-btn.shaky.active { background: var(--coral); color: #fff; }
+.conf-btn.solid { border-color: var(--amber); color: var(--amber); }
+.conf-btn.solid.active { background: var(--amber); color: #fff; }
+.conf-btn.confident { border-color: var(--green); color: var(--green); }
+.conf-btn.confident.active { background: var(--green); color: #fff; }
+.conf-btn:hover { opacity: 0.8; }
+
+/* ---- Stats Section ---- */
+.stats-section {
+  margin-bottom: 32px;
+}
+.stats-section h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 16px;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+.stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: var(--card-shadow);
+}
+.stat-card h3 {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin: 0 0 12px;
+}
+.conf-dist-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.conf-dist-label {
+  font-size: 13px;
+  width: 90px;
+  flex-shrink: 0;
+}
+.conf-dist-bar-outer {
+  flex: 1;
+  height: 8px;
+  background: var(--bar-bg);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.conf-dist-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s ease-out;
+}
+.conf-dist-bar-fill.not-studied { background: var(--check-border); }
+.conf-dist-bar-fill.shaky { background: var(--coral); }
+.conf-dist-bar-fill.solid { background: var(--amber); }
+.conf-dist-bar-fill.confident { background: var(--green); }
+.conf-dist-num {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  width: 24px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.weakest-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--divider);
+  font-size: 13px;
+}
+.weakest-row:last-child { border-bottom: none; }
+.weakest-row .pct {
+  font-family: var(--mono);
+  font-weight: 600;
+  color: var(--coral);
+}
+.weakest-row .pct.mid { color: var(--amber); }
+.weakest-row .pct.high { color: var(--green); }
+
+.streak-num {
+  font-family: var(--mono);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+.streak-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+.streak-msg {
+  font-size: 13px;
+  margin-top: 8px;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+/* ---- Reset ---- */
+.reset-section {
+  text-align: center;
+  padding-top: 16px;
+  border-top: 1px solid var(--divider);
+}
+.reset-btn {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--coral);
+  background: transparent;
+  border: 1.5px solid var(--coral);
+  border-radius: 6px;
+  padding: 6px 20px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.reset-btn:hover {
+  background: var(--coral);
+  color: #fff;
+}
+
+/* ---- Completion banner ---- */
+.card-complete-badge {
+  display: none;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--green);
+  margin-left: 8px;
+}
+.card.section-complete .card-complete-badge { display: inline; }
+</style>
+
+<div class="app" id="app"></div>
+
+<script>
+(function() {
+  'use strict';
+
+  /* ========== DATA ========== */
+  var SUB_ELEMENTS = [
+    {
+      id: 'E0', title: 'E0 — Safety', defaultOpen: true,
+      topics: [
+        'RF Safety and Maximum Permissible Exposure',
+        'Electrical Safety in the Amateur Radio Station',
+        'Station Grounding for Amateur Radio',
+        'Single-Point Ground Panel Design',
+        'Lightning Protection for Amateur Stations'
+      ]
+    },
+    {
+      id: 'E1', title: 'E1 — Commission’s Rules', defaultOpen: false,
+      topics: [
+        'FCC Part 97 Rules for the Extra Class Exam',
+        'Effective Radiated Power — ERP and EIRP',
+        'RF Security, Encryption, and International Amateur Radio Law'
+      ]
+    },
+    {
+      id: 'E2', title: 'E2 — Operating Procedures', defaultOpen: false,
+      topics: [
+        'Digital Modes — FT8, WSJT-X, and Weak-Signal Communication',
+        'Packet Radio AX.25 and APRS Protocol Fundamentals',
+        'D-STAR, DMR, and System Fusion — Digital Voice Modes',
+        'Meshtastic Protocol and Mesh Networking',
+        'Amateur Satellite Communication — AMSAT, CubeSats, and ISS',
+        'RF Security, Encryption, and International Amateur Radio Law'
+      ]
+    },
+    {
+      id: 'E3', title: 'E3 — Radio Wave Propagation', defaultOpen: false,
+      topics: [
+        'The Ionosphere and HF Propagation',
+        'Skip Distance, Maximum Usable Frequency, and Critical Frequency',
+        'Ground Wave Propagation',
+        'VHF UHF Line-of-Sight and Fresnel Zones',
+        'Tropospheric Ducting and Scatter',
+        'Sporadic E and Other Unusual Propagation',
+        'Solar Indices — SFI, A-Index, K-Index',
+        'HF Propagation Prediction — VOACAP and Computational Tools',
+        'Amateur Satellite Communication — AMSAT, CubeSats, and ISS',
+        'Electromagnetic Wave Fundamentals',
+        'Antenna Polarization and Cross-Polarization Loss'
+      ]
+    },
+    {
+      id: 'E4', title: 'E4 — Amateur Practices', defaultOpen: false,
+      topics: [
+        'Test Equipment and Measurement Techniques',
+        'Station Grounding for Amateur Radio',
+        'Single-Point Ground Panel Design',
+        'Lightning Protection for Amateur Stations'
+      ]
+    },
+    {
+      id: 'E5', title: 'E5 — Electrical Principles', defaultOpen: false,
+      topics: [
+        'Ohm’s Law and Power in RF Systems',
+        'Decibels and Logarithmic Scales in Amateur Radio',
+        'Wavelength, Frequency, and the Electromagnetic Spectrum',
+        'Complex Impedance and Phasor Notation',
+        'Reactance — Capacitive and Inductive',
+        'Resonance and Q Factor in RF Circuits',
+        'RLC Circuit Analysis for Amateur Radio',
+        'Skin Effect and Conductor RF Resistance'
+      ]
+    },
+    {
+      id: 'E6', title: 'E6 — Circuit Components', defaultOpen: false,
+      topics: [
+        'Semiconductor Physics for Amateur Radio'
+      ]
+    },
+    {
+      id: 'E7', title: 'E7 — Practical Circuits', defaultOpen: false,
+      topics: [
+        'Filter Theory and Design for Amateur Radio',
+        'Amplifier Classes and RF Power Amplifier Design',
+        'Oscillators and Frequency Synthesis — PLL and DDS',
+        'Mixers and Frequency Conversion',
+        'Digital Signal Processing in Amateur Radio',
+        'Operational Amplifiers and Active Filters',
+        'Power Supplies and Voltage Regulation',
+        'Superheterodyne Receiver Architecture',
+        'Direct Conversion and Software-Defined Radio Receivers',
+        'Impedance Matching Networks — L, T, Pi, and Stub'
+      ]
+    },
+    {
+      id: 'E8', title: 'E8 — Signals and Emissions', defaultOpen: false,
+      topics: [
+        'Modulation — AM, FM, SSB, and Digital',
+        'LoRa Physical Layer and Chirp Spread Spectrum',
+        'Digital Modes — FT8, WSJT-X, and Weak-Signal Communication'
+      ]
+    },
+    {
+      id: 'E9', title: 'E9 — Antennas and Transmission Lines', defaultOpen: true,
+      topics: [
+        'Antenna Fundamentals — Radiation Resistance, Gain, Efficiency',
+        'Radiation Patterns and Antenna Directionality',
+        'The Half-Wave Dipole and Its Variants',
+        'Vertical Antennas and Ground Planes',
+        'Yagi-Uda Antenna Design Principles',
+        'Loop Antennas — Quad, Delta, and Small Loops',
+        'HF Wire Antennas — End-Fed, Random Wire, and Long Wire',
+        'VHF UHF Antenna Design — J-Pole, Collinear, and Discone',
+        'Near Field and Far Field — Antenna Field Regions',
+        'Effective Radiated Power — ERP and EIRP',
+        'Antenna Modeling with NEC and MMANA',
+        'RF Link Budget Analysis',
+        'Coaxial Cable — Types, Characteristics, and Loss',
+        'Standing Wave Ratio (SWR) Theory',
+        'Transmission Line Equations and Characteristic Impedance',
+        'The Smith Chart — Theory and Practical Use',
+        'Impedance Matching Networks — L, T, Pi, and Stub',
+        'Baluns and Ununs — Theory and Selection',
+        'Feedline Loss Budget and System Planning',
+        'Antenna Polarization and Cross-Polarization Loss'
+      ]
+    }
+  ];
+
+  /* ========== TOOLS & RESOURCES ========== */
+  var MATHLAB = '/study/math/';
+  var EXPOLAB = '/study/rf-exposure/';
+  var TOOLS = [
+    { label: '🧮 Math Lab', href: MATHLAB, featured: true },
+    { label: '🛡 RF Exposure Lab', href: EXPOLAB, featured: true },
+    { label: 'RLC Filter Explorer', href: '/study/rlc/' },
+    { label: 'Smith Chart', href: '/study/smith-chart/' },
+    { label: 'RF Link Budget', href: '/study/link-budget/' },
+    { label: 'Antenna Patterns', href: '/study/antenna-patterns/' },
+    { label: 'HF Band Conditions', href: '/study/band-conditions/' },
+    { label: 'Live Propagation (kd7swh.com)', href: 'https://kd7swh.com/propagation/' }
+  ];
+
+  /* topic name -> resource links. 'math' flag styles Math Lab links gold. */
+  function ml(anchor, label) { return { label: label || 'Math Lab', href: MATHLAB + '#' + anchor, math: true }; }
+  var T_RLC = { label: 'RLC Explorer', href: '/study/rlc/' };
+  var T_SMITH = { label: 'Smith Chart', href: '/study/smith-chart/' };
+  var T_LINK = { label: 'Link Budget', href: '/study/link-budget/' };
+  var T_ANT = { label: 'Antenna Patterns', href: '/study/antenna-patterns/' };
+  var T_HF = { label: 'Band Conditions', href: '/study/band-conditions/' };
+  var T_PROP = { label: 'kd7swh.com/propagation', href: 'https://kd7swh.com/propagation/' };
+
+  var RESOURCES = {
+    'RF Safety and Maximum Permissible Exposure': [{ label: 'RF Exposure Lab', href: EXPOLAB, math: true }],
+    'Electrical Safety in the Amateur Radio Station': [{ label: 'Exposure Lab: E0A', href: EXPOLAB + '#e0a', math: true }],
+    'Station Grounding for Amateur Radio': [{ label: 'Exposure Lab: E0A', href: EXPOLAB + '#e0a', math: true }],
+    'Ohm’s Law and Power in RF Systems': [ml('power', 'Math: real power')],
+    'Decibels and Logarithmic Scales in Amateur Radio': [ml('db', 'Math: dB & dBm')],
+    'Complex Impedance and Phasor Notation': [ml('polar', 'Math: rect ↔ polar')],
+    'Reactance — Capacitive and Inductive': [ml('reactance', 'Math: reactance')],
+    'Resonance and Q Factor in RF Circuits': [ml('resonance', 'Math: resonance'), ml('q-bw', 'Math: Q & BW'), T_RLC],
+    'RLC Circuit Analysis for Amateur Radio': [T_RLC, ml('phase', 'Math: phase angle')],
+    'Skin Effect and Conductor RF Resistance': [ml('facts', 'Math: quick facts')],
+    'Filter Theory and Design for Amateur Radio': [T_RLC],
+    'Operational Amplifiers and Active Filters': [ml('opamp', 'Math: op-amp gain')],
+    'Digital Signal Processing in Amateur Radio': [ml('bits', 'Math: bits & Nyquist')],
+    'Power Supplies and Voltage Regulation': [ml('facts', 'Math: quick facts')],
+    'The Smith Chart — Theory and Practical Use': [T_SMITH, ml('match', 'Math: matching')],
+    'Impedance Matching Networks — L, T, Pi, and Stub': [T_SMITH, ml('match', 'Math: Q-section')],
+    'RF Link Budget Analysis': [T_LINK, ml('db', 'Math: link budget')],
+    'Effective Radiated Power — ERP and EIRP': [ml('erp', 'Math: ERP/EIRP')],
+    'Antenna Fundamentals — Radiation Resistance, Gain, Efficiency': [T_ANT, ml('facts', 'Math: efficiency')],
+    'Radiation Patterns and Antenna Directionality': [T_ANT],
+    'Yagi-Uda Antenna Design Principles': [T_ANT],
+    'Antenna Modeling with NEC and MMANA': [T_ANT],
+    'The Ionosphere and HF Propagation': [T_HF, T_PROP],
+    'Skip Distance, Maximum Usable Frequency, and Critical Frequency': [T_HF, T_PROP],
+    'Solar Indices — SFI, A-Index, K-Index': [T_PROP],
+    'HF Propagation Prediction — VOACAP and Computational Tools': [T_HF],
+    'Standing Wave Ratio (SWR) Theory': [ml('swr', 'Math: SWR & power')],
+    'Transmission Line Equations and Characteristic Impedance': [ml('feed', 'Math: feed lines')],
+    'Coaxial Cable — Types, Characteristics, and Loss': [ml('feed', 'Math: velocity factor')],
+    'Baluns and Ununs — Theory and Selection': [ml('feed', 'Math: stubs')],
+    'Feedline Loss Budget and System Planning': [T_LINK, ml('db', 'Math: dB')],
+    'Modulation — AM, FM, SSB, and Digital': [ml('fm', 'Math: FM index')],
+    'Digital Modes — FT8, WSJT-X, and Weak-Signal Communication': [ml('digi', 'Math: digital BW')],
+    'FCC Part 97 Rules for the Extra Class Exam': [ml('edges', 'Math: band edges')]
+  };
+
+  /* Compute unique topics and cross-reference map */
+  var uniqueSet = new Set();
+  var topicSections = {};  /* topic -> [sectionId, ...] */
+  SUB_ELEMENTS.forEach(function(se) {
+    se.topics.forEach(function(t) {
+      uniqueSet.add(t);
+      if (!topicSections[t]) topicSections[t] = [];
+      topicSections[t].push(se.id);
+    });
+  });
+  var TOTAL_UNIQUE = uniqueSet.size;
+
+  /* ========== STATE ========== */
+  var STORAGE_KEY = 'kd7swh_extra_class_study';
+
+  function loadState() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        var s = JSON.parse(raw);
+        return {
+          studied: s.studied || {},
+          confidence: s.confidence || {},
+          dates: s.dates || [],
+          expanded: s.expanded || defaultExpanded()
+        };
+      }
+    } catch(e) { /* localStorage unavailable */ }
+    return { studied: {}, confidence: {}, dates: [], expanded: defaultExpanded() };
+  }
+
+  function defaultExpanded() {
+    var exp = {};
+    SUB_ELEMENTS.forEach(function(se) { exp[se.id] = !!se.defaultOpen; });
+    return exp;
+  }
+
+  function saveState(state) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch(e) { /* localStorage unavailable */ }
+  }
+
+  var state = loadState();
+
+  /* ========== HELPERS ========== */
+  function countStudied() {
+    var n = 0;
+    uniqueSet.forEach(function(t) { if (state.studied[t]) n++; });
+    return n;
+  }
+
+  function countSectionStudied(se) {
+    var n = 0;
+    se.topics.forEach(function(t) { if (state.studied[t]) n++; });
+    return n;
+  }
+
+  function sectionComplete(se) {
+    return countSectionStudied(se) === se.topics.length;
+  }
+
+  function countSectionsComplete() {
+    var n = 0;
+    SUB_ELEMENTS.forEach(function(se) { if (sectionComplete(se)) n++; });
+    return n;
+  }
+
+  function confidenceCounts() {
+    var counts = { none: 0, shaky: 0, solid: 0, confident: 0 };
+    uniqueSet.forEach(function(t) {
+      if (!state.studied[t]) { counts.none++; return; }
+      var c = state.confidence[t];
+      if (c === 'shaky') counts.shaky++;
+      else if (c === 'solid') counts.solid++;
+      else if (c === 'confident') counts.confident++;
+      else counts.none++;
+    });
+    return counts;
+  }
+
+  function weakestSections() {
+    var arr = SUB_ELEMENTS.map(function(se) {
+      var studied = countSectionStudied(se);
+      return { id: se.id, title: se.title, pct: Math.round(studied / se.topics.length * 100) };
+    });
+    arr.sort(function(a, b) { return a.pct - b.pct; });
+    return arr.slice(0, 3);
+  }
+
+  function formatDate(d) {
+    var y = d.getFullYear();
+    var m = String(d.getMonth() + 1).padStart(2, '0');
+    var day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + day;
+  }
+
+  function computeStreak() {
+    if (!state.dates || state.dates.length === 0) return 0;
+    var dateSet = new Set(state.dates);
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var cursor = new Date(today);
+    var todayStr = formatDate(cursor);
+
+    if (!dateSet.has(todayStr)) {
+      cursor.setDate(cursor.getDate() - 1);
+      if (!dateSet.has(formatDate(cursor))) return 0;
+    }
+
+    var streak = 0;
+    while (dateSet.has(formatDate(cursor))) {
+      streak++;
+      cursor.setDate(cursor.getDate() - 1);
+    }
+    return streak;
+  }
+
+  function streakMessage(n) {
+    if (n === 0) return 'Study a topic today to start your streak.';
+    if (n === 1) return 'You studied today — keep it going tomorrow!';
+    if (n < 7) return n + '-day streak! Momentum is building.';
+    if (n < 14) return n + '-day streak! Outstanding consistency.';
+    return n + '-day streak! Incredible discipline, 73!';
+  }
+
+  function encouragement() {
+    var studied = countStudied();
+    var pct = Math.round(studied / TOTAL_UNIQUE * 100);
+    if (pct === 0) return 'Ready to begin your Extra Class journey. Start with any section below.';
+    if (pct < 25) return 'Good start — every topic counts. Keep going!';
+    if (pct < 50) return 'Making solid progress through the material.';
+    if (pct < 75) return 'Past the halfway mark. The exam is within reach.';
+    if (pct < 100) return 'Almost there — finish strong!';
+    return 'All topics covered! Review your shaky areas and go ace that exam. 73 de KD7SWH!';
+  }
+
+  function esc(s) {
+    var d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  /* ========== RENDER ========== */
+  function render() {
+    var studied = countStudied();
+    var pct = TOTAL_UNIQUE > 0 ? Math.round(studied / TOTAL_UNIQUE * 100) : 0;
+    var sectComplete = countSectionsComplete();
+
+    var html = '';
+
+    /* Header */
+    html += '<header class="header">';
+    html += '<div class="callsign">KD7SWH</div>';
+    html += '<h1>Extra Class Study Dashboard</h1>';
+    html += '<div class="header-stats">';
+    html += '<div class="header-stat"><span class="num">' + studied + '</span>';
+    html += '<span class="label">of ' + TOTAL_UNIQUE + ' topics studied</span></div>';
+    html += '<div class="header-stat"><span class="num">' + sectComplete + '</span>';
+    html += '<span class="label">of ' + SUB_ELEMENTS.length + ' sub-elements complete</span></div>';
+    html += '</div>';
+    html += '<div class="progress-global">';
+    html += '<div class="progress-bar-outer"><div class="progress-bar-fill' + (pct === 100 ? ' complete' : '') + '" style="width:' + pct + '%"></div></div>';
+    html += '<div class="progress-pct">' + pct + '%</div>';
+    html += '</div>';
+    html += '<div class="encouragement">' + esc(encouragement()) + '</div>';
+    html += '</header>';
+
+    /* Toolbench */
+    html += '<section class="toolbench" aria-label="Study tools">';
+    html += '<h2>Toolbench — interactive companions</h2>';
+    html += '<div class="toolbench-row">';
+    TOOLS.forEach(function(t) {
+      html += '<a class="tool-chip' + (t.featured ? ' featured' : '') + '" href="' + t.href + '">' + esc(t.label) + '</a>';
+    });
+    html += '</div>';
+    html += '</section>';
+
+    /* Cards grid */
+    html += '<div class="cards-grid">';
+    SUB_ELEMENTS.forEach(function(se) {
+      var secStudied = countSectionStudied(se);
+      var secTotal = se.topics.length;
+      var secPct = Math.round(secStudied / secTotal * 100);
+      var isExpanded = !!state.expanded[se.id];
+      var isComplete = secStudied === secTotal;
+
+      var cardClasses = 'card';
+      if (isExpanded) cardClasses += ' expanded';
+      if (isComplete) cardClasses += ' section-complete';
+
+      html += '<div class="' + cardClasses + '" data-section="' + se.id + '">';
+
+      html += '<div class="card-header" role="button" tabindex="0" aria-expanded="' + isExpanded + '" data-toggle="' + se.id + '">';
+      html += '<div class="card-title-group">';
+      html += '<div class="card-title">' + esc(se.title) + '<span class="card-complete-badge">✓ Complete</span></div>';
+      html += '<div class="card-count">' + secStudied + ' of ' + secTotal + ' studied</div>';
+      html += '</div>';
+      html += '<div class="card-header-right">';
+      var pctClass = secPct === 0 ? 'low' : (secPct < 100 ? 'mid' : 'high');
+      html += '<span class="card-pct ' + pctClass + '">' + secPct + '%</span>';
+      html += '<span class="expand-icon">▼</span>';
+      html += '</div>';
+      html += '</div>';
+
+      html += '<div class="card-progress"><div class="card-progress-fill' + (isComplete ? ' complete' : '') + '" style="width:' + secPct + '%"></div></div>';
+
+      html += '<div class="card-body"><div class="card-body-inner"><div class="card-topics">';
+      se.topics.forEach(function(topic) {
+        var isStudied = !!state.studied[topic];
+        var conf = state.confidence[topic] || '';
+        var sections = topicSections[topic];
+        var otherSections = sections.filter(function(s) { return s !== se.id; });
+
+        html += '<div class="topic-row' + (isStudied ? ' studied' : '') + '">';
+        html += '<label class="topic-check-wrap">';
+        html += '<input type="checkbox" class="topic-check" data-topic="' + esc(topic) + '"' + (isStudied ? ' checked' : '') + '>';
+        html += '<span class="check-mark">✓</span>';
+        html += '<span class="topic-name">' + esc(topic) + '</span>';
+        if (otherSections.length > 0) {
+          html += '<span class="shared-badge">also ' + otherSections.join(', ') + '</span>';
+        }
+        html += '</label>';
+
+        /* Resource links */
+        var res = RESOURCES[topic];
+        if (res && res.length) {
+          html += '<div class="topic-links" aria-label="Resources for ' + esc(topic) + '">';
+          res.forEach(function(r) {
+            html += '<a class="res-chip' + (r.math ? ' math' : '') + '" href="' + r.href + '">' + esc(r.label) + '</a>';
+          });
+          html += '</div>';
+        }
+
+        /* Confidence selector */
+        html += '<div class="conf-selector">';
+        html += '<button class="conf-btn shaky' + (conf === 'shaky' ? ' active' : '') + '" data-topic="' + esc(topic) + '" data-level="shaky">⚠ Shaky</button>';
+        html += '<button class="conf-btn solid' + (conf === 'solid' ? ' active' : '') + '" data-topic="' + esc(topic) + '" data-level="solid">— Solid</button>';
+        html += '<button class="conf-btn confident' + (conf === 'confident' ? ' active' : '') + '" data-topic="' + esc(topic) + '" data-level="confident">✓ Confident</button>';
+        html += '</div>';
+
+        html += '</div>';
+      });
+      html += '</div></div></div>';
+      html += '</div>';
+    });
+    html += '</div>';
+
+    /* Statistics */
+    var cc = confidenceCounts();
+    var weak = weakestSections();
+    var streak = computeStreak();
+
+    html += '<section class="stats-section">';
+    html += '<h2>Study Statistics</h2>';
+    html += '<div class="stats-grid">';
+
+    html += '<div class="stat-card">';
+    html += '<h3>Confidence Distribution</h3>';
+    var confRows = [
+      { label: 'Not studied', cls: 'not-studied', count: cc.none },
+      { label: '⚠ Shaky', cls: 'shaky', count: cc.shaky },
+      { label: '— Solid', cls: 'solid', count: cc.solid },
+      { label: '✓ Confident', cls: 'confident', count: cc.confident }
+    ];
+    confRows.forEach(function(r) {
+      var barPct = TOTAL_UNIQUE > 0 ? Math.round(r.count / TOTAL_UNIQUE * 100) : 0;
+      html += '<div class="conf-dist-row">';
+      html += '<span class="conf-dist-label">' + r.label + '</span>';
+      html += '<div class="conf-dist-bar-outer"><div class="conf-dist-bar-fill ' + r.cls + '" style="width:' + barPct + '%"></div></div>';
+      html += '<span class="conf-dist-num">' + r.count + '</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+
+    html += '<div class="stat-card">';
+    html += '<h3>Needs Attention</h3>';
+    weak.forEach(function(w) {
+      var wpClass = w.pct < 50 ? '' : (w.pct < 100 ? ' mid' : ' high');
+      html += '<div class="weakest-row">';
+      html += '<span>' + esc(w.title) + '</span>';
+      html += '<span class="pct' + wpClass + '">' + w.pct + '%</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+
+    html += '<div class="stat-card">';
+    html += '<h3>Study Streak</h3>';
+    html += '<div class="streak-num">' + streak + '</div>';
+    html += '<div class="streak-label">consecutive day' + (streak !== 1 ? 's' : '') + '</div>';
+    html += '<div class="streak-msg">' + esc(streakMessage(streak)) + '</div>';
+    html += '</div>';
+
+    html += '</div>';
+    html += '</section>';
+
+    /* Reset */
+    html += '<div class="reset-section">';
+    html += '<button class="reset-btn" id="reset-btn">Reset All Progress</button>';
+    html += '</div>';
+
+    document.getElementById('app').innerHTML = html;
+  }
+
+  /* ========== EVENTS ========== */
+  document.getElementById('app').addEventListener('change', function(e) {
+    if (e.target.classList.contains('topic-check')) {
+      var topic = e.target.getAttribute('data-topic');
+      var checked = e.target.checked;
+      state.studied[topic] = checked;
+      if (!checked) {
+        delete state.confidence[topic];
+      }
+      if (checked) {
+        var today = formatDate(new Date());
+        var dateSet = new Set(state.dates);
+        if (!dateSet.has(today)) {
+          state.dates.push(today);
+        }
+      }
+      saveState(state);
+      render();
+    }
+  });
+
+  document.getElementById('app').addEventListener('click', function(e) {
+    /* Resource links must never toggle the card */
+    if (e.target.closest && e.target.closest('a')) return;
+
+    var header = e.target.closest('[data-toggle]');
+    if (header) {
+      var secId = header.getAttribute('data-toggle');
+      state.expanded[secId] = !state.expanded[secId];
+      saveState(state);
+      render();
+      return;
+    }
+
+    var confBtn = e.target.closest('.conf-btn');
+    if (confBtn) {
+      var topic = confBtn.getAttribute('data-topic');
+      var level = confBtn.getAttribute('data-level');
+      if (state.confidence[topic] === level) {
+        delete state.confidence[topic];
+      } else {
+        state.confidence[topic] = level;
+      }
+      saveState(state);
+      render();
+      return;
+    }
+
+    if (e.target.id === 'reset-btn' || (e.target.closest && e.target.closest('#reset-btn'))) {
+      if (confirm('Reset all study progress? This cannot be undone.')) {
+        state = { studied: {}, confidence: {}, dates: [], expanded: defaultExpanded() };
+        saveState(state);
+        render();
+      }
+    }
+  });
+
+  document.getElementById('app').addEventListener('keydown', function(e) {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.hasAttribute('data-toggle')) {
+      e.preventDefault();
+      e.target.click();
+    }
+  });
+
+  /* ========== INIT ========== */
+  render();
+})();
+</script>
+
+</body></html>

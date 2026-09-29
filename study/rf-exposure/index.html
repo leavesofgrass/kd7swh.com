@@ -1,0 +1,551 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex, nofollow"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>RF Exposure Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf8f5;
+  --text: #1b2838;
+  --text-2: #5a7089;
+  --accent: #d4a017;
+  --accent-soft: rgba(212,160,23,0.12);
+  --good: #2563eb;
+  --good-soft: rgba(37,99,235,0.10);
+  --pass: #15803d;
+  --pass-soft: rgba(21,128,61,0.10);
+  --fail: #b91c1c;
+  --fail-soft: rgba(185,28,28,0.10);
+  --warn: #b45309;
+  --warn-soft: rgba(180,83,9,0.10);
+  --card: #ffffff;
+  --border: #d0ccc5;
+  --divider: #e8e4de;
+  --mono: 'IBM Plex Mono','Consolas',monospace;
+  --sans: 'DM Sans',system-ui,-apple-system,sans-serif;
+  --shadow: 0 1px 3px rgba(27,40,56,0.06);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#151b24; --text:#eae6df; --text-2:#8a9ab0;
+    --accent:#e6b422; --accent-soft:rgba(230,180,34,0.15);
+    --good:#60a5fa; --good-soft:rgba(96,165,250,0.14);
+    --pass:#4ade80; --pass-soft:rgba(74,222,128,0.12);
+    --fail:#f87171; --fail-soft:rgba(248,113,113,0.12);
+    --warn:#f0b84a; --warn-soft:rgba(240,184,74,0.13);
+    --card:#1c2530; --border:#2e3a4a; --divider:#2a3444;
+    --shadow:0 1px 3px rgba(0,0,0,0.25);
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#151b24; --text:#eae6df; --text-2:#8a9ab0;
+  --accent:#e6b422; --accent-soft:rgba(230,180,34,0.15);
+  --good:#60a5fa; --good-soft:rgba(96,165,250,0.14);
+  --pass:#4ade80; --pass-soft:rgba(74,222,128,0.12);
+  --fail:#f87171; --fail-soft:rgba(248,113,113,0.12);
+  --warn:#f0b84a; --warn-soft:rgba(240,184,74,0.13);
+  --card:#1c2530; --border:#2e3a4a; --divider:#2a3444;
+  --shadow:0 1px 3px rgba(0,0,0,0.25);
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--sans); margin: 0;
+  padding-inline: 16px; padding-block: 0 48px;
+  line-height: 1.55; -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 880px; margin: 0 auto; }
+header.top { text-align: center; padding-block: 28px 8px; }
+.callsign { font-family: var(--mono); font-weight: 600; font-size: 13px; letter-spacing: 0.08em; color: var(--accent); text-transform: uppercase; }
+h1 { font-size: 26px; font-weight: 700; margin: 4px 0 8px; text-wrap: balance; }
+.lede { color: var(--text-2); font-size: 15px; max-width: 640px; margin: 0 auto 6px; }
+.lede a { color: var(--good); }
+nav.toc {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--bg); padding-block: 10px;
+  border-bottom: 1px solid var(--divider);
+  display: flex; gap: 6px; overflow-x: auto; scrollbar-width: thin;
+  margin-bottom: 24px;
+}
+nav.toc a {
+  flex-shrink: 0; font-family: var(--mono); font-size: 12px; font-weight: 500;
+  color: var(--text); text-decoration: none;
+  border: 1px solid var(--border); border-radius: 100px;
+  padding: 4px 12px; background: var(--card); white-space: nowrap;
+}
+nav.toc a:hover { border-color: var(--accent); }
+nav.toc a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+section.module {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; box-shadow: var(--shadow);
+  padding: 20px; margin-bottom: 22px; scroll-margin-top: 64px;
+}
+.mod-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+.mod-head h2 { font-size: 18px; font-weight: 700; margin: 0; }
+.se-tag { font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--accent); background: var(--accent-soft); border-radius: 8px; padding: 2px 8px; }
+.mod-why { color: var(--text-2); font-size: 14px; margin: 0 0 14px; }
+.formula {
+  font-family: var(--mono); font-size: 14.5px; font-weight: 500;
+  background: var(--accent-soft); border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0; padding: 10px 14px; margin: 0 0 14px;
+  overflow-x: auto;
+}
+.formula small { display: block; font-family: var(--sans); font-weight: 400; font-size: 12.5px; color: var(--text-2); margin-top: 4px; }
+.calc {
+  display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;
+  padding: 12px; border: 1px dashed var(--border); border-radius: 10px;
+  margin-bottom: 12px;
+}
+.field { display: flex; flex-direction: column; gap: 3px; min-width: 120px; flex: 1 1 130px; max-width: 200px; }
+.field label { font-size: 12.5px; font-weight: 600; color: var(--text-2); }
+.field input, .field select {
+  font-family: var(--mono); font-size: 14.5px; color: var(--text);
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: 7px; padding: 7px 9px; width: 100%;
+}
+.field input:focus-visible, .field select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.result {
+  flex: 1 1 100%;
+  font-family: var(--mono); font-size: 14.5px; font-weight: 600;
+  background: var(--good-soft); border-left: 3px solid var(--good);
+  border-radius: 0 8px 8px 0; padding: 10px 14px;
+}
+.result .steps { display: block; font-weight: 400; font-size: 13px; color: var(--text-2); margin-top: 4px; font-family: var(--sans); }
+.verdicts { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-bottom: 12px; }
+.verdict { border-radius: 10px; padding: 12px 14px; border: 1.5px solid; }
+.verdict h3 { margin: 0 0 6px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; }
+.verdict .v-line { font-family: var(--mono); font-size: 13.5px; margin: 2px 0; }
+.verdict .v-word { font-weight: 700; }
+.verdict.pass { border-color: var(--pass); background: var(--pass-soft); }
+.verdict.pass h3, .verdict.pass .v-word { color: var(--pass); }
+.verdict.fail { border-color: var(--fail); background: var(--fail-soft); }
+.verdict.fail h3, .verdict.fail .v-word { color: var(--fail); }
+.hf-note { font-size: 12.5px; color: var(--text-2); margin: 0 0 10px; }
+.band-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.band-chip {
+  font-family: var(--mono); font-size: 12px; font-weight: 600;
+  border: 1px solid var(--border); border-radius: 100px;
+  background: var(--bg); color: var(--text); padding: 3px 12px; cursor: pointer;
+}
+.band-chip:hover { border-color: var(--accent); }
+.band-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.curve-wrap { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; margin: 12px 0; }
+.curve-svg { flex: 1 1 320px; min-width: 0; }
+.curve-svg svg { width: 100%; height: auto; display: block; }
+.curve-text { flex: 1 1 240px; font-size: 13.5px; color: var(--text-2); }
+.pool { border-top: 1px solid var(--divider); padding-top: 12px; margin-top: 4px; }
+.pool h3 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-2); margin: 0 0 8px; }
+.pool-q { font-size: 14px; margin: 0 0 6px; }
+.pool-q .qid { font-family: var(--mono); font-weight: 600; color: var(--accent); }
+details.answer { margin: 4px 0 10px; }
+details.answer summary { cursor: pointer; font-size: 13px; font-weight: 600; color: var(--good); width: fit-content; border-radius: 4px; padding: 2px 4px; }
+details.answer summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+details.answer .a-body { font-size: 14px; padding: 8px 12px; background: var(--good-soft); border-radius: 8px; margin-top: 6px; }
+.traps { margin: 10px 0 0; padding: 10px 14px; background: var(--warn-soft); border-left: 3px solid var(--warn); border-radius: 0 8px 8px 0; }
+.traps h3 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--warn); margin: 0 0 6px; }
+.traps ul { margin: 0; padding-left: 18px; font-size: 13.5px; }
+.traps li { margin-bottom: 4px; }
+.twocol { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+.defbox { border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+.defbox h3 { margin: 0 0 6px; font-size: 15px; }
+.defbox .unit { font-family: var(--mono); font-size: 12.5px; color: var(--accent); font-weight: 600; }
+.defbox p { font-size: 13.5px; margin: 6px 0 0; }
+.defbox ul { font-size: 13.5px; margin: 6px 0 0; padding-left: 18px; }
+footer.foot { text-align: center; color: var(--text-2); font-size: 13px; border-top: 1px solid var(--divider); padding-top: 16px; }
+footer.foot a { color: var(--good); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="callsign">KD7SWH</div>
+  <h1>RF Exposure Lab</h1>
+  <p class="lede">The FCC's RF exposure rules, made touchable: what SAR and MPE
+  actually measure, why the limits bottom out exactly where your body is the
+  best antenna, and the evaluation every amateur station has owed the FCC
+  since May 3, 2021 — computed live, explained in words.</p>
+  <p class="lede"><a href="/study/">← Study Dashboard</a> ·
+  <a href="/study/math/">Math Lab</a></p>
+</header>
+
+<nav class="toc" aria-label="Sections">
+  <a href="#defs">SAR vs MPE</a>
+  <a href="#limits">The Limits</a>
+  <a href="#eval">Station Evaluation</a>
+  <a href="#averaging">Time Averaging</a>
+  <a href="#exempt">Exemptions</a>
+  <a href="#e0a">The E0A Questions</a>
+</nav>
+
+<!-- ============ DEFINITIONS ============ -->
+<section class="module" id="defs" aria-labelledby="h-defs">
+  <div class="mod-head"><h2 id="h-defs">Two Rulers: SAR and MPE</h2><span class="se-tag">E0A08</span></div>
+  <p class="mod-why">The FCC measures RF exposure two ways, and knowing which
+  applies where is half the subject.</p>
+  <div class="twocol">
+    <div class="defbox">
+      <h3>SAR — Specific Absorption Rate <span class="unit">watts per kilogram</span></h3>
+      <p>The rate at which RF energy is absorbed <em>by the body</em> — the
+      fundamental limit from 100 kHz to 6 GHz. It's how portable devices
+      (used within 20 cm of the body — your HT against your face) must be
+      evaluated.</p>
+      <ul>
+        <li>General population: <strong>1.6 W/kg</strong> in any 1 gram of tissue; 0.08 W/kg whole-body</li>
+        <li>Occupational: 8 W/kg per gram; 0.4 W/kg whole-body</li>
+      </ul>
+    </div>
+    <div class="defbox">
+      <h3>MPE — Maximum Permissible Exposure <span class="unit">mW/cm²</span></h3>
+      <p>Power density crossing space where a person could be — derived from
+      the whole-body SAR limit, and the practical yardstick for fixed
+      stations like your antennas. From 300 kHz to 6 GHz the rules let MPE
+      stand in for SAR everywhere <em>except</em> portable devices.</p>
+      <ul>
+        <li>Your base station and antennas → evaluated by <strong>MPE</strong></li>
+        <li>Your handheld → evaluated by <strong>SAR</strong> (the manufacturer's job)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pool">
+    <h3>Straight from the pool</h3>
+    <p class="pool-q"><span class="qid">E0A08</span> What does SAR measure?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body"><strong>The rate at which RF energy is absorbed by the body.</strong> The fake acronym expansions ("signal attenuation ratio," "signal amplification rating") are the decoys.</div></details>
+    <p class="pool-q"><span class="qid">E0A09</span> Which equipment is exempt from RF exposure evaluations?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body"><strong>Hand-held transceivers sold before May 3, 2021</strong> — the effective date of the rewritten rules. Everything since owes an evaluation.</div></details>
+  </div>
+</section>
+
+<!-- ============ LIMITS ============ -->
+<section class="module" id="limits" aria-labelledby="h-limits">
+  <div class="mod-head"><h2 id="h-limits">The MPE Limits — and Why They Dip</h2><span class="se-tag">E0A03 · E0A02</span></div>
+  <p class="mod-why">Enter a frequency, or tap a band. The limits come from
+  47 CFR §1.1310, Table 1 — and they are most restrictive from
+  <strong>30 to 300 MHz</strong>, because a human body is roughly a
+  quarter-wave antenna there. At 6 m and 2 m, <em>you</em> resonate.</p>
+  <div class="band-chips" role="group" aria-label="Band shortcuts">
+    <button class="band-chip" data-f="1.9">160m</button>
+    <button class="band-chip" data-f="3.75">80m</button>
+    <button class="band-chip" data-f="7.15">40m</button>
+    <button class="band-chip" data-f="14.2">20m</button>
+    <button class="band-chip" data-f="28.4">10m</button>
+    <button class="band-chip" data-f="50.1">6m</button>
+    <button class="band-chip" data-f="146">2m</button>
+    <button class="band-chip" data-f="440">70cm</button>
+    <button class="band-chip" data-f="1296">23cm</button>
+  </div>
+  <div class="calc">
+    <div class="field"><label for="lim-f">Frequency (MHz)</label><input id="lim-f" type="number" step="any" min="0.3" max="100000" value="146"></div>
+    <output class="result" id="lim-out" aria-live="polite"></output>
+  </div>
+  <div class="curve-wrap">
+    <div class="curve-svg" aria-hidden="true">
+      <svg viewBox="0 0 460 220" id="curve-svg"></svg>
+    </div>
+    <div class="curve-text">The chart plots both limits against frequency on
+    log scales: high plateaus at HF, a hard floor across 30–300 MHz
+    (controlled 1.0, uncontrolled 0.2 mW/cm²), then a climb through UHF to
+    the microwave plateaus (5 and 1 mW/cm²). The uncontrolled limit is five
+    times stricter everywhere above 30 MHz — and your neighbors are always
+    "uncontrolled."</div>
+  </div>
+  <div class="pool">
+    <h3>Straight from the pool</h3>
+    <p class="pool-q"><span class="qid">E0A03</span> Over what range of frequencies are the FCC human body RF exposure limits most restrictive?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body"><strong>30 – 300 MHz</strong> — body resonance. The tempting wrong answer is 300–3000 MHz. (The Technician pool's version of this idea answers "50 MHz.")</div></details>
+    <p class="pool-q"><span class="qid">E0A02</span> When evaluating RF exposure at a neighbor's home, what must you do?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">Ensure your signals are below the <strong>uncontrolled</strong> MPE limits. Neighbors can't control their exposure, so they always get the stricter tier and the longer 30-minute averaging window.</div></details>
+    <p class="pool-q"><span class="qid">E0A06</span> Why are there separate E-field and H-field limits below 300 MHz?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body"><strong>All the choices are correct</strong>: the body reacts to both fields, reflections make field strength vary by location, and E and H peaks occur in different places. In the near field the two fields decouple — which is also why this Lab's far-field math is only an estimate close to the antenna.</div></details>
+  </div>
+  <div class="traps"><h3>Traps</h3><ul>
+    <li>Below 30 MHz the power-density numbers are "plane-wave equivalents" — the E-field and H-field limits are what actually govern. Fine for estimates; know the asterisk exists.</li>
+    <li>Averaging windows pair with the tiers: 6 minutes controlled, 30 minutes uncontrolled. Swapping them is the classic error.</li>
+  </ul></div>
+</section>
+
+<!-- ============ EVALUATION ============ -->
+<section class="module" id="eval" aria-labelledby="h-eval">
+  <div class="mod-head"><h2 id="h-eval">Evaluate Your Station</h2><span class="se-tag">E0A10 · OET-65</span></div>
+  <p class="mod-why">The real thing, per OET Bulletin 65: average power through
+  the duty factor and the transmit pattern, spread it over distance, compare
+  against both tiers. Preloaded with OET-65's own worked example — 1,500 W
+  PEP SSB, 2 minutes on, 2 off — which the Bulletin says averages to 200 W.
+  Watch the calculator agree.</p>
+  <div class="formula">S = P<sub>avg</sub> G × refl / (4πR²) &nbsp;&nbsp;·&nbsp;&nbsp; P<sub>avg</sub> = PEP × duty × (worst-case on-time ÷ window)
+    <small>Ground reflection: ×1 free space · ×2.56 EPA "realistic" · ×4 worst-case 100% reflection. Far-field estimate — conservative close in.</small></div>
+  <div class="calc">
+    <div class="field"><label for="ev-p">Power at antenna (W PEP)</label><input id="ev-p" type="number" step="any" min="0" value="1500"></div>
+    <div class="field"><label for="ev-mode">Mode (duty factor)</label>
+      <select id="ev-mode">
+        <option value="0.2" selected>SSB voice, no processing (20%)</option>
+        <option value="0.5">SSB, heavy processing (50%)</option>
+        <option value="0.4">Conversational CW (40%)</option>
+        <option value="1">FM / RTTY / FT8 / digital (100%)</option>
+        <option value="1">Carrier / tune-up (100%)</option>
+      </select></div>
+    <div class="field"><label for="ev-on">Minutes transmitting</label><input id="ev-on" type="number" step="any" min="0" value="2"></div>
+    <div class="field"><label for="ev-off">Minutes receiving</label><input id="ev-off" type="number" step="any" min="0" value="2"></div>
+    <div class="field"><label for="ev-g">Antenna gain (dBi)</label><input id="ev-g" type="number" step="any" value="6"></div>
+    <div class="field"><label for="ev-d">Distance (meters)</label><input id="ev-d" type="number" step="any" min="0.1" value="10"></div>
+    <div class="field"><label for="ev-f">Frequency (MHz)</label><input id="ev-f" type="number" step="any" min="0.3" max="100000" value="14.2"></div>
+    <div class="field"><label for="ev-refl">Ground reflection</label>
+      <select id="ev-refl">
+        <option value="1">None — free space (×1)</option>
+        <option value="2.56" selected>EPA realistic (×2.56)</option>
+        <option value="4">Worst case (×4)</option>
+      </select></div>
+    <output class="result" id="ev-out" aria-live="polite"></output>
+  </div>
+  <div class="verdicts" id="ev-verdicts" aria-live="polite"></div>
+  <p class="hf-note" id="ev-note"></p>
+  <div class="pool">
+    <h3>Straight from the pool</h3>
+    <p class="pool-q"><span class="qid">E0A10</span> When must an RF exposure evaluation be performed on an amateur station operating on 80 meters?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body"><strong>An evaluation must always be performed.</strong> Since May 3, 2021 there is no categorical amateur exemption — every station either shows it qualifies for an exemption or runs this evaluation.</div></details>
+    <p class="pool-q"><span class="qid">E0A04</span> With multiple transmitters at one site, who is responsible for mitigating over-exposure?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">Every transmitter producing <strong>5 percent or more</strong> of its MPE limit in areas where the total is exceeded. The 5% apportionment number is the thing to remember.</div></details>
+    <p class="pool-q"><span class="qid">E0A05</span> What hazard is created by operating at microwave frequencies?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body"><strong>High-gain antennas can produce high exposure levels.</strong> It's the gain concentrating the power, not anything ionizing — RF, microwaves included, is non-ionizing. That decoy is always offered.</div></details>
+  </div>
+</section>
+
+<!-- ============ AVERAGING ============ -->
+<section class="module" id="averaging" aria-labelledby="h-avg">
+  <div class="mod-head"><h2 id="h-avg">Time Averaging — the Sliding Window</h2><span class="se-tag">OET-65 Supp. B</span></div>
+  <p class="mod-why">Exposure limits are averages: any 6-minute window
+  (controlled) or any 30-minute window (uncontrolled) must stay under the
+  limit. Short transmissions buy you real headroom — and the two windows can
+  give the same station two different average powers. These are OET-65's own
+  examples; the calculator above reproduces each one.</p>
+  <div class="pool">
+    <p class="pool-q"><strong>1,500 W PEP SSB</strong> (no processing), 2 min on / 2 min off:</p>
+    <details class="answer"><summary>Show the work</summary>
+      <div class="a-body">Worst 6-minute window holds 4 minutes of transmit: 1500 × 0.2 × (4/6) = <strong>200 W average</strong> (controlled). Over 30 minutes: 1500 × 0.2 × (20/30) = <strong>200 W</strong> too — this pattern averages the same in both windows.</div></details>
+    <p class="pool-q"><strong>500 W CW</strong> in a DX pileup, 15 seconds every 2 minutes:</p>
+    <details class="answer"><summary>Show the work</summary>
+      <div class="a-body">500 × 0.4 × 0.125 = <strong>25 W average</strong> in both tiers. A big signal calling briefly is a small exposure.</div></details>
+    <p class="pool-q"><strong>250 W FM</strong>, 5 min on / 5 min off:</p>
+    <details class="answer"><summary>Show the work</summary>
+      <div class="a-body">Worst 6-minute window: 5 minutes on → 250 × 1.0 × (5/6) = <strong>208 W</strong> controlled. Over 30 minutes it settles to half: 250 × 0.5 = <strong>125 W</strong> uncontrolled. Same station, two answers — that's the sliding window at work.</div></details>
+  </div>
+  <div class="traps"><h3>Worth internalizing (asked on General/Tech, assumed at Extra)</h3><ul>
+    <li>Duty factor and on/off time are <em>separate</em> multipliers — the mode's average-to-peak ratio, then the fraction of the window on the air.</li>
+    <li>FM and digital modes are 100% duty while transmitting; unprocessed SSB is 20%; CW is 40%.</li>
+  </ul></div>
+</section>
+
+<!-- ============ EXEMPTIONS ============ -->
+<section class="module" id="exempt" aria-labelledby="h-ex">
+  <div class="mod-head"><h2 id="h-ex">The Exemption Check</h2><span class="se-tag">§1.1307(b)(3)</span></div>
+  <p class="mod-why">Before running a full evaluation, the rules offer
+  exemptions from <em>routine</em> evaluation. The one hams use: ERP at or
+  below a threshold that depends on distance and frequency. (The threshold
+  quietly bakes in the uncontrolled limit plus worst-case ground reflection.)</p>
+  <div class="formula">Thresholds (ERP in W, R in meters, f in MHz): 0.3–1.34: 1920R² · 1.34–30: 3450R²/f² · 30–300: 3.83R² · 300–1500: 0.0128R²f · above: 19.2R²
+    <small>Valid when R ≥ λ/2π and R ≥ 40 cm... short version: separation matters, and the exemption is per-source. When in doubt, evaluate — it's what the calculator above is for.</small></div>
+  <div class="calc">
+    <div class="field"><label for="ex-f">Frequency (MHz)</label><input id="ex-f" type="number" step="any" min="0.3" value="146"></div>
+    <div class="field"><label for="ex-r">Distance to nearest person (m)</label><input id="ex-r" type="number" step="any" min="0.1" value="10"></div>
+    <div class="field"><label for="ex-erp">Your ERP (W)</label><input id="ex-erp" type="number" step="any" min="0" value="100"></div>
+    <output class="result" id="ex-out" aria-live="polite"></output>
+  </div>
+</section>
+
+<!-- ============ E0A ============ -->
+<section class="module" id="e0a" aria-labelledby="h-e0a">
+  <div class="mod-head"><h2 id="h-e0a">The Rest of E0A</h2><span class="se-tag">1 exam question</span></div>
+  <p class="mod-why">E0 puts exactly <strong>one</strong> of twelve questions
+  on your exam. Eight are RF exposure (covered above); the other four are
+  grounding and tower safety — quick wins:</p>
+  <div class="pool">
+    <p class="pool-q"><span class="qid">E0A01</span> Primary function of an external earth connection or ground rod?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body"><strong>Lightning charge dissipation.</strong> Not RF-current reduction, not surge protection of equipment — lightning.</div></details>
+    <p class="pool-q"><span class="qid">E0A07</span> What is meant by "100% tie-off" in tower safety?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body"><strong>At least one lanyard attached to the tower at all times.</strong></div></details>
+    <p class="pool-q"><span class="qid">E0A11</span> To what should lanyards be attached while climbing?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body"><strong>Tower legs</strong> — not the rungs, which may not be rated as anchor points. Rungs are the trap.</div></details>
+    <p class="pool-q"><span class="qid">E0A12</span> Where should a shock-absorbing lanyard attach when working above ground?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body"><strong>Above the climber's head level</strong> — the shorter the free fall, the less energy to absorb.</div></details>
+  </div>
+</section>
+
+<footer class="foot">
+  <p>Sources: 47 CFR §1.1310 &amp; §1.1307(b)(3) (as amended by FCC 19-126, effective May 3, 2021) ·
+  FCC OET Bulletin 65 and Supplement B (amateur) · NCVEC 2024–2028 Extra pool, E0A.</p>
+  <p>Companion tools:
+    <a href="/study/">Study Dashboard</a> ·
+    <a href="/study/math/">Math Lab</a> ·
+    <a href="/study/link-budget/">RF Link Budget</a> ·
+    <a href="https://kd7swh.com/propagation/">Live propagation</a></p>
+  <p>Estimates for study and station planning — the FCC's rules and bulletins are the authority. 73 de KD7SWH.</p>
+</footer>
+</div>
+
+<script>
+(function() {
+'use strict';
+var $ = function(id){ return document.getElementById(id); };
+function num(id){ var v = parseFloat($(id).value); return isFinite(v) ? v : NaN; }
+function fmt(x, d){ if(!isFinite(x)) return '—'; return Number(x.toPrecision(d||4)).toLocaleString('en-US',{maximumFractionDigits:8}); }
+function bind(ids, fn){ ids.forEach(function(id){ var e=$(id); e.addEventListener('input', fn); e.addEventListener('change', fn); }); fn(); }
+
+/* MPE limits, mW/cm^2 (power-density / plane-wave equivalent) */
+function limitControlled(f){
+  if (f < 3) return 100;
+  if (f < 30) return 900/(f*f);
+  if (f < 300) return 1.0;
+  if (f < 1500) return f/300;
+  return 5;
+}
+function limitUncontrolled(f){
+  if (f < 1.34) return 100;
+  if (f < 30) return 180/(f*f);
+  if (f < 300) return 0.2;
+  if (f < 1500) return f/1500;
+  return 1.0;
+}
+
+/* ---- Limits explorer ---- */
+bind(['lim-f'], function(){
+  var f = num('lim-f');
+  if (!(f >= 0.3)) { $('lim-out').textContent = 'Enter a frequency of 0.3 MHz or higher.'; return; }
+  var c = limitControlled(f), u = limitUncontrolled(f);
+  var floor = (f >= 30 && f < 300) ? ' You are in the body-resonance floor — the strictest range in the table.' : '';
+  var hf = f < 30 ? ' (Below 30 MHz these are plane-wave equivalents; E and H field limits govern.)' : '';
+  $('lim-out').innerHTML = 'Controlled: ' + fmt(c,3) + ' mW/cm² (6-min avg) · Uncontrolled: ' + fmt(u,3) + ' mW/cm² (30-min avg)'
+    + '<span class="steps">At ' + fmt(f) + ' MHz.' + floor + hf + '</span>';
+  drawCurve(f);
+});
+
+/* Band chips */
+Array.prototype.forEach.call(document.querySelectorAll('.band-chip'), function(b){
+  b.addEventListener('click', function(){
+    $('lim-f').value = this.getAttribute('data-f');
+    $('lim-f').dispatchEvent(new Event('input'));
+  });
+});
+
+/* Limit curve: log-log, 0.3..1e5 MHz, 0.1..200 mW/cm^2 */
+function drawCurve(markF){
+  var svg = $('curve-svg');
+  var W=460, H=220, L=44, R=10, T=12, B=30;
+  var fmin=Math.log10(0.3), fmax=5;
+  var smin=Math.log10(0.1), smax=Math.log10(200);
+  function X(f){ return L + (Math.log10(f)-fmin)/(fmax-fmin)*(W-L-R); }
+  function Y(s){ return T + (smax-Math.log10(s))/(smax-smin)*(H-T-B); }
+  function path(fn){
+    var d='', first=true;
+    for(var i=0;i<=200;i++){
+      var f = Math.pow(10, fmin + i*(fmax-fmin)/200);
+      var p = (first?'M':'L') + X(f).toFixed(1) + ' ' + Y(fn(f)).toFixed(1);
+      d += p + ' '; first=false;
+    }
+    return d;
+  }
+  var marks = [1,10,100,1000,10000,100000];
+  var yh = '';
+  [0.1,1,10,100].forEach(function(s){
+    yh += '<line x1="'+L+'" y1="'+Y(s)+'" x2="'+(W-R)+'" y2="'+Y(s)+'" stroke="var(--divider)" stroke-width="1"/>' +
+          '<text x="'+(L-6)+'" y="'+(Y(s)+3)+'" text-anchor="end" font-size="9" fill="var(--text-2)" font-family="monospace">'+s+'</text>';
+  });
+  var xh = '';
+  marks.forEach(function(f){
+    xh += '<text x="'+X(f)+'" y="'+(H-10)+'" text-anchor="middle" font-size="9" fill="var(--text-2)" font-family="monospace">'+(f>=1000? (f/1000)+'G' : f+'M').replace('0.','.')+'</text>';
+  });
+  var markX = (markF>=0.3 && markF<=1e5) ? '<line x1="'+X(markF)+'" y1="'+T+'" x2="'+X(markF)+'" y2="'+(H-B)+'" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="4 3"/>' : '';
+  svg.innerHTML = yh + xh + markX +
+    '<path d="'+path(limitControlled)+'" fill="none" stroke="var(--good)" stroke-width="2"/>' +
+    '<path d="'+path(limitUncontrolled)+'" fill="none" stroke="var(--warn)" stroke-width="2" stroke-dasharray="7 4"/>' +
+    '<text x="'+(W-R)+'" y="'+(Y(5)-5)+'" text-anchor="end" font-size="10" fill="var(--good)">controlled</text>' +
+    '<text x="'+(W-R)+'" y="'+(Y(1)+14)+'" text-anchor="end" font-size="10" fill="var(--warn)">uncontrolled</text>' +
+    '<text x="'+(L-30)+'" y="'+T+'" font-size="9" fill="var(--text-2)" transform="rotate(-90 '+(L-30)+' '+(T+60)+')">mW/cm²</text>';
+}
+
+/* ---- Worst-case on-time within a sliding window ---- */
+function worstOn(on, off, w){
+  if (on <= 0) return 0;
+  if (off <= 0) return Math.min(on, w) >= w ? w : w; /* continuous */
+  var p = on + off;
+  var k = Math.floor(w / p);
+  var rem = w - k * p;
+  return Math.min(w, k * on + Math.min(on, rem));
+}
+
+/* ---- Station evaluation ---- */
+bind(['ev-p','ev-mode','ev-on','ev-off','ev-g','ev-d','ev-f','ev-refl'], function(){
+  var pep = num('ev-p'), duty = parseFloat($('ev-mode').value);
+  var on = num('ev-on'), off = num('ev-off');
+  var gdb = num('ev-g'), d = num('ev-d'), f = num('ev-f');
+  var refl = parseFloat($('ev-refl').value);
+  if (!(pep >= 0) || !(d > 0) || !(f >= 0.3)) { $('ev-out').textContent = 'Fill in power, distance, and frequency.'; return; }
+  var G = Math.pow(10, gdb/10);
+  var Rcm = d * 100;
+
+  var f6 = worstOn(on, off, 6) / 6;
+  var f30 = worstOn(on, off, 30) / 30;
+  var pavg6 = pep * duty * f6;      /* controlled window */
+  var pavg30 = pep * duty * f30;    /* uncontrolled window */
+
+  function density(pw){ return (pw * 1000 * G * refl) / (4 * Math.PI * Rcm * Rcm); }
+  var s6 = density(pavg6), s30 = density(pavg30);
+  var lc = limitControlled(f), lu = limitUncontrolled(f);
+
+  function compDist(pw, lim){ return Math.sqrt((pw * 1000 * G * refl) / (4 * Math.PI * lim)) / 100; }
+
+  $('ev-out').innerHTML = 'Average power: ' + fmt(pavg6,4) + ' W (6-min window) · ' + fmt(pavg30,4) + ' W (30-min window)'
+    + '<span class="steps">' + fmt(pep) + ' W × duty ' + duty + ' × on-fraction ' + fmt(f6,3) + ' / ' + fmt(f30,3)
+    + '. Gain ×' + fmt(G,3) + ', reflection ×' + refl + ', at ' + fmt(d) + ' m.</span>';
+
+  function verdict(title, s, lim, pw, win){
+    var ok = s <= lim;
+    var pct = lim > 0 ? (s/lim*100) : Infinity;
+    return '<div class="verdict ' + (ok?'pass':'fail') + '">'
+      + '<h3>' + title + '</h3>'
+      + '<div class="v-line">' + fmt(s,3) + ' mW/cm² vs limit ' + fmt(lim,3) + '</div>'
+      + '<div class="v-line">' + fmt(pct,3) + '% of limit — <span class="v-word">' + (ok ? 'COMPLIANT' : 'OVER THE LIMIT') + '</span></div>'
+      + '<div class="v-line">Compliant beyond ' + fmt(compDist(pw, lim),3) + ' m</div>'
+      + '</div>';
+  }
+  $('ev-verdicts').innerHTML =
+    verdict('Controlled · 6-min avg', s6, lc, pavg6) +
+    verdict('Uncontrolled · 30-min avg', s30, lu, pavg30);
+
+  $('ev-note').textContent = (f < 30
+    ? 'Below 30 MHz this compares plane-wave equivalent power density; the E and H field limits formally govern. Far-field math over-predicts close to the antenna — conservative, which is the right direction for safety. '
+    : 'Far-field estimate: it over-predicts close to the antenna, which errs on the safe side. ')
+    + 'Uncontrolled areas are anywhere your neighbors or passersby can be.';
+});
+
+/* ---- Exemption check ---- */
+bind(['ex-f','ex-r','ex-erp'], function(){
+  var f = num('ex-f'), r = num('ex-r'), erp = num('ex-erp');
+  if (!(f >= 0.3) || !(r > 0)) { $('ex-out').textContent = 'Enter frequency and distance.'; return; }
+  var th;
+  if (f < 1.34) th = 1920*r*r;
+  else if (f < 30) th = 3450*r*r/(f*f);
+  else if (f < 300) th = 3.83*r*r;
+  else if (f < 1500) th = 0.0128*r*r*f;
+  else th = 19.2*r*r;
+  var lambda2pi = (300/f)/(2*Math.PI);
+  var distOk = r >= lambda2pi;
+  var ok = erp <= th && distOk;
+  $('ex-out').innerHTML = 'Threshold at ' + fmt(r) + ' m, ' + fmt(f) + ' MHz: ' + fmt(th,4) + ' W ERP — your ' + fmt(erp,4) + ' W is '
+    + (ok ? 'AT OR UNDER it: exempt from routine evaluation.' : (distOk ? 'OVER it: run the evaluation above.' : 'inside λ/2π (' + fmt(lambda2pi,3) + ' m) — formula not valid this close; evaluate.'))
+    + '<span class="steps">Exemption is per-source and from ROUTINE evaluation only — the exposure limits themselves always apply. The 1 mW blanket exemption covers milliwatt devices at any distance.</span>';
+});
+})();
+</script>
+
+</body></html>

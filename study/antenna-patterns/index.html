@@ -1,0 +1,797 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex, nofollow"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Antenna Patterns</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f4f6f9; --bg-card:#ffffff; --text:#1e2d42; --text-sec:#4a5568;
+  --text-muted:#6a7a8a; --primary:#2563eb; --primary-fill:rgba(37,99,235,0.13);
+  --primary-stroke:rgba(37,99,235,0.9); --compare:#d97706; --compare-fill:rgba(217,119,6,0.09);
+  --compare-stroke:rgba(217,119,6,0.9); --grid:#cdd5de; --grid-strong:#a0adb8;
+  --border:#dde3ea; --btn-bg:#e8ecf2; --btn-hover:#dce1e9;
+  --btn-active-bg:#2563eb; --btn-active-text:#fff; --plot-bg:#f8fafc;
+  --ground-fill:#e2e6ec; --ground-line:#a0adb8; --ann:#0c4a6e;
+  --ann-line:rgba(12,74,110,0.35); --font-ui:'Inter',-apple-system,system-ui,sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code',monospace;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1724; --bg-card:#1a2538; --text:#e2e8f0; --text-sec:#a0aec0;
+  --text-muted:#718096; --primary:#60a5fa; --primary-fill:rgba(96,165,250,0.13);
+  --primary-stroke:rgba(96,165,250,0.9); --compare:#f59e0b; --compare-fill:rgba(245,158,11,0.09);
+  --compare-stroke:rgba(245,158,11,0.9); --grid:#2d3748; --grid-strong:#4a5568;
+  --border:#2d3748; --btn-bg:#2d3748; --btn-hover:#3a4a5e;
+  --btn-active-bg:#60a5fa; --btn-active-text:#0f1724; --plot-bg:#141e30;
+  --ground-fill:#1e2d42; --ground-line:#4a5568; --ann:#93c5fd;
+  --ann-line:rgba(147,197,253,0.4);
+}}
+:root[data-theme="dark"]{
+  --bg:#0f1724; --bg-card:#1a2538; --text:#e2e8f0; --text-sec:#a0aec0;
+  --text-muted:#718096; --primary:#60a5fa; --primary-fill:rgba(96,165,250,0.13);
+  --primary-stroke:rgba(96,165,250,0.9); --compare:#f59e0b; --compare-fill:rgba(245,158,11,0.09);
+  --compare-stroke:rgba(245,158,11,0.9); --grid:#2d3748; --grid-strong:#4a5568;
+  --border:#2d3748; --btn-bg:#2d3748; --btn-hover:#3a4a5e;
+  --btn-active-bg:#60a5fa; --btn-active-text:#0f1724; --plot-bg:#141e30;
+  --ground-fill:#1e2d42; --ground-line:#4a5568; --ann:#93c5fd;
+  --ann-line:rgba(147,197,253,0.4);
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font-ui);
+  margin:0;padding:16px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+*,*::before,*::after{box-sizing:border-box;}
+.app{max-width:1120px;margin:0 auto;}
+.hdr{text-align:center;margin-bottom:20px;}
+.hdr h1{font-size:1.4rem;font-weight:700;margin:0 0 2px;}
+.hdr p{font-size:.8125rem;color:var(--text-muted);margin:0;}
+.ctrl{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+  padding:14px 16px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;}
+.cg{display:flex;flex-direction:column;gap:5px;}
+.cg>label,.cg>.clbl{font-size:.75rem;font-weight:600;color:var(--text-sec);
+  text-transform:uppercase;letter-spacing:.05em;}
+.bg{display:flex;flex-wrap:wrap;gap:5px;}
+.bg button{font-family:var(--font-ui);font-size:.8rem;font-weight:500;padding:5px 11px;
+  border:1px solid var(--border);border-radius:6px;background:var(--btn-bg);
+  color:var(--text);cursor:pointer;transition:background .12s,border-color .12s;white-space:nowrap;}
+.bg button:hover{background:var(--btn-hover);}
+.bg button.on{background:var(--btn-active-bg);color:var(--btn-active-text);border-color:var(--btn-active-bg);}
+.sr{display:flex;align-items:center;gap:8px;}
+.sr input[type=range]{flex:1;min-width:100px;accent-color:var(--primary);}
+.mono{font-family:var(--font-mono);font-size:.8rem;min-width:3.8em;}
+.cr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.cr label{display:flex;align-items:center;gap:5px;font-size:.75rem;font-weight:600;
+  color:var(--text-sec);cursor:pointer;text-transform:uppercase;letter-spacing:.05em;}
+.cr select{font-family:var(--font-ui);font-size:.8rem;padding:5px 8px;
+  border:1px solid var(--border);border-radius:6px;background:var(--btn-bg);color:var(--text);}
+.legend{display:none;gap:20px;justify-content:center;flex-wrap:wrap;
+  margin-bottom:14px;font-size:.8125rem;}
+.legend.vis{display:flex;}
+.li{display:flex;align-items:center;gap:7px;}
+.ll{width:26px;height:3px;border-radius:1px;}
+.ll.sol{background:var(--primary);}
+.ll.dash{background:repeating-linear-gradient(to right,var(--compare) 0,var(--compare) 5px,transparent 5px,transparent 9px);
+  background-size:9px 3px;}
+.plots{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-bottom:16px;}
+.pw{flex:1 1 340px;max-width:540px;min-width:290px;background:var(--bg-card);
+  border:1px solid var(--border);border-radius:10px;padding:14px 14px 10px;}
+.pw h3{font-size:.8125rem;font-weight:600;margin:0 0 6px;text-align:center;color:var(--text-sec);}
+.pw canvas{width:100%;aspect-ratio:1;display:block;}
+.specs{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+  padding:14px 16px;margin-bottom:16px;}
+.sg{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+.sc{border-left:3px solid var(--primary);padding:8px 14px;border-radius:4px;
+  background:var(--bg);min-width:0;}
+.sc.cmp{border-left-style:dashed;border-left-color:var(--compare);}
+.sc-hd{font-size:.875rem;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.sc-hd .tag{font-size:.65rem;font-weight:600;padding:1px 6px;border-radius:3px;
+  text-transform:uppercase;letter-spacing:.04em;}
+.sc-hd .tag.pri{background:var(--primary);color:var(--btn-active-text);}
+.sc-hd .tag.sec{background:var(--compare);color:#fff;}
+.si{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;}
+.si-r{display:flex;flex-direction:column;gap:1px;}
+.si-l{font-size:.7rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;}
+.si-v{font-family:var(--font-mono);font-size:.875rem;font-weight:500;}
+.note{text-align:center;font-size:.75rem;color:var(--text-muted);margin-top:4px;}
+@media(max-width:640px){
+  .ctrl{padding:12px;gap:10px;}
+  .bg button{font-size:.75rem;padding:4px 8px;}
+  .pw{padding:10px 8px 8px;}
+  .si{grid-template-columns:1fr;}
+}
+</style>
+
+<div class="app">
+  <div class="hdr">
+    <h1>Antenna Radiation Patterns</h1>
+    <p>Amateur Extra Study &mdash; E9 Antennas &middot; KD7SWH</p>
+  </div>
+  <div class="ctrl">
+    <div class="cg">
+      <span class="clbl">Antenna Type</span>
+      <div class="bg" id="abtn">
+        <button data-t="dipole">&frac12;&lambda; Dipole</button>
+        <button data-t="vertical">&frac14;&lambda; Vertical</button>
+        <button data-t="yagi3" class="on">3-el Yagi</button>
+        <button data-t="yagi5">5-el Yagi</button>
+        <button data-t="quad">Cubical Quad</button>
+        <button data-t="collinear">Collinear</button>
+      </div>
+    </div>
+    <div class="cg" id="hgrp">
+      <label for="hsl">Height Above Ground</label>
+      <div class="sr">
+        <input type="range" id="hsl" min="0.1" max="2.0" step="0.05" value="0.5">
+        <span id="hval" class="mono">0.50&lambda;</span>
+      </div>
+    </div>
+    <div class="cg" id="sgrp" style="display:none">
+      <label for="ssl">Element Spacing</label>
+      <div class="sr">
+        <input type="range" id="ssl" min="0.10" max="0.35" step="0.01" value="0.20">
+        <span id="sval" class="mono">0.20&lambda;</span>
+      </div>
+    </div>
+    <div class="cg">
+      <div class="cr">
+        <label><input type="checkbox" id="cmpchk"> Compare</label>
+        <select id="cmpsel" disabled>
+          <option value="dipole">&frac12;&lambda; Dipole</option>
+          <option value="vertical">&frac14;&lambda; Vertical</option>
+          <option value="yagi3">3-el Yagi</option>
+          <option value="yagi5">5-el Yagi</option>
+          <option value="quad">Cubical Quad</option>
+          <option value="collinear">Collinear</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="legend" id="leg">
+    <div class="li"><span class="ll sol"></span><span>Primary: <strong id="legP"></strong> (solid)</span></div>
+    <div class="li"><span class="ll dash"></span><span>Compare: <strong id="legC"></strong> (dashed)</span></div>
+  </div>
+  <div class="plots">
+    <div class="pw"><h3>Azimuth Pattern (H-plane)</h3><canvas id="az"></canvas></div>
+    <div class="pw"><h3>Elevation Pattern (E-plane)</h3><canvas id="el"></canvas></div>
+  </div>
+  <div class="specs" id="specs"></div>
+  <p class="note">Patterns use simplified analytical models for study purposes. All dimensions in wavelengths (&lambda;).</p>
+</div>
+
+<script>
+'use strict';
+/* ================================================================
+   ANTENNA DATABASE
+   ================================================================ */
+var ANT={
+  dipole:{nm:'½λ Dipole',full:'Half-Wave Dipole',dbi:2.15,bwAz:360,bwEl:78,
+    fb:0,pt:'Omnidirectional',omni:true,hgt:true,spc:false,ds:0,
+    desc:'Reference antenna (0 dBd)'},
+  vertical:{nm:'¼λ Vertical',full:'Quarter-Wave Vertical',dbi:5.15,bwAz:360,bwEl:45,
+    fb:0,pt:'Omnidirectional',omni:true,hgt:false,spc:false,ds:0,
+    desc:'Ground plane, max at horizon'},
+  yagi3:{nm:'3-el Yagi',full:'3-Element Yagi',dbi:8.0,bwAz:65,bwEl:55,
+    fb:20,pt:'Unidirectional',omni:false,hgt:true,spc:true,ds:0.20,
+    desc:'Reflector + driven + director'},
+  yagi5:{nm:'5-el Yagi',full:'5-Element Yagi',dbi:11.0,bwAz:44,bwEl:40,
+    fb:22,pt:'Unidirectional',omni:false,hgt:true,spc:true,ds:0.20,
+    desc:'Reflector + driven + 3 directors'},
+  quad:{nm:'Cubical Quad',full:'Cubical Quad (2-element)',dbi:7.0,bwAz:70,bwEl:60,
+    fb:18,pt:'Unidirectional',omni:false,hgt:true,spc:false,ds:0,
+    desc:'Full-wave loop elements'},
+  collinear:{nm:'Collinear',full:'Collinear Vertical (2-element)',dbi:6.0,bwAz:360,bwEl:30,
+    fb:0,pt:'Omnidirectional',omni:true,hgt:true,spc:false,ds:0,
+    desc:'Stacked ½λ elements'}
+};
+
+/* ================================================================
+   STATE
+   ================================================================ */
+var S={ant:'yagi3',h:0.5,sp:0.20,cmp:false,cmpW:'dipole'};
+
+/* ================================================================
+   HELPERS
+   ================================================================ */
+var D2R=Math.PI/180, R2D=180/Math.PI;
+function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+function p2dB(p){return p>1e-10?10*Math.log10(p):-100;}
+function dB2r(dB,R){return R*clamp((dB+30)/30,0,1);}
+function css(p){return getComputedStyle(document.documentElement).getPropertyValue(p).trim();}
+
+function azPt(cx,cy,r,deg){var a=deg*D2R;return[cx+r*Math.sin(a),cy-r*Math.cos(a)];}
+function elPt(cx,cy,r,deg){var a=deg*D2R;return[cx+r*Math.cos(a),cy-r*Math.sin(a)];}
+
+/* ================================================================
+   PATTERN MATH
+   ================================================================ */
+function calcAz(type,phi){
+  var a=ANT[type];
+  if(a.omni) return 1.0;
+  var pr=((phi*D2R%(2*Math.PI))+3*Math.PI)%(2*Math.PI)-Math.PI;
+  var bw=a.bwAz, fb=a.fb;
+  if(a.spc&&type===S.ant){
+    var sr=S.sp/(a.ds||0.20);
+    bw=clamp(bw*Math.pow(1/sr,0.3),20,120);
+    fb=clamp(fb+3*Math.log(sr)/Math.log(2),10,30);
+  }
+  var bwr=bw*D2R, sig=bwr/(2*Math.sqrt(2*Math.log(2)));
+  var ml=Math.exp(-pr*pr/(2*sig*sig));
+  var sAng=bwr*0.9, sSig=sig*0.4, sLev=0.05;
+  var sl=sLev*Math.exp(-Math.pow(Math.abs(pr)-sAng,2)/(2*sSig*sSig));
+  var fbP=Math.pow(10,-fb/10);
+  var bP=Math.PI-Math.abs(pr), bSig=Math.max(sig*2.2,0.35);
+  var bl=fbP*Math.exp(-bP*bP/(2*bSig*bSig));
+  return Math.max(ml,sl,bl,1e-4);
+}
+
+function calcEl(type,alpha,hLam,dir){
+  var a=ANT[type], ar=alpha*D2R, pat;
+  if(type==='vertical'){
+    var ca=Math.cos(ar);
+    if(Math.abs(ca)<0.002) return 1e-4;
+    var e=Math.cos(Math.PI/2*Math.sin(ar))/ca;
+    pat=e*e;
+  }else if(type==='collinear'){
+    var ca2=Math.cos(ar);
+    if(Math.abs(ca2)<0.002) return 1e-4;
+    var el2=Math.cos(Math.PI/2*Math.sin(ar))/ca2;
+    var af2=Math.cos(Math.PI/2*Math.sin(ar));
+    pat=Math.pow(el2*af2,2);
+    if(hLam>0){var gf=Math.sin(2*Math.PI*hLam*Math.sin(ar));pat*=gf*gf;}
+  }else{
+    pat=1.0;
+    if(hLam>0){var gf2=Math.sin(2*Math.PI*hLam*Math.sin(ar));pat=gf2*gf2;}
+  }
+  if(dir==='back'&&!a.omni) pat*=Math.pow(10,-a.fb/10);
+  return Math.max(pat,1e-4);
+}
+
+/* ================================================================
+   ANALYSIS
+   ================================================================ */
+function takeoffAngle(type,hLam){
+  var mx=0,ang=0;
+  for(var a=0;a<=90;a+=0.5){
+    var p=calcEl(type,a,hLam,'fwd');
+    if(p>mx){mx=p;ang=a;}
+  }
+  return ang;
+}
+
+function elBeamwidth(type,hLam){
+  var ta=takeoffAngle(type,hLam);
+  var pk=calcEl(type,ta,hLam,'fwd'), half=pk*0.5;
+  var lo=0,hi=90;
+  for(var a=ta;a>=0;a-=0.5){if(calcEl(type,a,hLam,'fwd')<half){lo=a+0.5;break;}}
+  for(var a2=ta;a2<=90;a2+=0.5){if(calcEl(type,a2,hLam,'fwd')<half){hi=a2-0.5;break;}}
+  return Math.max(1,hi-lo);
+}
+
+function effBw(type){
+  var a=ANT[type];
+  if(a.omni) return 360;
+  var bw=a.bwAz;
+  if(a.spc&&type===S.ant){var sr=S.sp/(a.ds||0.20);bw=clamp(bw*Math.pow(1/sr,0.3),20,120);}
+  return Math.round(bw);
+}
+
+function effFb(type){
+  var a=ANT[type];
+  if(a.omni) return 0;
+  var fb=a.fb;
+  if(a.spc&&type===S.ant){var sr=S.sp/(a.ds||0.20);fb=clamp(fb+3*Math.log(sr)/Math.log(2),10,30);}
+  return Math.round(fb*10)/10;
+}
+
+/* ================================================================
+   CANVAS SETUP
+   ================================================================ */
+function setup(cv){
+  var dpr=window.devicePixelRatio||1;
+  var r=cv.getBoundingClientRect(), w=r.width, h=r.height;
+  cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);
+  var c=cv.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);
+  return{c:c,w:w,h:h};
+}
+
+/* ================================================================
+   RENDER: AZIMUTH
+   ================================================================ */
+function drawAz(){
+  var cv=document.getElementById('az');
+  var o=setup(cv), c=o.c, w=o.w, h=o.h;
+  var cx=w/2, cy=h/2, R=Math.min(w,h)/2-34;
+  var fU=css('--font-ui')||'Inter,sans-serif';
+  var fM=css('--font-mono')||'monospace';
+
+  /* background */
+  c.beginPath();c.arc(cx,cy,R,0,2*Math.PI);
+  c.fillStyle=css('--plot-bg');c.fill();
+
+  /* dB circles */
+  var dbs=[-3,-6,-10,-20];
+  c.lineWidth=0.5;c.strokeStyle=css('--grid');
+  for(var i=0;i<dbs.length;i++){
+    var rr=dB2r(dbs[i],R);
+    c.beginPath();c.arc(cx,cy,rr,0,2*Math.PI);c.stroke();
+  }
+  /* outer circle */
+  c.lineWidth=1;c.strokeStyle=css('--grid-strong');
+  c.beginPath();c.arc(cx,cy,R,0,2*Math.PI);c.stroke();
+
+  /* radial lines + labels */
+  c.lineWidth=0.5;c.strokeStyle=css('--grid');
+  c.font='11px '+fU;c.fillStyle=css('--text-muted');c.textAlign='center';c.textBaseline='middle';
+  for(var d=0;d<360;d+=30){
+    var p=azPt(cx,cy,R,d);
+    c.beginPath();c.moveTo(cx,cy);c.lineTo(p[0],p[1]);c.stroke();
+    var lp=azPt(cx,cy,R+15,d);
+    c.fillText(d+'°',lp[0],lp[1]);
+  }
+
+  /* dB labels along 50 deg line */
+  c.font='9px '+fM;c.textAlign='left';c.textBaseline='bottom';
+  for(var j=0;j<dbs.length;j++){
+    var rr2=dB2r(dbs[j],R);
+    var lp2=azPt(cx,cy,rr2,47);
+    var txt=dbs[j]+'dB';
+    var tm=c.measureText(txt);
+    c.fillStyle=css('--plot-bg');c.fillRect(lp2[0]-1,lp2[1]-9,tm.width+2,11);
+    c.fillStyle=css('--text-muted');c.fillText(txt,lp2[0],lp2[1]);
+  }
+
+  /* comparison pattern */
+  if(S.cmp) drawAzPat(c,cx,cy,R,S.cmpW,true);
+  /* primary pattern */
+  drawAzPat(c,cx,cy,R,S.ant,false);
+
+  /* annotations */
+  drawAzAnn(c,cx,cy,R,S.ant,fU,fM);
+}
+
+function drawAzPat(c,cx,cy,R,type,isCmp){
+  /* compute */
+  var pts=[];
+  for(var d=0;d<360;d++){
+    var pw=calcAz(type,d);
+    pts.push(pw);
+  }
+  /* normalize */
+  var mx=0;for(var i=0;i<pts.length;i++) if(pts[i]>mx) mx=pts[i];
+  if(mx>0) for(var j=0;j<pts.length;j++) pts[j]/=mx;
+
+  /* fill */
+  c.beginPath();
+  for(var d2=0;d2<=360;d2++){
+    var pw2=pts[d2%360];
+    var db=p2dB(pw2), r=dB2r(db,R);
+    var p=azPt(cx,cy,r,d2);
+    if(d2===0) c.moveTo(p[0],p[1]); else c.lineTo(p[0],p[1]);
+  }
+  c.closePath();
+  c.fillStyle=isCmp?css('--compare-fill'):css('--primary-fill');
+  c.fill();
+
+  /* stroke */
+  c.beginPath();
+  for(var d3=0;d3<=360;d3++){
+    var pw3=pts[d3%360];
+    var db2=p2dB(pw3), r2=dB2r(db2,R);
+    var p2=azPt(cx,cy,r2,d3);
+    if(d3===0) c.moveTo(p2[0],p2[1]); else c.lineTo(p2[0],p2[1]);
+  }
+  c.strokeStyle=isCmp?css('--compare-stroke'):css('--primary-stroke');
+  c.lineWidth=isCmp?1.5:2;
+  if(isCmp) c.setLineDash([6,4]); else c.setLineDash([]);
+  c.stroke();c.setLineDash([]);
+}
+
+function drawAzAnn(c,cx,cy,R,type,fU,fM){
+  var a=ANT[type];
+  if(a.omni){
+    /* omni label */
+    c.font='bold 13px '+fU;c.fillStyle=css('--ann');
+    c.textAlign='center';c.textBaseline='middle';
+    c.fillText('Omnidirectional',cx,cy-12);
+    c.font='11px '+fM;
+    c.fillText(a.dbi.toFixed(2)+' dBi',cx,cy+6);
+    return;
+  }
+  /* main lobe */
+  c.font='bold 11px '+fU;c.fillStyle=css('--ann');
+  c.textAlign='center';c.textBaseline='bottom';
+  var mainR=dB2r(0,R);
+  var mp=azPt(cx,cy,mainR+18,0);
+  c.fillText('Main lobe',mp[0],mp[1]-2);
+  c.font='10px '+fM;c.textBaseline='top';
+  c.fillText(a.dbi.toFixed(1)+' dBi',mp[0],mp[1]+1);
+
+  /* back lobe */
+  var fbVal=effFb(type);
+  var bDb=-fbVal;
+  var bR=dB2r(bDb,R);
+  c.font='bold 10px '+fU;c.textBaseline='top';
+  var bp=azPt(cx,cy,bR+16,180);
+  c.fillText('Back lobe',bp[0],bp[1]+2);
+  c.font='10px '+fM;
+  c.fillText('F/B: '+fbVal.toFixed(0)+' dB',bp[0],bp[1]+15);
+
+  /* beamwidth arc */
+  var bw=effBw(type);
+  var halfBw=bw/2;
+  var arcR=dB2r(-3,R)*0.92;
+  /* -3dB lines */
+  c.save();c.setLineDash([3,3]);c.strokeStyle=css('--ann-line');c.lineWidth=1;
+  var lp1=azPt(cx,cy,arcR+10,-halfBw);
+  var lp2=azPt(cx,cy,arcR+10,halfBw);
+  c.beginPath();c.moveTo(cx,cy);c.lineTo(lp1[0],lp1[1]);c.stroke();
+  c.beginPath();c.moveTo(cx,cy);c.lineTo(lp2[0],lp2[1]);c.stroke();
+  c.setLineDash([]);c.restore();
+  /* arc */
+  c.beginPath();
+  for(var d=(-halfBw);d<=halfBw;d+=1){
+    var pp=azPt(cx,cy,arcR,d);
+    if(d===Math.ceil(-halfBw)) c.moveTo(pp[0],pp[1]);
+    else c.lineTo(pp[0],pp[1]);
+  }
+  c.strokeStyle=css('--ann');c.lineWidth=1.5;c.stroke();
+  /* label */
+  var bwLabel=azPt(cx,cy,arcR-14,halfBw+4);
+  c.font='bold 10px '+fU;c.fillStyle=css('--ann');
+  c.textAlign='left';c.textBaseline='middle';
+  c.fillText('BW: '+bw+'°',bwLabel[0],bwLabel[1]);
+  /* -3dB tick labels */
+  c.font='9px '+fM;c.fillStyle=css('--text-muted');
+  c.textAlign='center';c.textBaseline='middle';
+  c.fillText('-3dB',lp1[0]-10,lp1[1]+2);
+  c.fillText('-3dB',lp2[0]+10,lp2[1]+2);
+}
+
+/* ================================================================
+   RENDER: ELEVATION
+   ================================================================ */
+function drawEl(){
+  var cv=document.getElementById('el');
+  var o=setup(cv), c=o.c, w=o.w, h=o.h;
+  var cx=w/2, cy=h/2, R=Math.min(w,h)/2-34;
+  var fU=css('--font-ui')||'Inter,sans-serif';
+  var fM=css('--font-mono')||'monospace';
+
+  /* sky background (upper semicircle) */
+  c.beginPath();c.arc(cx,cy,R,Math.PI,0,false);c.closePath();
+  c.fillStyle=css('--plot-bg');c.fill();
+
+  /* ground (lower semicircle) */
+  c.beginPath();c.arc(cx,cy,R,0,Math.PI,false);c.closePath();
+  c.fillStyle=css('--ground-fill');c.fill();
+
+  /* horizon line */
+  c.beginPath();c.moveTo(cx-R,cy);c.lineTo(cx+R,cy);
+  c.strokeStyle=css('--ground-line');c.lineWidth=1.5;c.stroke();
+
+  /* dB semicircles */
+  var dbs=[-3,-6,-10,-20];
+  c.lineWidth=0.5;c.strokeStyle=css('--grid');
+  for(var i=0;i<dbs.length;i++){
+    var rr=dB2r(dbs[i],R);
+    c.beginPath();c.arc(cx,cy,rr,Math.PI,0,false);c.stroke();
+  }
+  /* outer arc */
+  c.lineWidth=1;c.strokeStyle=css('--grid-strong');
+  c.beginPath();c.arc(cx,cy,R,Math.PI,0,false);c.stroke();
+
+  /* radial lines */
+  c.lineWidth=0.5;c.strokeStyle=css('--grid');
+  var elAngles=[0,30,60,90,120,150,180];
+  for(var j=0;j<elAngles.length;j++){
+    var ep=elPt(cx,cy,R,elAngles[j]);
+    c.beginPath();c.moveTo(cx,cy);c.lineTo(ep[0],ep[1]);c.stroke();
+  }
+
+  /* angle labels */
+  c.font='11px '+fU;c.fillStyle=css('--text-muted');c.textBaseline='middle';
+  var angLabels=[
+    {a:0,t:'0°',al:'left',dx:4,dy:14},
+    {a:30,t:'30°',al:'left',dx:4,dy:0},
+    {a:60,t:'60°',al:'left',dx:4,dy:0},
+    {a:90,t:'90°',al:'center',dx:0,dy:-6},
+    {a:120,t:'60°',al:'right',dx:-4,dy:0},
+    {a:150,t:'30°',al:'right',dx:-4,dy:0},
+    {a:180,t:'0°',al:'right',dx:-4,dy:14}
+  ];
+  for(var k=0;k<angLabels.length;k++){
+    var al=angLabels[k];
+    var ep2=elPt(cx,cy,R+14,al.a);
+    c.textAlign=al.al;
+    c.fillText(al.t,ep2[0]+al.dx,ep2[1]+al.dy);
+  }
+
+  /* Fwd / Back / Zenith / Ground labels */
+  c.font='bold 10px '+fU;c.fillStyle=css('--text-muted');
+  c.textAlign='left';c.textBaseline='top';
+  c.fillText('FWD',cx+R+4,cy+4);
+  c.textAlign='right';
+  c.fillText('BACK',cx-R-4,cy+4);
+  c.textAlign='center';c.textBaseline='bottom';
+  c.fillText('ZENITH',cx,cy-R-4);
+  c.textBaseline='middle';c.font='10px '+fU;
+  c.fillText('Ground',cx,cy+R*0.45);
+
+  /* dB labels along 55 deg */
+  c.font='9px '+fM;c.textAlign='left';c.textBaseline='bottom';
+  for(var m=0;m<dbs.length;m++){
+    var rr2=dB2r(dbs[m],R);
+    var lp=elPt(cx,cy,rr2,55);
+    var txt=dbs[m]+'dB';
+    var tm=c.measureText(txt);
+    c.fillStyle=css('--plot-bg');c.fillRect(lp[0]-1,lp[1]-9,tm.width+2,11);
+    c.fillStyle=css('--text-muted');c.fillText(txt,lp[0],lp[1]);
+  }
+
+  /* comparison pattern */
+  if(S.cmp) drawElPat(c,cx,cy,R,S.cmpW,true);
+  /* primary pattern */
+  drawElPat(c,cx,cy,R,S.ant,false);
+
+  /* annotations */
+  drawElAnn(c,cx,cy,R,S.ant,fU,fM);
+}
+
+function drawElPat(c,cx,cy,R,type,isCmp){
+  var a=ANT[type], hL=a.hgt?S.h:0;
+  var pts=[];var mx=0;
+  for(var d=0;d<=180;d++){
+    var alpha,dir;
+    if(d<=90){alpha=d;dir='fwd';}
+    else{alpha=180-d;dir='back';}
+    var pw=calcEl(type,alpha,hL,dir);
+    pts.push(pw);
+    if(pw>mx) mx=pw;
+  }
+  if(mx>0) for(var i=0;i<pts.length;i++) pts[i]/=mx;
+
+  /* fill */
+  c.beginPath();c.moveTo(cx,cy);
+  for(var d2=0;d2<pts.length;d2++){
+    var db=p2dB(pts[d2]),r=dB2r(db,R);
+    var p=elPt(cx,cy,r,d2);
+    c.lineTo(p[0],p[1]);
+  }
+  c.lineTo(cx,cy);c.closePath();
+  c.fillStyle=isCmp?css('--compare-fill'):css('--primary-fill');
+  c.fill();
+
+  /* stroke */
+  c.beginPath();
+  var started=false;
+  for(var d3=0;d3<pts.length;d3++){
+    var db2=p2dB(pts[d3]),r2=dB2r(db2,R);
+    var p2=elPt(cx,cy,r2,d3);
+    if(!started){c.moveTo(p2[0],p2[1]);started=true;}
+    else c.lineTo(p2[0],p2[1]);
+  }
+  c.strokeStyle=isCmp?css('--compare-stroke'):css('--primary-stroke');
+  c.lineWidth=isCmp?1.5:2;
+  if(isCmp) c.setLineDash([6,4]); else c.setLineDash([]);
+  c.stroke();c.setLineDash([]);
+}
+
+function drawElAnn(c,cx,cy,R,type,fU,fM){
+  var a=ANT[type], hL=a.hgt?S.h:0;
+  var ta=takeoffAngle(type,hL);
+
+  if(type==='vertical'){
+    /* vertical: annotate the donut shape */
+    c.font='bold 11px '+fU;c.fillStyle=css('--ann');
+    c.textAlign='center';c.textBaseline='middle';
+    c.fillText('Max at horizon',cx,cy-R*0.3);
+    c.font='10px '+fM;
+    c.fillText('Null at zenith',cx,cy-R*0.7);
+    return;
+  }
+
+  /* takeoff angle annotation */
+  if(ta>1){
+    var lineR=R*0.82;
+    var tp=elPt(cx,cy,lineR,ta);
+    c.save();c.setLineDash([3,3]);c.strokeStyle=css('--ann-line');c.lineWidth=1;
+    c.beginPath();c.moveTo(cx,cy);c.lineTo(tp[0],tp[1]);c.stroke();
+    c.setLineDash([]);c.restore();
+
+    /* angle arc from horizon (0) to takeoff */
+    var arcR=R*0.22;
+    c.beginPath();
+    for(var dd=0;dd<=ta;dd++){
+      var pp=elPt(cx,cy,arcR,dd);
+      if(dd===0) c.moveTo(pp[0],pp[1]); else c.lineTo(pp[0],pp[1]);
+    }
+    c.strokeStyle=css('--ann');c.lineWidth=1.5;c.stroke();
+
+    /* label */
+    var mid=Math.min(ta/2,ta-5);
+    var labR=arcR+14;
+    var lp=elPt(cx,cy,labR,Math.max(mid,5));
+    c.font='bold 10px '+fU;c.fillStyle=css('--ann');
+    c.textAlign='left';c.textBaseline='middle';
+    c.fillText('Takeoff: '+Math.round(ta)+'°',lp[0],lp[1]);
+  }
+
+  /* label the main lobe */
+  if(ta>1){
+    var lobeR=dB2r(0,R)*0.75;
+    var lobePt=elPt(cx,cy,lobeR,ta);
+    c.font='bold 10px '+fU;c.fillStyle=css('--ann');
+    c.textAlign='center';c.textBaseline='bottom';
+    c.fillText('Main lobe',lobePt[0],lobePt[1]-3);
+  }
+
+  /* height note */
+  if(a.hgt){
+    var hNote;
+    if(S.h<=0.3) hNote='NVIS (high angle)';
+    else if(S.h<=0.6) hNote='DX (moderate angle)';
+    else if(S.h<=1.1) hNote='Low angle + lobes';
+    else hNote='Multi-lobe pattern';
+    c.font='10px '+fU;c.fillStyle=css('--text-muted');
+    c.textAlign='center';c.textBaseline='top';
+    c.fillText(hNote,cx,cy+R*0.15);
+  }
+}
+
+/* ================================================================
+   SPECIFICATIONS PANEL
+   ================================================================ */
+function updateSpecs(){
+  var el=document.getElementById('specs');
+  var html='<div class="sg">';
+  html+=specCard(S.ant,false);
+  if(S.cmp) html+=specCard(S.cmpW,true);
+  html+='</div>';
+  el.innerHTML=html;
+}
+
+function specCard(type,isCmp){
+  var a=ANT[type], hL=a.hgt?S.h:0;
+  var ta=takeoffAngle(type,hL);
+  var elbw=elBeamwidth(type,hL);
+  var bw=effBw(type);
+  var fb=effFb(type);
+  var dBd=(a.dbi-2.15).toFixed(2);
+  var tagCls=isCmp?'sec':'pri';
+  var tagTxt=isCmp?'Compare':'Primary';
+  var cls=isCmp?' cmp':'';
+  return '<div class="sc'+cls+'">'
+    +'<div class="sc-hd"><span class="tag '+tagCls+'">'+tagTxt+'</span> '+a.full+'</div>'
+    +'<div class="si">'
+    +'<div class="si-r"><span class="si-l">Gain (dBi)</span><span class="si-v">'+a.dbi.toFixed(2)+'</span></div>'
+    +'<div class="si-r"><span class="si-l">Gain (dBd)</span><span class="si-v">'+dBd+'</span></div>'
+    +'<div class="si-r"><span class="si-l">Beamwidth (Az)</span><span class="si-v">'+(a.omni?'Omni (360°)':bw+'°')+'</span></div>'
+    +'<div class="si-r"><span class="si-l">Beamwidth (El)</span><span class="si-v">'+Math.round(elbw)+'°</span></div>'
+    +'<div class="si-r"><span class="si-l">F/B Ratio</span><span class="si-v">'+(fb>0?fb.toFixed(0)+' dB':'—')+'</span></div>'
+    +'<div class="si-r"><span class="si-l">Takeoff Angle</span><span class="si-v">'+Math.round(ta)+'°</span></div>'
+    +'<div class="si-r"><span class="si-l">Pattern Type</span><span class="si-v">'+a.pt+'</span></div>'
+    +'<div class="si-r"><span class="si-l">Height</span><span class="si-v">'+(a.hgt?S.h.toFixed(2)+'λ':'Ground')+'</span></div>'
+    +'</div></div>';
+}
+
+/* ================================================================
+   RENDER ALL
+   ================================================================ */
+function render(){drawAz();drawEl();updateSpecs();updateLegend();}
+
+function updateLegend(){
+  var leg=document.getElementById('leg');
+  if(S.cmp){
+    leg.classList.add('vis');
+    document.getElementById('legP').textContent=ANT[S.ant].nm;
+    document.getElementById('legC').textContent=ANT[S.cmpW].nm;
+  }else{
+    leg.classList.remove('vis');
+  }
+}
+
+/* ================================================================
+   UI
+   ================================================================ */
+function initUI(){
+  /* antenna buttons */
+  var btns=document.querySelectorAll('#abtn button');
+  btns.forEach(function(b){
+    b.addEventListener('click',function(){
+      btns.forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      S.ant=b.getAttribute('data-t');
+      syncControls();render();save();
+    });
+  });
+
+  /* height slider */
+  var hsl=document.getElementById('hsl');
+  hsl.addEventListener('input',function(){
+    S.h=parseFloat(hsl.value);
+    document.getElementById('hval').textContent=S.h.toFixed(2)+'λ';
+    render();
+  });
+  hsl.addEventListener('change',save);
+
+  /* spacing slider */
+  var ssl=document.getElementById('ssl');
+  ssl.addEventListener('input',function(){
+    S.sp=parseFloat(ssl.value);
+    document.getElementById('sval').textContent=S.sp.toFixed(2)+'λ';
+    render();
+  });
+  ssl.addEventListener('change',save);
+
+  /* compare */
+  var chk=document.getElementById('cmpchk');
+  var sel=document.getElementById('cmpsel');
+  chk.addEventListener('change',function(){
+    S.cmp=chk.checked;
+    sel.disabled=!S.cmp;
+    render();save();
+  });
+  sel.addEventListener('change',function(){
+    S.cmpW=sel.value;
+    render();save();
+  });
+}
+
+function syncControls(){
+  var a=ANT[S.ant];
+  /* height */
+  var hgrp=document.getElementById('hgrp');
+  var hsl=document.getElementById('hsl');
+  if(a.hgt){hgrp.style.opacity='1';hsl.disabled=false;}
+  else{hgrp.style.opacity='0.4';hsl.disabled=true;}
+  /* spacing */
+  var sgrp=document.getElementById('sgrp');
+  sgrp.style.display=a.spc?'':'none';
+  /* button highlight */
+  var btns=document.querySelectorAll('#abtn button');
+  btns.forEach(function(b){b.classList.toggle('on',b.getAttribute('data-t')===S.ant);});
+  /* compare select */
+  document.getElementById('cmpchk').checked=S.cmp;
+  document.getElementById('cmpsel').disabled=!S.cmp;
+  document.getElementById('cmpsel').value=S.cmpW;
+  /* slider values */
+  document.getElementById('hsl').value=S.h;
+  document.getElementById('hval').textContent=S.h.toFixed(2)+'λ';
+  document.getElementById('ssl').value=S.sp;
+  document.getElementById('sval').textContent=S.sp.toFixed(2)+'λ';
+}
+
+/* ================================================================
+   PERSISTENCE
+   ================================================================ */
+function save(){
+  try{localStorage.setItem('kd7swh-ant',JSON.stringify(S));}catch(e){}
+}
+function load(){
+  try{
+    var raw=localStorage.getItem('kd7swh-ant');
+    if(!raw) return;
+    var s=JSON.parse(raw);
+    if(s.ant&&ANT[s.ant]) S.ant=s.ant;
+    if(typeof s.h==='number') S.h=clamp(s.h,0.1,2.0);
+    if(typeof s.sp==='number') S.sp=clamp(s.sp,0.10,0.35);
+    if(typeof s.cmp==='boolean') S.cmp=s.cmp;
+    if(s.cmpW&&ANT[s.cmpW]) S.cmpW=s.cmpW;
+  }catch(e){}
+}
+
+/* ================================================================
+   INIT
+   ================================================================ */
+function init(){
+  load();initUI();syncControls();render();
+  var tid=0;
+  window.addEventListener('resize',function(){clearTimeout(tid);tid=setTimeout(render,120);});
+  /* re-render on color scheme change */
+  if(window.matchMedia){
+    window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',function(){
+      setTimeout(render,50);
+    });
+  }
+}
+init();
+</script>
+
+</body></html>

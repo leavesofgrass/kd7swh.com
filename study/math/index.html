@@ -1,0 +1,887 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex, nofollow"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Extra Class Math Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf8f5;
+  --text: #1b2838;
+  --text-2: #5a7089;
+  --accent: #d4a017;
+  --accent-soft: rgba(212,160,23,0.12);
+  --good: #2563eb;
+  --good-soft: rgba(37,99,235,0.10);
+  --warn: #b45309;
+  --warn-soft: rgba(180,83,9,0.10);
+  --card: #ffffff;
+  --border: #d0ccc5;
+  --divider: #e8e4de;
+  --hover: rgba(27,40,56,0.04);
+  --mono: 'IBM Plex Mono','Consolas',monospace;
+  --sans: 'DM Sans',system-ui,-apple-system,sans-serif;
+  --shadow: 0 1px 3px rgba(27,40,56,0.06);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#151b24; --text:#eae6df; --text-2:#8a9ab0;
+    --accent:#e6b422; --accent-soft:rgba(230,180,34,0.15);
+    --good:#60a5fa; --good-soft:rgba(96,165,250,0.14);
+    --warn:#f0b84a; --warn-soft:rgba(240,184,74,0.13);
+    --card:#1c2530; --border:#2e3a4a; --divider:#2a3444;
+    --hover:rgba(255,255,255,0.04);
+    --shadow:0 1px 3px rgba(0,0,0,0.25);
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#151b24; --text:#eae6df; --text-2:#8a9ab0;
+  --accent:#e6b422; --accent-soft:rgba(230,180,34,0.15);
+  --good:#60a5fa; --good-soft:rgba(96,165,250,0.14);
+  --warn:#f0b84a; --warn-soft:rgba(240,184,74,0.13);
+  --card:#1c2530; --border:#2e3a4a; --divider:#2a3444;
+  --hover:rgba(255,255,255,0.04);
+  --shadow:0 1px 3px rgba(0,0,0,0.25);
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--sans); margin: 0;
+  padding-inline: 16px; padding-block: 0 48px;
+  line-height: 1.55; -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 880px; margin: 0 auto; }
+header.top { text-align: center; padding-block: 28px 8px; }
+.callsign {
+  font-family: var(--mono); font-weight: 600; font-size: 13px;
+  letter-spacing: 0.08em; color: var(--accent); text-transform: uppercase;
+}
+h1 { font-size: 26px; font-weight: 700; margin: 4px 0 8px; text-wrap: balance; }
+.lede { color: var(--text-2); font-size: 15px; max-width: 620px; margin: 0 auto 6px; }
+.lede a { color: var(--good); }
+.exam-fact {
+  font-family: var(--mono); font-size: 12.5px; color: var(--text-2);
+  margin-top: 10px;
+}
+nav.toc {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--bg); padding-block: 10px;
+  border-bottom: 1px solid var(--divider);
+  display: flex; gap: 6px; overflow-x: auto; scrollbar-width: thin;
+  margin-bottom: 24px;
+}
+nav.toc a {
+  flex-shrink: 0; font-family: var(--mono); font-size: 12px; font-weight: 500;
+  color: var(--text); text-decoration: none;
+  border: 1px solid var(--border); border-radius: 100px;
+  padding: 4px 12px; background: var(--card); white-space: nowrap;
+}
+nav.toc a:hover { background: var(--hover); border-color: var(--accent); }
+nav.toc a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+section.module {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; box-shadow: var(--shadow);
+  padding: 20px; margin-bottom: 22px;
+  scroll-margin-top: 64px;
+}
+.mod-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+.mod-head h2 { font-size: 18px; font-weight: 700; margin: 0; }
+.se-tag {
+  font-family: var(--mono); font-size: 11px; font-weight: 600;
+  color: var(--accent); background: var(--accent-soft);
+  border-radius: 8px; padding: 2px 8px;
+}
+.mod-why { color: var(--text-2); font-size: 14px; margin: 0 0 14px; }
+.formula {
+  font-family: var(--mono); font-size: 15.5px; font-weight: 500;
+  background: var(--accent-soft); border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0; padding: 10px 14px; margin: 0 0 14px;
+  overflow-x: auto;
+}
+.formula small { display: block; font-family: var(--sans); font-weight: 400; font-size: 12.5px; color: var(--text-2); margin-top: 4px; }
+.calc {
+  display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;
+  padding: 12px; border: 1px dashed var(--border); border-radius: 10px;
+  margin-bottom: 12px;
+}
+.field { display: flex; flex-direction: column; gap: 3px; min-width: 110px; flex: 1 1 110px; max-width: 170px; }
+.field label { font-size: 12.5px; font-weight: 600; color: var(--text-2); }
+.field input, .field select {
+  font-family: var(--mono); font-size: 15px; color: var(--text);
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: 7px; padding: 7px 9px; width: 100%;
+}
+.field input:focus-visible, .field select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.result {
+  flex: 1 1 100%;
+  font-family: var(--mono); font-size: 15px; font-weight: 600;
+  background: var(--good-soft); border-left: 3px solid var(--good);
+  border-radius: 0 8px 8px 0; padding: 10px 14px;
+}
+.result .steps { display: block; font-weight: 400; font-size: 13px; color: var(--text-2); margin-top: 4px; font-family: var(--sans); }
+.pool {
+  border-top: 1px solid var(--divider); padding-top: 12px; margin-top: 4px;
+}
+.pool h3 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-2); margin: 0 0 8px; }
+.pool-q { font-size: 14px; margin: 0 0 6px; }
+.pool-q .qid { font-family: var(--mono); font-weight: 600; color: var(--accent); }
+details.answer { margin: 4px 0 10px; }
+details.answer summary {
+  cursor: pointer; font-size: 13px; font-weight: 600; color: var(--good);
+  width: fit-content; border-radius: 4px; padding: 2px 4px;
+}
+details.answer summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+details.answer .a-body { font-size: 14px; padding: 8px 12px; background: var(--good-soft); border-radius: 8px; margin-top: 6px; }
+.traps { margin: 10px 0 0; padding: 10px 14px; background: var(--warn-soft); border-left: 3px solid var(--warn); border-radius: 0 8px 8px 0; }
+.traps h3 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--warn); margin: 0 0 6px; }
+.traps ul { margin: 0; padding-left: 18px; font-size: 13.5px; }
+.traps li { margin-bottom: 4px; }
+.tool-link {
+  display: inline-block; font-size: 13px; font-weight: 600;
+  color: var(--good); text-decoration: none;
+  border: 1.5px solid var(--good); border-radius: 100px;
+  padding: 4px 14px; margin-top: 10px; margin-right: 8px;
+}
+.tool-link:hover { background: var(--good-soft); }
+.tool-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.plane-wrap { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+.plane-svg { flex: 0 1 220px; }
+.plane-svg svg { width: 100%; height: auto; display: block; }
+.plane-text { flex: 1 1 240px; font-size: 14px; }
+.quickfacts { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+.qf {
+  border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px;
+}
+.qf .qf-fact { font-family: var(--mono); font-size: 14px; font-weight: 600; }
+.qf .qf-note { font-size: 12.5px; color: var(--text-2); margin-top: 4px; }
+.qf .qid { color: var(--accent); font-family: var(--mono); font-size: 11px; }
+.gone {
+  border: 1.5px dashed var(--warn); background: var(--warn-soft);
+}
+.gone h2 { color: var(--warn); }
+.gone ul { font-size: 14px; padding-left: 20px; margin: 8px 0 0; }
+.gone li { margin-bottom: 5px; }
+footer.foot {
+  text-align: center; color: var(--text-2); font-size: 13px;
+  border-top: 1px solid var(--divider); padding-top: 16px;
+}
+footer.foot a { color: var(--good); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="callsign">KD7SWH</div>
+  <h1>Extra Class Math Lab</h1>
+  <p class="lede">Every calculation family on the 2024–2028 Extra pool: the formula,
+  a live calculator that shows its work, the real exam questions with their real
+  numbers, and the traps each one sets. Nothing here depends on sight of a graph —
+  every answer is announced in words.</p>
+  <p class="exam-fact">50 questions · one per group · 37 to pass · ≈16 will be math or figure questions</p>
+  <p class="lede"><a href="/study/">← Back to the Study Dashboard</a></p>
+</header>
+
+<nav class="toc" aria-label="Formula families">
+  <a href="#reactance">Reactance</a>
+  <a href="#resonance">Resonance</a>
+  <a href="#q-bw">Q &amp; Bandwidth</a>
+  <a href="#tau">Time Constants</a>
+  <a href="#phase">Phase Angle</a>
+  <a href="#polar">Rect ↔ Polar</a>
+  <a href="#admit">Admittance</a>
+  <a href="#power">Real Power</a>
+  <a href="#opamp">Op-Amp Gain</a>
+  <a href="#db">Decibels &amp; dBm</a>
+  <a href="#erp">ERP / EIRP</a>
+  <a href="#feed">Feed Lines &amp; Stubs</a>
+  <a href="#match">Matching</a>
+  <a href="#swr">SWR &amp; Power</a>
+  <a href="#fm">FM Index</a>
+  <a href="#digi">Digital BW</a>
+  <a href="#bits">Bits &amp; Nyquist</a>
+  <a href="#edges">Band Edges</a>
+  <a href="#facts">Quick Facts</a>
+  <a href="#gone">Not on This Exam</a>
+</nav>
+
+<!-- ============ REACTANCE ============ -->
+<section class="module" id="reactance" aria-labelledby="h-reactance">
+  <div class="mod-head"><h2 id="h-reactance">Reactance</h2><span class="se-tag">E5B · E5C</span></div>
+  <p class="mod-why">The arithmetic underneath half of E5. You compute a reactance
+  first, then every other module uses it.</p>
+  <div class="formula">X<sub>L</sub> = 2πfL &nbsp;&nbsp;·&nbsp;&nbsp; X<sub>C</sub> = 1 / (2πfC)
+    <small>f in hertz, L in henries, C in farads. µ = 10⁻⁶, n = 10⁻⁹, p = 10⁻¹².</small></div>
+  <div class="calc" data-calc="reactance">
+    <div class="field"><label for="x-f">Frequency (MHz)</label><input id="x-f" type="number" step="any" value="14"></div>
+    <div class="field"><label for="x-l">Inductance (µH)</label><input id="x-l" type="number" step="any" value="18"></div>
+    <div class="field"><label for="x-c">Capacitance (pF)</label><input id="x-c" type="number" step="any" value="38"></div>
+    <output class="result" id="x-out" aria-live="polite"></output>
+  </div>
+  <div class="pool">
+    <h3>Straight from the pool</h3>
+    <p class="pool-q"><span class="qid">E5C10</span> asks you to plot a 400-Ω resistor in series with 38 pF at 14 MHz — but first you must find X<sub>C</sub>.</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">X<sub>C</sub> = 1 / (2π × 14 × 10⁶ × 38 × 10⁻¹²) ≈ <strong>299 Ω</strong>. The impedance is 400 − j300. (Continues in Rect ↔ Polar below.)</div></details>
+  </div>
+  <div class="traps"><h3>Traps</h3><ul>
+    <li>Picofarads at HF give <em>hundreds</em> of ohms — if you get milliohms or megohms, a prefix slipped.</li>
+    <li>Keep f in plain hertz inside the formula: 14 MHz = 14,000,000 Hz.</li>
+  </ul></div>
+</section>
+
+<!-- ============ RESONANCE ============ -->
+<section class="module" id="resonance" aria-labelledby="h-resonance">
+  <div class="mod-head"><h2 id="h-resonance">Resonant Frequency</h2><span class="se-tag">E5A</span></div>
+  <p class="mod-why">Where X<sub>L</sub> = X<sub>C</sub>. Series resonance: impedance
+  minimum, current maximum, voltage and current in phase. Parallel: impedance maximum.</p>
+  <div class="formula">f<sub>r</sub> = 1 / (2π√(LC))
+    <small>Resistance is <strong>not in this formula</strong> — the exam lists R anyway, as bait.</small></div>
+  <div class="calc" data-calc="resonance">
+    <div class="field"><label for="r-l">Inductance (µH)</label><input id="r-l" type="number" step="any" value="50"></div>
+    <div class="field"><label for="r-c">Capacitance (pF)</label><input id="r-c" type="number" step="any" value="40"></div>
+    <output class="result" id="r-out" aria-live="polite"></output>
+  </div>
+  <div class="pool">
+    <h3>Straight from the pool</h3>
+    <p class="pool-q"><span class="qid">E5A02</span> R = 22 Ω, L = 50 µH, C = 40 pF. Resonant frequency?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">Ignore the 22 Ω. f<sub>r</sub> = 1/(2π√(50µ × 40p)) = <strong>3.56 MHz</strong>.</div></details>
+    <p class="pool-q"><span class="qid">E5A10</span> R = 33 Ω, L = 50 µH, C = 10 pF. Resonant frequency?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">Quarter the capacitance → double the frequency: <strong>7.12 MHz</strong>. (Same L as E5A02, C ÷ 4.)</div></details>
+  </div>
+  <div class="traps"><h3>Traps</h3><ul>
+    <li>R is a decoy in <em>every</em> resonance calculation on this exam.</li>
+    <li>Wrong answers sit at 2× and ½× the right one — dropping the 2π or the square root lands you exactly on a listed choice.</li>
+    <li>E5A10 offers 7.12 <em>kHz</em> and 7.12 <em>MHz</em>. Read the unit.</li>
+  </ul></div>
+  <a class="tool-link" href="/study/rlc/">Open the RLC Filter Explorer →</a>
+</section>
+
+<!-- ============ Q & BANDWIDTH ============ -->
+<section class="module" id="q-bw" aria-labelledby="h-qbw">
+  <div class="mod-head"><h2 id="h-qbw">Q and Half-Power Bandwidth</h2><span class="se-tag">E5A · E4B · E9D</span></div>
+  <p class="mod-why">Q measures how sharp a resonance is. Higher Q, narrower bandwidth —
+  true for tuned circuits, matching networks, and antennas alike.</p>
+  <div class="formula">BW = f<sub>r</sub> / Q &nbsp;&nbsp;·&nbsp;&nbsp; Q<sub>series</sub> = X / R &nbsp;&nbsp;·&nbsp;&nbsp; Q<sub>parallel</sub> = R / X
+    <small>Series and parallel Q are reciprocals — the exam asks the parallel form (E5A09).</small></div>
+  <div class="calc" data-calc="qbw">
+    <div class="field"><label for="q-f">f<sub>r</sub> (MHz)</label><input id="q-f" type="number" step="any" value="7.1"></div>
+    <div class="field"><label for="q-q">Q</label><input id="q-q" type="number" step="any" value="150"></div>
+    <output class="result" id="q-out" aria-live="polite"></output>
+  </div>
+  <div class="pool">
+    <h3>Straight from the pool</h3>
+    <p class="pool-q"><span class="qid">E5A11</span> f<sub>r</sub> = 7.1 MHz, Q = 150. Half-power bandwidth?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">7,100 kHz / 150 = <strong>47.3 kHz</strong>.</div></details>
+    <p class="pool-q"><span class="qid">E5A12</span> f<sub>r</sub> = 3.7 MHz, Q = 118. Half-power bandwidth?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">3,700 kHz / 118 = <strong>31.4 kHz</strong>.</div></details>
+  </div>
+  <div class="traps"><h3>Traps</h3><ul>
+    <li>Half of the correct value is always listed — do <em>not</em> halve the half-power bandwidth. The −3 dB points already define it.</li>
+    <li>Answers appear in both Hz and kHz. 47.3 kHz, not 157.8 Hz.</li>
+    <li>Antenna corollary (E9D06/E9D08): loading coils want high X/R for efficiency, but that raises Q and <em>narrows</em> SWR bandwidth. The exam tests both directions.</li>
+  </ul></div>
+</section>
+
+<!-- ============ TIME CONSTANTS ============ -->
+<section class="module" id="tau" aria-labelledby="h-tau">
+  <div class="mod-head"><h2 id="h-tau">RC Time Constants</h2><span class="se-tag">E5B</span></div>
+  <p class="mod-why">One time constant charges a capacitor to 63.2% of the applied
+  voltage, or discharges it to 36.8%. Those two percentages are the only ones this pool asks.</p>
+  <div class="formula">τ = R × C
+    <small>Handy identity: megohms × microfarads = seconds, directly.</small></div>
+  <div class="calc" data-calc="tau">
+    <div class="field"><label for="t-r">Resistance (MΩ)</label><input id="t-r" type="number" step="any" value="0.5"></div>
+    <div class="field"><label for="t-c">Capacitance (µF)</label><input id="t-c" type="number" step="any" value="440"></div>
+    <output class="result" id="t-out" aria-live="polite"></output>
+  </div>
+  <div class="pool">
+    <h3>Straight from the pool</h3>
+    <p class="pool-q"><span class="qid">E5B04</span> Two 220 µF capacitors and two 1 MΩ resistors, <em>all in parallel</em>. Time constant?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">Parallel capacitors <strong>add</strong>: 440 µF. Parallel resistors <strong>halve</strong>: 0.5 MΩ. τ = 0.5 × 440 = <strong>220 seconds</strong> — right back at the number you started with, which is exactly why the decoys are 55, 110, and 440.</div></details>
+  </div>
+  <div class="traps"><h3>Traps</h3><ul>
+    <li>Caps add in parallel; resistors divide. Every wrong combination of those two rules lands on a listed decoy.</li>
+    <li>63.2% charging and 36.8% discharging (E5B01) — the old multi-time-constant percentages are gone from this pool.</li>
+  </ul></div>
+</section>
+
+<!-- ============ PHASE ANGLE ============ -->
+<section class="module" id="phase" aria-labelledby="h-phase">
+  <div class="mod-head"><h2 id="h-phase">Phase Angle — ELI the ICE Man</h2><span class="se-tag">E5B</span></div>
+  <p class="mod-why">Three pool questions, one formula, and a mnemonic:
+  in an inductive circuit (ELI) voltage leads current; in a capacitive circuit (ICE) voltage lags.</p>
+  <div class="formula">θ = arctan( (X<sub>L</sub> − X<sub>C</sub>) / R )
+    <small>Positive result → net inductive → voltage LEADS. Negative → net capacitive → voltage LAGS.</small></div>
+  <div class="calc" data-calc="phase">
+    <div class="field"><label for="p-xl">X<sub>L</sub> (Ω)</label><input id="p-xl" type="number" step="any" value="250"></div>
+    <div class="field"><label for="p-xc">X<sub>C</sub> (Ω)</label><input id="p-xc" type="number" step="any" value="500"></div>
+    <div class="field"><label for="p-r">R (Ω)</label><input id="p-r" type="number" step="any" value="1000"></div>
+    <output class="result" id="p-out" aria-live="polite"></output>
+  </div>
+  <div class="pool">
+    <h3>Straight from the pool</h3>
+    <p class="pool-q"><span class="qid">E5B07</span> X<sub>C</sub> = 500, R = 1,000, X<sub>L</sub> = 250. Phase relationship?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">Net X = 250 − 500 = −250. θ = arctan(250/1000) = <strong>14.0°, voltage lagging</strong> (net capacitive — ICE).</div></details>
+    <p class="pool-q"><span class="qid">E5B11</span> X<sub>C</sub> = 25, R = 100, X<sub>L</sub> = 75. Phase relationship?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">Net X = +50. θ = arctan(50/100) = <strong>27°, voltage leading</strong> (net inductive — ELI).</div></details>
+  </div>
+  <div class="traps"><h3>Traps</h3><ul>
+    <li>Every answer set offers the angle <em>and its complement</em>, each in both directions — two separate ways to miss. 14° pairs with 68.2°, 27° with 63°.</li>
+    <li>Subtract X<sub>C</sub> from X<sub>L</sub>, not the reverse — the sign carries the lead/lag verdict.</li>
+  </ul></div>
+</section>
+
+<!-- ============ RECT/POLAR ============ -->
+<section class="module" id="polar" aria-labelledby="h-polar">
+  <div class="mod-head"><h2 id="h-polar">Rectangular ↔ Polar (Figure E5-1)</h2><span class="se-tag">E5C</span></div>
+  <p class="mod-why">Two-step problems: compute the reactance, then place R + jX on the
+  complex plane. Resistance runs along the horizontal axis; +j (inductive) is up,
+  −j (capacitive) is down.</p>
+  <div class="formula">Z = R ± jX &nbsp;&nbsp;·&nbsp;&nbsp; |Z| = √(R² + X²) &nbsp;&nbsp;·&nbsp;&nbsp; θ = arctan(X/R)</div>
+  <div class="calc" data-calc="polar">
+    <div class="field"><label for="pl-r">R (Ω)</label><input id="pl-r" type="number" step="any" value="400"></div>
+    <div class="field"><label for="pl-x">X (Ω, negative = capacitive)</label><input id="pl-x" type="number" step="any" value="-300"></div>
+    <output class="result" id="pl-out" aria-live="polite"></output>
+  </div>
+  <div class="plane-wrap">
+    <div class="plane-svg" aria-hidden="true">
+      <svg viewBox="0 0 200 200">
+        <line x1="10" y1="100" x2="190" y2="100" stroke="var(--border)" stroke-width="1.5"/>
+        <line x1="100" y1="10" x2="100" y2="190" stroke="var(--border)" stroke-width="1.5"/>
+        <text x="184" y="94" font-size="9" fill="var(--text-2)" text-anchor="end" font-family="monospace">+R</text>
+        <text x="106" y="20" font-size="9" fill="var(--text-2)" font-family="monospace">+jX</text>
+        <text x="106" y="188" font-size="9" fill="var(--text-2)" font-family="monospace">−jX</text>
+        <circle id="pl-dot" cx="160" cy="145" r="5" fill="var(--accent)"/>
+      </svg>
+    </div>
+    <div class="plane-text" id="pl-text" aria-live="polite"></div>
+  </div>
+  <div class="pool">
+    <h3>Straight from the pool</h3>
+    <p class="pool-q"><span class="qid">E5C10</span> 400 Ω in series with 38 pF at 14 MHz → which point on Figure E5-1?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">X<sub>C</sub> ≈ 299 Ω → Z = 400 − j300 → right of center, <em>below</em> the axis: <strong>Point 4</strong>.</div></details>
+    <p class="pool-q"><span class="qid">E5C11</span> 300 Ω in series with 18 µH at 3.505 MHz?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">X<sub>L</sub> ≈ 396 Ω → Z = 300 + j400 → <em>above</em> the axis: <strong>Point 3</strong>.</div></details>
+  </div>
+  <div class="traps"><h3>Traps</h3><ul>
+    <li>The figure's points differ mostly by the <em>sign of j</em> — capacitive plots below the axis, inductive above.</li>
+    <li>Pure reactance sits on the vertical axis at ±90°; pure resistance on the horizontal (E5C03, E5C07).</li>
+  </ul></div>
+  <a class="tool-link" href="/study/smith-chart/">Open the Smith Chart →</a>
+</section>
+
+<!-- ============ ADMITTANCE ============ -->
+<section class="module" id="admit" aria-labelledby="h-admit">
+  <div class="mod-head"><h2 id="h-admit">Admittance and Susceptance</h2><span class="se-tag">E5B</span></div>
+  <p class="mod-why">Admittance Y is the reciprocal of impedance, measured in siemens.
+  Susceptance B is its imaginary part. Letters matter: G conductance, B susceptance, Y admittance.</p>
+  <div class="formula">Y = 1 / Z
+    <small>In polar form that means: take the reciprocal of the magnitude AND flip the sign of the angle. Two operations — the distractors do only one.</small></div>
+  <div class="calc" data-calc="admit">
+    <div class="field"><label for="ad-m">|Z| (Ω)</label><input id="ad-m" type="number" step="any" value="141.4"></div>
+    <div class="field"><label for="ad-a">Angle (degrees)</label><input id="ad-a" type="number" step="any" value="45"></div>
+    <output class="result" id="ad-out" aria-live="polite"></output>
+  </div>
+  <div class="traps"><h3>Traps</h3><ul>
+    <li><span class="qid">E5B03</span>: reciprocal of magnitude <em>and</em> negate the angle — both, always.</li>
+    <li><span class="qid">E5B02</span>: the letter for susceptance is <strong>B</strong>; conductance is G.</li>
+  </ul></div>
+</section>
+
+<!-- ============ REAL POWER ============ -->
+<section class="module" id="power" aria-labelledby="h-power">
+  <div class="mod-head"><h2 id="h-power">Real vs. Reactive Power</h2><span class="se-tag">E5D</span></div>
+  <p class="mod-why">Only resistance dissipates power. Reactance stores energy in
+  fields and hands it back — "wattless, nonproductive power" in the pool's own words.</p>
+  <div class="formula">P = I² × R
+    <small>R is the resistance alone — never |Z|, never R + X.</small></div>
+  <div class="calc" data-calc="power">
+    <div class="field"><label for="pw-i">Current (A)</label><input id="pw-i" type="number" step="any" value="1"></div>
+    <div class="field"><label for="pw-r">Resistance (Ω)</label><input id="pw-r" type="number" step="any" value="100"></div>
+    <div class="field"><label for="pw-x">Reactance (Ω) — spoiler: unused</label><input id="pw-x" type="number" step="any" value="100"></div>
+    <output class="result" id="pw-out" aria-live="polite"></output>
+  </div>
+  <div class="pool">
+    <h3>Straight from the pool</h3>
+    <p class="pool-q"><span class="qid">E5D11</span> 100 Ω resistor in series with 100 Ω inductive reactance, 1 A flowing. Power consumed?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">1² × 100 = <strong>100 watts</strong>. The 141.4 W decoy uses |Z|; the 200 W decoy adds R + X. Only the resistor heats.</div></details>
+  </div>
+</section>
+
+<!-- ============ OP-AMP ============ -->
+<section class="module" id="opamp" aria-labelledby="h-opamp">
+  <div class="mod-head"><h2 id="h-opamp">Inverting Op-Amp Gain</h2><span class="se-tag">E7G</span></div>
+  <p class="mod-why">Four pool questions, one division. The circuit inverts —
+  the output sign flips, and one question exists purely to catch that.</p>
+  <div class="formula">A<sub>V</sub> = −R<sub>F</sub> / R<sub>1</sub>
+    <small>"Absolute voltage gain" means report the magnitude; a computed output voltage keeps the minus sign.</small></div>
+  <div class="calc" data-calc="opamp">
+    <div class="field"><label for="op-rf">R<sub>F</sub> (Ω)</label><input id="op-rf" type="number" step="any" value="10000"></div>
+    <div class="field"><label for="op-r1">R<sub>1</sub> (Ω)</label><input id="op-r1" type="number" step="any" value="1000"></div>
+    <div class="field"><label for="op-vin">V<sub>in</sub> (V, optional)</label><input id="op-vin" type="number" step="any" value="0.23"></div>
+    <output class="result" id="op-out" aria-live="polite"></output>
+  </div>
+  <div class="pool">
+    <h3>Straight from the pool</h3>
+    <p class="pool-q"><span class="qid">E7G09</span> R1 = 1,000 Ω, R<sub>F</sub> = 10,000 Ω, input +0.23 V DC. Output voltage?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">Gain −10 × 0.23 V = <strong>−2.3 volts</strong>. Positive 2.3 V is the trap. It inverts.</div></details>
+    <p class="pool-q"><span class="qid">E7G10</span> R1 = 1,800 Ω, R<sub>F</sub> = 68 kΩ. Absolute voltage gain?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">68,000 / 1,800 = <strong>38</strong>. Note the mixed units — kΩ over Ω.</div></details>
+  </div>
+  <div class="traps"><h3>Traps</h3><ul>
+    <li>R<sub>F</sub> arrives in kilohms while R1 arrives in ohms. Convert first.</li>
+    <li>Distractors sit at 2× and ½× the correct ratio.</li>
+  </ul></div>
+</section>
+
+<!-- ============ DECIBELS ============ -->
+<section class="module" id="db" aria-labelledby="h-db">
+  <div class="mod-head"><h2 id="h-db">Decibels, dBm, and the Link Budget</h2><span class="se-tag">E4C · E4D</span></div>
+  <p class="mod-why">dBm turns multiplication into addition: 0 dBm is 1 milliwatt,
+  +10 dB is ×10, +3 dB is ×2. A link budget is just a sum down the signal chain.</p>
+  <div class="formula">dBm = 10 log₁₀(P / 1 mW) &nbsp;·&nbsp; RX level = TX + gains − losses &nbsp;·&nbsp; ΔNF = 10 log₁₀(BW₂/BW₁)</div>
+  <div class="calc" data-calc="link">
+    <div class="field"><label for="lb-tx">TX power (dBm)</label><input id="lb-tx" type="number" step="any" value="40"></div>
+    <div class="field"><label for="lb-g">Antenna gains, total (dBi)</label><input id="lb-g" type="number" step="any" value="9"></div>
+    <div class="field"><label for="lb-l">Losses + path loss (dB)</label><input id="lb-l" type="number" step="any" value="100"></div>
+    <output class="result" id="lb-out" aria-live="polite"></output>
+  </div>
+  <div class="pool">
+    <h3>Straight from the pool</h3>
+    <p class="pool-q"><span class="qid">E4D13</span> 10 W transmitter (+40 dBm), 6 dBi and 3 dBi antennas, 100 dB path loss. Received level?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">40 + 6 + 3 − 100 = <strong>−51 dBm</strong>.</div></details>
+    <p class="pool-q"><span class="qid">E4D12</span> Same idea plus MDS −103 dBm and 6 dB required SNR. Link margin?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">Received: 40 + 10 − 3 − 136 = −89 dBm. Needed: −103 + 6 = −97 dBm. Margin = −89 − (−97) = <strong>+8 dB</strong>. Add the SNR to the MDS <em>before</em> comparing.</div></details>
+    <p class="pool-q"><span class="qid">E4C06</span> Receiver bandwidth widens from 50 Hz to 1,000 Hz. Noise floor rises by?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">10 log₁₀(20) = <strong>13 dB</strong> — think 10 dB (×10) + 3 dB (×2).</div></details>
+  </div>
+  <div class="traps"><h3>Traps</h3><ul>
+    <li>The dBm-to-watts ladder: −100 dBm = 0.1 picowatt (<span class="qid">E4D14</span>). Decoys are the neighboring powers of ten.</li>
+    <li>Memorize the mental pairs: 3 dB = ×2, 10 dB = ×10, so 13 dB = ×20 and 6 dB = ×4.</li>
+  </ul></div>
+  <a class="tool-link" href="/study/link-budget/">Open the RF Link Budget →</a>
+</section>
+
+<!-- ============ ERP ============ -->
+<section class="module" id="erp" aria-labelledby="h-erp">
+  <div class="mod-head"><h2 id="h-erp">ERP and EIRP</h2><span class="se-tag">E9A</span></div>
+  <p class="mod-why">Sum every loss the question lists, add the antenna gain, convert
+  the net dB back to watts. Each pool question adds one more loss term than the last.</p>
+  <div class="formula">ERP = TPO × 10^(net dB / 10) &nbsp;&nbsp;·&nbsp;&nbsp; dBi = dBd + 2.15
+    <small>Gain given in dBd → ERP. Gain in dBi → EIRP. Same arithmetic, different reference antenna.</small></div>
+  <div class="calc" data-calc="erp">
+    <div class="field"><label for="e-p">TX output (W)</label><input id="e-p" type="number" step="any" value="150"></div>
+    <div class="field"><label for="e-g">Antenna gain (dB)</label><input id="e-g" type="number" step="any" value="7"></div>
+    <div class="field"><label for="e-l">Total losses (dB)</label><input id="e-l" type="number" step="any" value="4.2"></div>
+    <output class="result" id="e-out" aria-live="polite"></output>
+  </div>
+  <div class="pool">
+    <h3>Straight from the pool</h3>
+    <p class="pool-q"><span class="qid">E9A02</span> 150 W, 2 dB feed line loss, 2.2 dB duplexer loss, 7 dBd gain. ERP?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">Net: 7 − 4.2 = +2.8 dB → 150 × 1.9 ≈ <strong>286 W</strong>.</div></details>
+    <p class="pool-q"><span class="qid">E9A12</span> An antenna has 6 dBi gain. Gain in dBd?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">6 − 2.15 = <strong>3.85 dBd</strong>. The dipole already has 2.15 dB over isotropic.</div></details>
+  </div>
+  <div class="traps"><h3>Traps</h3><ul>
+    <li>Miss one listed loss (duplexer, circulator) and you land on a decoy built for exactly that miss.</li>
+    <li>Mental anchors: +1 dB ≈ ×1.26, +2 dB ≈ ×1.6, +3 dB = ×2.</li>
+  </ul></div>
+  <a class="tool-link" href="/study/antenna-patterns/">Open Antenna Patterns →</a>
+</section>
+
+<!-- ============ FEED LINES ============ -->
+<section class="module" id="feed" aria-labelledby="h-feed">
+  <div class="mod-head"><h2 id="h-feed">Feed Lines, Velocity Factor, and Stubs</h2><span class="se-tag">E9F</span></div>
+  <p class="mod-why">Electrical length shrinks by the velocity factor. And the stub
+  rules compress to three lines worth memorizing cold.</p>
+  <div class="formula">length (m) = fraction of λ × (300 / f<sub>MHz</sub>) × VF
+    <small>¼-wave INVERTS its far end (short → open). ½-wave REPEATS it. ⅛-wave shorted = inductive, open = capacitive.</small></div>
+  <div class="calc" data-calc="feed">
+    <div class="field"><label for="f-f">Frequency (MHz)</label><input id="f-f" type="number" step="any" value="14.1"></div>
+    <div class="field"><label for="f-frac">Fraction of λ</label>
+      <select id="f-frac"><option value="0.5" selected>1/2 wave</option><option value="0.25">1/4 wave</option><option value="0.125">1/8 wave</option><option value="1">Full wave</option></select></div>
+    <div class="field"><label for="f-vf">Velocity factor</label><input id="f-vf" type="number" step="any" min="0.1" max="1" value="0.97"></div>
+    <output class="result" id="f-out" aria-live="polite"></output>
+  </div>
+  <div class="pool">
+    <h3>Straight from the pool</h3>
+    <p class="pool-q"><span class="qid">E9F06</span> Air-insulated parallel-conductor line, electrically ½ wavelength at 14.10 MHz. Physical length?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">Air line VF ≈ 0.97–1. (300/14.10)/2 ≈ <strong>10.6 meters</strong>. The 8.5 m decoy wrongly applies coax's VF of 0.66–0.80.</div></details>
+    <p class="pool-q"><span class="qid">E9F09</span> Impedance of a ¼-wave line shorted at the far end?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body"><strong>Very high</strong> — the quarter wave inverts. (Open ¼-wave → very low; shorted ½-wave → very low, it repeats.)</div></details>
+  </div>
+  <div class="traps"><h3>Traps</h3><ul>
+    <li>Match the VF to the line type: air ≈ 1, foam higher than solid dielectric, solid coax ≈ 0.66.</li>
+    <li>Recite the stub table as pairs before the exam: ¼ inverts, ½ repeats, ⅛ shorted is an inductor, ⅛ open is a capacitor.</li>
+  </ul></div>
+</section>
+
+<!-- ============ MATCHING ============ -->
+<section class="module" id="match" aria-labelledby="h-match">
+  <div class="mod-head"><h2 id="h-match">Impedance Matching — the Q-Section</h2><span class="se-tag">E9E · E9G</span></div>
+  <p class="mod-why">A quarter-wave transformer's impedance is the geometric mean of
+  the two impedances it joins. The Smith chart questions are pure vocabulary.</p>
+  <div class="formula">Z<sub>section</sub> = √(Z₁ × Z₂)
+    <small>Smith chart: circles = constant resistance, arcs = constant reactance, the one straight line = the resistance axis.</small></div>
+  <div class="calc" data-calc="match">
+    <div class="field"><label for="m-z1">Z₁ (Ω)</label><input id="m-z1" type="number" step="any" value="100"></div>
+    <div class="field"><label for="m-z2">Z₂ (Ω)</label><input id="m-z2" type="number" step="any" value="50"></div>
+    <output class="result" id="m-out" aria-live="polite"></output>
+  </div>
+  <div class="pool">
+    <h3>Straight from the pool</h3>
+    <p class="pool-q"><span class="qid">E9E06</span> Match a 100-Ω feed point to 50-Ω line with a quarter-wave section of what impedance?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">√5000 = 70.7 Ω, which isn't offered — pick the nearest standard line: <strong>75 Ω</strong>. The 62-Ω decoy is the arithmetic average.</div></details>
+  </div>
+  <a class="tool-link" href="/study/smith-chart/">Open the Smith Chart →</a>
+</section>
+
+<!-- ============ SWR ============ -->
+<section class="module" id="swr" aria-labelledby="h-swr">
+  <div class="mod-head"><h2 id="h-swr">Forward, Reflected, and S-Parameters</h2><span class="se-tag">E4B · E9E</span></div>
+  <p class="mod-why">The load absorbs what doesn't come back. And the S-parameter
+  questions are a two-line vocabulary list.</p>
+  <div class="formula">P<sub>absorbed</sub> = P<sub>forward</sub> − P<sub>reflected</sub>
+    <small>S11 = input return loss (the SWR-like one). S21 = forward gain. Subscripts: measured-at, driven-at.</small></div>
+  <div class="calc" data-calc="swr">
+    <div class="field"><label for="s-f">Forward power (W)</label><input id="s-f" type="number" step="any" value="100"></div>
+    <div class="field"><label for="s-r">Reflected power (W)</label><input id="s-r" type="number" step="any" value="25"></div>
+    <output class="result" id="s-out" aria-live="polite"></output>
+  </div>
+  <div class="pool">
+    <h3>Straight from the pool</h3>
+    <p class="pool-q"><span class="qid">E4B06</span> 100 W forward, 25 W reflected. Power absorbed by the load?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">100 − 25 = <strong>75 watts</strong>. The decoys add them (125) or split the difference (112.5).</div></details>
+  </div>
+</section>
+
+<!-- ============ FM INDEX ============ -->
+<section class="module" id="fm" aria-labelledby="h-fm">
+  <div class="mod-head"><h2 id="h-fm">FM Modulation Index and Deviation Ratio</h2><span class="se-tag">E8B</span></div>
+  <p class="mod-why">Same division, different inputs: modulation index uses the
+  deviation and modulating frequency of the moment; deviation ratio uses the maximums.</p>
+  <div class="formula">m = deviation / modulating frequency &nbsp;&nbsp;·&nbsp;&nbsp; DR = max deviation / highest modulating frequency</div>
+  <div class="calc" data-calc="fm">
+    <div class="field"><label for="fm-d">Deviation, one-sided (kHz)</label><input id="fm-d" type="number" step="any" value="5"></div>
+    <div class="field"><label for="fm-m">Modulating freq (kHz)</label><input id="fm-m" type="number" step="any" value="3"></div>
+    <output class="result" id="fm-out" aria-live="polite"></output>
+  </div>
+  <div class="pool">
+    <h3>Straight from the pool</h3>
+    <p class="pool-q"><span class="qid">E8B05</span> Carrier swings ±5 kHz, highest modulating frequency 3 kHz. Deviation ratio?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">5 / 3 = <strong>1.67</strong>. "Plus or minus 5 kHz" means the one-sided deviation is 5 — doubling it is the trap.</div></details>
+    <p class="pool-q"><span class="qid">E8B04</span> ±6 kHz deviation, 2 kHz modulating frequency. Index?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">6 / 2 = <strong>3</strong>.</div></details>
+  </div>
+</section>
+
+<!-- ============ DIGITAL BW ============ -->
+<section class="module" id="digi" aria-labelledby="h-digi">
+  <div class="mod-head"><h2 id="h-digi">Digital Signal Bandwidth</h2><span class="se-tag">E8C</span></div>
+  <p class="mod-why">Two formulas and one memorized constant cover the whole group.</p>
+  <div class="formula">CW: BW ≈ 4 × WPM (Hz) &nbsp;·&nbsp; FSK: BW = baud + 1.2 × shift &nbsp;·&nbsp; FT8 = 50 Hz, always</div>
+  <div class="calc" data-calc="digi">
+    <div class="field"><label for="d-mode">Mode</label>
+      <select id="d-mode"><option value="cw" selected>CW (from WPM)</option><option value="fsk">FSK (baud + shift)</option></select></div>
+    <div class="field"><label for="d-a">WPM or baud</label><input id="d-a" type="number" step="any" value="13"></div>
+    <div class="field"><label for="d-b">Shift (Hz, FSK only)</label><input id="d-b" type="number" step="any" value="4800"></div>
+    <output class="result" id="d-out" aria-live="polite"></output>
+  </div>
+  <div class="pool">
+    <h3>Straight from the pool</h3>
+    <p class="pool-q"><span class="qid">E8C05</span> Bandwidth of 13-WPM International Morse?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">≈ 4 × 13 = <strong>52 Hz</strong>. The decoys use ×1, ×2, and ×8.</div></details>
+    <p class="pool-q"><span class="qid">E8C07</span> 4,800-Hz shift, 9,600-baud ASCII FM. Bandwidth?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">9,600 + 1.2 × 4,800 = <strong>15.36 kHz</strong>. Not Carson's rule — this exam wants baud + 1.2 × shift.</div></details>
+  </div>
+</section>
+
+<!-- ============ BITS ============ -->
+<section class="module" id="bits" aria-labelledby="h-bits">
+  <div class="mod-head"><h2 id="h-bits">Bits, Levels, Nyquist, Dividers</h2><span class="se-tag">E8A · E7F · E7A</span></div>
+  <p class="mod-why">Everything here is a power of two. n bits give 2ⁿ levels;
+  n flip-flops divide by 2ⁿ; sampling needs 2× the highest frequency.</p>
+  <div class="formula">levels = 2ⁿ &nbsp;·&nbsp; bits needed = ⌈log₂(range/resolution)⌉ &nbsp;·&nbsp; f<sub>sample</sub> ≥ 2 × f<sub>max</sub></div>
+  <div class="calc" data-calc="bits">
+    <div class="field"><label for="b-n">Bits (or flip-flops)</label><input id="b-n" type="number" step="1" min="1" max="24" value="8"></div>
+    <div class="field"><label for="b-steps">…or levels needed</label><input id="b-steps" type="number" step="any" value="1000"></div>
+    <output class="result" id="b-out" aria-live="polite"></output>
+  </div>
+  <div class="pool">
+    <h3>Straight from the pool</h3>
+    <p class="pool-q"><span class="qid">E8A09</span> How many levels can an 8-bit A/D converter encode?</p>
+    <details class="answer"><summary>Show the answer</summary><div class="a-body">2⁸ = <strong>256</strong>.</div></details>
+    <p class="pool-q"><span class="qid">E7F06</span> Measure 1 volt at 1 millivolt resolution — minimum bits?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body">1,000 steps needed; 2⁸ = 256 is too few, 2¹⁰ = 1,024 → <strong>10 bits</strong>.</div></details>
+    <p class="pool-q"><span class="qid">E7A04</span> Divide a signal's frequency by 16 — how many flip-flops?</p>
+    <details class="answer"><summary>Show the answer</summary><div class="a-body">log₂16 = <strong>4</strong>.</div></details>
+  </div>
+</section>
+
+<!-- ============ BAND EDGES ============ -->
+<section class="module" id="edges" aria-labelledby="h-edges">
+  <div class="mod-head"><h2 id="h-edges">Band-Edge Arithmetic</h2><span class="se-tag">E1A</span></div>
+  <p class="mod-why">The displayed carrier frequency is not where the signal ends.
+  USB occupies the 3 kHz <em>above</em> the display; LSB the 3 kHz <em>below</em>.
+  The whole signal must stay inside the segment.</p>
+  <div class="formula">USB: carrier … carrier + 3 kHz &nbsp;&nbsp;·&nbsp;&nbsp; LSB: carrier − 3 kHz … carrier
+    <small>Edges to know cold: 20 m top = 14.350; 75 m Extra phone floor = 3.600; 20 m data/phone boundary = 14.150.</small></div>
+  <div class="calc" data-calc="edges">
+    <div class="field"><label for="ed-c">Displayed carrier (MHz)</label><input id="ed-c" type="number" step="0.0001" value="14.348"></div>
+    <div class="field"><label for="ed-sb">Sideband</label>
+      <select id="ed-sb"><option value="usb" selected>USB</option><option value="lsb">LSB</option></select></div>
+    <div class="field"><label for="ed-bw">Signal width (kHz)</label><input id="ed-bw" type="number" step="any" value="3"></div>
+    <div class="field"><label for="ed-edge">Band edge (MHz)</label><input id="ed-edge" type="number" step="0.0001" value="14.350"></div>
+    <output class="result" id="ed-out" aria-live="polite"></output>
+  </div>
+  <div class="pool">
+    <h3>Straight from the pool</h3>
+    <p class="pool-q"><span class="qid">E1A01</span> 3 kHz-wide USB with the display reading 14.348 MHz — legal?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body"><strong>No</strong> — the signal reaches 14.351, and 1 kHz of it sits above the 14.350 band edge.</div></details>
+    <p class="pool-q"><span class="qid">E1A04</span> A station calls CQ at 3.601 MHz LSB. Legal for you to answer there?</p>
+    <details class="answer"><summary>Show the answer</summary>
+      <div class="a-body"><strong>No</strong> — your LSB sidebands would reach down to 3.598, below the 3.600 phone-segment floor.</div></details>
+  </div>
+</section>
+
+<!-- ============ QUICK FACTS ============ -->
+<section class="module" id="facts" aria-labelledby="h-facts">
+  <div class="mod-head"><h2 id="h-facts">Quick Facts — One-Line Answers</h2><span class="se-tag">assorted</span></div>
+  <p class="mod-why">Single-question families. Each is one memorized line.</p>
+  <div class="quickfacts">
+    <div class="qf"><div class="qf-fact">63.2% / 36.8%</div><div class="qf-note">One time constant: charge to, discharge to <span class="qid">E5B01</span></div></div>
+    <div class="qf"><div class="qf-fact">2.5 : 1</div><div class="qf-note">PEP-to-average ratio of unprocessed SSB voice <span class="qid">E8A06</span></div></div>
+    <div class="qf"><div class="qf-fact">+6 dB per frequency doubling</div><div class="qf-note">Ideal parabolic dish gain — not 3 dB <span class="qid">E9D01</span></div></div>
+    <div class="qf"><div class="qf-fact">15% farther</div><div class="qf-note">VHF radio horizon vs. geometric horizon <span class="qid">E3C06</span></div></div>
+    <div class="qf"><div class="qf-fact">Ah ÷ A = hours</div><div class="qf-note">Battery life = capacity over average current <span class="qid">E7D09</span></div></div>
+    <div class="qf"><div class="qf-fact">(V<sub>in</sub> − V<sub>out</sub>) × I</div><div class="qf-note">Series linear regulator dissipation <span class="qid">E7D13</span></div></div>
+    <div class="qf"><div class="qf-fact">0.6–0.7 V</div><div class="qf-note">Silicon base-emitter "on" voltage <span class="qid">E6A07</span></div></div>
+    <div class="qf"><div class="qf-fact">efficiency = R<sub>rad</sub> / R<sub>total</sub></div><div class="qf-note">Antenna efficiency — total includes loss R <span class="qid">E9A09</span></div></div>
+    <div class="qf"><div class="qf-fact">50 Hz</div><div class="qf-note">FT8 signal bandwidth, memorized <span class="qid">E8C06</span></div></div>
+  </div>
+</section>
+
+<!-- ============ GONE ============ -->
+<section class="module gone" id="gone" aria-labelledby="h-gone">
+  <div class="mod-head"><h2 id="h-gone">Not on This Exam — Don't Study It</h2></div>
+  <p class="mod-why">Older guides drill these. The 2024–2028 pool (verified against the
+  February 2026 errata) removed them — spend the hours elsewhere.</p>
+  <ul>
+    <li>Energy storage numerics (E = ½CV², E = ½LI²) — gone.</li>
+    <li>Power-factor multiplication problems — gone; PF survives only as a distractor word.</li>
+    <li>Transformer turns-ratio calculations — gone.</li>
+    <li>The old PEP-from-peak-to-peak-voltage problems (×1.414 conversions) — gone; only the 2.5:1 ratio remains.</li>
+    <li>Numeric radio-horizon distance formulas — gone; only "15% farther" remains.</li>
+  </ul>
+</section>
+
+<footer class="foot">
+  <p>Companion tools:
+    <a href="/study/rf-exposure/">RF Exposure Lab</a> ·
+    <a href="/study/rlc/">RLC Filter Explorer</a> ·
+    <a href="/study/smith-chart/">Smith Chart</a> ·
+    <a href="/study/link-budget/">RF Link Budget</a> ·
+    <a href="/study/antenna-patterns/">Antenna Patterns</a> ·
+    <a href="/study/band-conditions/">HF Band Conditions</a> ·
+    <a href="https://kd7swh.com/propagation/">Live propagation at kd7swh.com</a></p>
+  <p>Question IDs and numbers from the NCVEC 2024–2028 Extra pool. 73 de KD7SWH.</p>
+</footer>
+</div>
+
+<script>
+(function() {
+'use strict';
+var $ = function(id){ return document.getElementById(id); };
+function num(id){ var v = parseFloat($(id).value); return isFinite(v) ? v : NaN; }
+function fmt(x, d){ if(!isFinite(x)) return '—'; return Number(x.toPrecision(d||4)).toLocaleString('en-US',{maximumFractionDigits:8}); }
+function bind(ids, fn){ ids.forEach(function(id){ $(id).addEventListener('input', fn); }); fn(); }
+
+/* Reactance */
+bind(['x-f','x-l','x-c'], function(){
+  var f=num('x-f')*1e6, L=num('x-l')*1e-6, C=num('x-c')*1e-12;
+  var xl=2*Math.PI*f*L, xc=1/(2*Math.PI*f*C);
+  $('x-out').innerHTML = 'X<sub>L</sub> = '+fmt(xl)+' Ω · X<sub>C</sub> = '+fmt(xc)+' Ω'
+    + '<span class="steps">X_L = 2π × '+fmt(f/1e6)+' MHz × '+fmt(L*1e6)+' µH; X_C = 1/(2π f C). '
+    + (xl>xc ? 'Net inductive at this frequency.' : xc>xl ? 'Net capacitive at this frequency.' : 'Resonant — reactances equal.')+'</span>';
+});
+
+/* Resonance */
+bind(['r-l','r-c'], function(){
+  var L=num('r-l')*1e-6, C=num('r-c')*1e-12;
+  var fr=1/(2*Math.PI*Math.sqrt(L*C));
+  $('r-out').innerHTML = 'f<sub>r</sub> = '+fmt(fr/1e6)+' MHz'
+    + '<span class="steps">1 / (2π√('+fmt(num('r-l'))+' µH × '+fmt(num('r-c'))+' pF)). Any resistance in the problem is a decoy.</span>';
+});
+
+/* Q & BW */
+bind(['q-f','q-q'], function(){
+  var f=num('q-f')*1e6, q=num('q-q');
+  var bw=f/q;
+  $('q-out').innerHTML = 'BW = '+fmt(bw/1e3)+' kHz'
+    + '<span class="steps">'+fmt(f/1e3)+' kHz ÷ '+fmt(q)+'. This IS the half-power (−3 dB) bandwidth — do not halve it again.</span>';
+});
+
+/* Tau */
+bind(['t-r','t-c'], function(){
+  var R=num('t-r'), C=num('t-c');
+  $('t-out').innerHTML = 'τ = '+fmt(R*C)+' seconds'
+    + '<span class="steps">MΩ × µF = seconds. After '+fmt(R*C)+' s: charged to 63.2%, or discharged to 36.8%.</span>';
+});
+
+/* Phase */
+bind(['p-xl','p-xc','p-r'], function(){
+  var net=num('p-xl')-num('p-xc'), r=num('p-r');
+  var th=Math.atan2(net,r)*180/Math.PI;
+  var verdict = net>0 ? 'voltage LEADS current (net inductive — ELI)' : net<0 ? 'voltage LAGS current (net capacitive — ICE)' : 'in phase (resonant)';
+  $('p-out').innerHTML = 'θ = '+fmt(Math.abs(th),3)+'° — '+verdict
+    + '<span class="steps">arctan(('+fmt(num('p-xl'))+' − '+fmt(num('p-xc'))+') / '+fmt(r)+'). Watch for the complement angle in the answer list.</span>';
+});
+
+/* Polar */
+bind(['pl-r','pl-x'], function(){
+  var r=num('pl-r'), x=num('pl-x');
+  var mag=Math.hypot(r,x), th=Math.atan2(x,r)*180/Math.PI;
+  var quad = x>0 ? 'above the axis (inductive, +j)' : x<0 ? 'below the axis (capacitive, −j)' : 'on the resistance axis (pure R)';
+  $('pl-out').innerHTML = 'Z = '+fmt(r)+(x>=0?' + j':' − j')+fmt(Math.abs(x))+' Ω = '+fmt(mag)+' Ω at '+fmt(th,3)+'°';
+  $('pl-text').textContent = 'On Figure E5-1 this point sits '+ (r>=0?'right of center, ':'left of center, ') + quad + '. Magnitude '+fmt(mag)+' Ω, angle '+fmt(th,3)+' degrees.';
+  var scale = 80/Math.max(mag,1);
+  var dot=$('pl-dot'); dot.setAttribute('cx', 100 + r*scale); dot.setAttribute('cy', 100 - x*scale);
+});
+
+/* Admittance */
+bind(['ad-m','ad-a'], function(){
+  var m=num('ad-m'), a=num('ad-a');
+  $('ad-out').innerHTML = 'Y = '+fmt(1/m,4)+' S at '+fmt(-a,4)+'°'
+    + '<span class="steps">Reciprocal of the magnitude AND the angle\'s sign flips — both operations, every time.</span>';
+});
+
+/* Power */
+bind(['pw-i','pw-r','pw-x'], function(){
+  var i=num('pw-i'), r=num('pw-r');
+  $('pw-out').innerHTML = 'P = '+fmt(i*i*r)+' watts'
+    + '<span class="steps">I² × R = '+fmt(i)+'² × '+fmt(r)+'. The reactance dissipates nothing — using |Z| or R+X lands on the decoys.</span>';
+});
+
+/* Op-amp */
+bind(['op-rf','op-r1','op-vin'], function(){
+  var g=num('op-rf')/num('op-r1'), vin=num('op-vin');
+  var out = isFinite(vin) ? ' · V_out = '+fmt(-g*vin,3)+' V' : '';
+  $('op-out').innerHTML = 'Gain = −'+fmt(g,3)+' (absolute: '+fmt(g,3)+')'+out
+    + '<span class="steps">−R_F/R_1. The output inverts: positive in, negative out.</span>';
+});
+
+/* Link budget */
+bind(['lb-tx','lb-g','lb-l'], function(){
+  var rx=num('lb-tx')+num('lb-g')-num('lb-l');
+  var watts = Math.pow(10,rx/10)/1000;
+  $('lb-out').innerHTML = 'Received = '+fmt(rx,4)+' dBm'
+    + '<span class="steps">'+fmt(num('lb-tx'))+' + '+fmt(num('lb-g'))+' − '+fmt(num('lb-l'))+'. That is '+watts.toExponential(1)+' watts. For margin: compare against MDS + required SNR.</span>';
+});
+
+/* ERP */
+bind(['e-p','e-g','e-l'], function(){
+  var netdb=num('e-g')-num('e-l');
+  var erp=num('e-p')*Math.pow(10,netdb/10);
+  $('e-out').innerHTML = 'ERP = '+fmt(erp,3)+' W (net '+(netdb>=0?'+':'')+fmt(netdb,3)+' dB)'
+    + '<span class="steps">'+fmt(num('e-p'))+' W × 10^('+fmt(netdb,3)+'/10). Gain in dBd gives ERP; in dBi it\'s EIRP (dBi = dBd + 2.15).</span>';
+});
+
+/* Feed */
+bind(['f-f','f-vf'], function(){ feedCalc(); });
+$('f-frac').addEventListener('change', feedCalc);
+function feedCalc(){
+  var frac=parseFloat($('f-frac').value);
+  var len=frac*(300/num('f-f'))*num('f-vf');
+  $('f-out').innerHTML = 'Physical length = '+fmt(len,4)+' m'
+    + '<span class="steps">'+frac+'λ × (300/'+fmt(num('f-f'))+') × VF '+fmt(num('f-vf'))+'. Air line VF ≈ 0.95–1; solid coax ≈ 0.66.</span>';
+}
+
+/* Match */
+bind(['m-z1','m-z2'], function(){
+  var z=Math.sqrt(num('m-z1')*num('m-z2'));
+  $('m-out').innerHTML = 'Q-section Z = '+fmt(z,4)+' Ω'
+    + '<span class="steps">√('+fmt(num('m-z1'))+' × '+fmt(num('m-z2'))+'). On the exam, pick the nearest standard line impedance.</span>';
+});
+
+/* SWR */
+bind(['s-f','s-r'], function(){
+  var fwd=num('s-f'), ref=num('s-r');
+  var swr = (Math.sqrt(fwd)+Math.sqrt(ref))/(Math.sqrt(fwd)-Math.sqrt(ref));
+  $('s-out').innerHTML = 'Absorbed = '+fmt(fwd-ref)+' W'
+    + '<span class="steps">Forward minus reflected. (For reference, that reflection is an SWR of about '+fmt(swr,3)+':1 — not asked numerically on this pool.)</span>';
+});
+
+/* FM */
+bind(['fm-d','fm-m'], function(){
+  var m=num('fm-d')/num('fm-m');
+  $('fm-out').innerHTML = 'Index / ratio = '+fmt(m,3)
+    + '<span class="steps">'+fmt(num('fm-d'))+' ÷ '+fmt(num('fm-m'))+'. "±5 kHz" means the deviation is 5, not 10. Watch the decimal-shift decoys.</span>';
+});
+
+/* Digital */
+bind(['d-a','d-b'], function(){ digiCalc(); });
+$('d-mode').addEventListener('change', digiCalc);
+function digiCalc(){
+  var mode=$('d-mode').value;
+  if(mode==='cw'){
+    $('d-out').innerHTML = 'CW bandwidth ≈ '+fmt(4*num('d-a'))+' Hz'
+      + '<span class="steps">4 × WPM. Shape factor (rise/fall time) sets the multiplier.</span>';
+  } else {
+    var bw=num('d-a')+1.2*num('d-b');
+    $('d-out').innerHTML = 'FSK bandwidth = '+fmt(bw/1000,4)+' kHz'
+      + '<span class="steps">baud + 1.2 × shift = '+fmt(num('d-a'))+' + 1.2 × '+fmt(num('d-b'))+'. Not Carson\'s rule.</span>';
+  }
+}
+
+/* Bits */
+bind(['b-n','b-steps'], function(){
+  var n=Math.round(num('b-n'));
+  var steps=num('b-steps');
+  var need=Math.ceil(Math.log2(steps));
+  $('b-out').innerHTML = '2^'+n+' = '+Math.pow(2,n).toLocaleString()+' levels · '+fmt(steps,6)+' levels need '+need+' bits'
+    + '<span class="steps">'+n+' flip-flops divide frequency by '+Math.pow(2,n).toLocaleString()+'. For resolution: 2^'+(need-1)+' = '+Math.pow(2,need-1)+' is too few, 2^'+need+' = '+Math.pow(2,need)+' covers it.</span>';
+});
+
+/* Edges */
+bind(['ed-c','ed-bw','ed-edge'], function(){ edgeCalc(); });
+$('ed-sb').addEventListener('change', edgeCalc);
+function edgeCalc(){
+  var c=num('ed-c'), bw=num('ed-bw')/1000, edge=num('ed-edge'), sb=$('ed-sb').value;
+  var lo = sb==='usb' ? c : c-bw;
+  var hi = sb==='usb' ? c+bw : c;
+  var legal = sb==='usb' ? hi<=edge : lo>=edge;
+  $('ed-out').innerHTML = 'Signal occupies '+lo.toFixed(4)+' – '+hi.toFixed(4)+' MHz — '
+    + (legal ? 'INSIDE the '+edge.toFixed(3)+' edge: legal.' : 'CROSSES the '+edge.toFixed(3)+' edge: NOT legal.')
+    + '<span class="steps">'+(sb==='usb'?'USB extends UP from the displayed carrier.':'LSB extends DOWN from the displayed carrier.')+' The display shows the carrier, not the signal edge.</span>';
+}
+})();
+</script>
+
+</body></html>

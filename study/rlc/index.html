@@ -1,0 +1,1341 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex, nofollow"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>RLC Filter Explorer</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+:root {
+  --bg: #faf7f2;
+  --bg-panel: #f0ece5;
+  --bg-plot: #ffffff;
+  --text: #2c3340;
+  --text-muted: #5a6a7a;
+  --trace-mag: #3366cc;
+  --trace-phase: #cc7a00;
+  --grid: rgba(90,106,122,0.35);
+  --grid-minor: rgba(90,106,122,0.12);
+  --annotation: #d4880a;
+  --accent: #3366cc;
+  --border: #c8c3ba;
+  --hover-bg: rgba(255,255,255,0.93);
+  --badge-bg: #e8e4dd;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1a1f28;
+    --bg-panel: #242a35;
+    --bg-plot: #1e2430;
+    --text: #e0ddd8;
+    --text-muted: #8a96a6;
+    --trace-mag: #6699ff;
+    --trace-phase: #ffaa33;
+    --grid: rgba(138,150,166,0.30);
+    --grid-minor: rgba(138,150,166,0.10);
+    --annotation: #e8a020;
+    --accent: #5588dd;
+    --border: #3a4550;
+    --hover-bg: rgba(30,36,48,0.93);
+    --badge-bg: #2e3644;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1a1f28;
+  --bg-panel: #242a35;
+  --bg-plot: #1e2430;
+  --text: #e0ddd8;
+  --text-muted: #8a96a6;
+  --trace-mag: #6699ff;
+  --trace-phase: #ffaa33;
+  --grid: rgba(138,150,166,0.30);
+  --grid-minor: rgba(138,150,166,0.10);
+  --annotation: #e8a020;
+  --accent: #5588dd;
+  --border: #3a4550;
+  --hover-bg: rgba(30,36,48,0.93);
+  --badge-bg: #2e3644;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+  padding: 16px;
+  min-height: 100vh;
+}
+
+#app { max-width: 1100px; margin: 0 auto; }
+
+h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.subtitle {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+/* Toggle groups */
+.mode-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+.toggle-group {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.toggle-group button {
+  border: none;
+  background: transparent;
+  padding: 5px 13px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  border-right: 1px solid var(--border);
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.toggle-group button:last-child { border-right: none; }
+.toggle-group button.active {
+  background: var(--accent);
+  color: #fff;
+}
+.toggle-group button:hover:not(.active):not(:disabled) {
+  background: var(--badge-bg);
+}
+.toggle-group button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Sliders */
+.sliders {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin-bottom: 18px;
+  padding: 12px 16px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 300px;
+  min-width: 280px;
+}
+.slider-row label {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+  width: 16px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.slider-row input[type="range"] {
+  flex: 1;
+  min-width: 120px;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--border);
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+.slider-row input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid var(--bg);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+}
+.slider-row input[type="range"]::-moz-range-thumb {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid var(--bg);
+}
+.slider-row .value {
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.82rem;
+  font-weight: 600;
+  min-width: 90px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* Main layout */
+.main {
+  display: flex;
+  gap: 18px;
+}
+.plots-col {
+  flex: 1;
+  min-width: 0;
+}
+.calc-col {
+  width: 240px;
+  flex-shrink: 0;
+}
+
+/* Canvas containers */
+.plot-wrap {
+  position: relative;
+  margin-bottom: 6px;
+}
+.plot-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+canvas {
+  width: 100%;
+  display: block;
+  border-radius: 4px;
+}
+#magCanvas { height: 280px; }
+#phaseCanvas { height: 195px; }
+
+/* Exam annotations */
+.exam-bar {
+  display: flex;
+  gap: 2px;
+  margin-top: 10px;
+  font-size: 0.76rem;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.exam-bar .region {
+  flex: 1;
+  padding: 8px 10px;
+  background: var(--bg-panel);
+  text-align: center;
+}
+.exam-bar .region.center {
+  border-left: 2px solid var(--annotation);
+  border-right: 2px solid var(--annotation);
+}
+.exam-bar .region-title {
+  font-weight: 700;
+  margin-bottom: 2px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+}
+.exam-bar .region-text {
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+/* Calc panel */
+.calc-panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 0.8rem;
+}
+.calc-panel h2 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+.calc-row {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.calc-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.calc-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-bottom: 1px;
+}
+.calc-formula {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+.calc-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+/* Hover tooltip */
+.hover-tip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--hover-bg);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 5px 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  white-space: nowrap;
+  display: none;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main { flex-direction: column; }
+  .calc-col { width: 100%; }
+  #magCanvas { height: 240px; }
+  #phaseCanvas { height: 170px; }
+  .slider-row { min-width: 0; flex-basis: 100%; }
+  h1 { font-size: 1.15rem; }
+}
+@media (max-width: 440px) {
+  body { padding: 10px; }
+  .mode-row { gap: 6px; }
+  .toggle-group button { padding: 4px 8px; font-size: 0.7rem; }
+  .sliders { padding: 8px 10px; }
+  #magCanvas { height: 210px; }
+  #phaseCanvas { height: 150px; }
+}
+</style>
+
+<div id="app">
+  <h1>RLC Filter Explorer</h1>
+  <p class="subtitle">Interactive frequency response for Amateur Extra study (E5 / E7) -- KD7SWH</p>
+
+  <div class="mode-row">
+    <div class="toggle-group" id="circuitMode">
+      <button class="active" data-v="series">Series RLC</button>
+      <button data-v="parallel">Parallel RLC</button>
+    </div>
+    <div class="toggle-group" id="filterView">
+      <button class="active" data-v="impedance">|Z| Impedance</button>
+      <button data-v="bandpass">Bandpass</button>
+      <button data-v="lowpass">Low-pass</button>
+      <button data-v="highpass">High-pass</button>
+    </div>
+  </div>
+
+  <div class="sliders">
+    <div class="slider-row">
+      <label>R</label>
+      <input type="range" id="rSlider" min="0" max="1000" step="1">
+      <span class="value" id="rVal">50.0 &#8486;</span>
+    </div>
+    <div class="slider-row">
+      <label>L</label>
+      <input type="range" id="lSlider" min="0" max="1000" step="1">
+      <span class="value" id="lVal">10.0 &micro;H</span>
+    </div>
+    <div class="slider-row">
+      <label>C</label>
+      <input type="range" id="cSlider" min="0" max="1000" step="1">
+      <span class="value" id="cVal">100 pF</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="plots-col">
+      <div class="plot-wrap">
+        <div class="plot-label" id="magLabel">Magnitude: |Z| (&#8486;)</div>
+        <canvas id="magCanvas"></canvas>
+        <div class="hover-tip" id="magTip"></div>
+      </div>
+      <div class="plot-wrap">
+        <div class="plot-label" id="phaseLabel">Phase: &ang;Z (degrees)</div>
+        <canvas id="phaseCanvas"></canvas>
+        <div class="hover-tip" id="phaseTip"></div>
+      </div>
+      <div class="exam-bar" id="examBar">
+        <div class="region" id="regionBelow">
+          <div class="region-title">&larr; Below f&#8320;</div>
+          <div class="region-text">Capacitive (X<sub>C</sub> &gt; X<sub>L</sub>)</div>
+        </div>
+        <div class="region center">
+          <div class="region-title">At resonance</div>
+          <div class="region-text">X<sub>L</sub> = X<sub>C</sub><br>Reactances cancel</div>
+        </div>
+        <div class="region" id="regionAbove">
+          <div class="region-title">Above f&#8320; &rarr;</div>
+          <div class="region-text">Inductive (X<sub>L</sub> &gt; X<sub>C</sub>)</div>
+        </div>
+      </div>
+    </div>
+    <div class="calc-col">
+      <div class="calc-panel" id="calcPanel"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  /* ── State ─────────────────────────────────── */
+  var S = {
+    R: 50,
+    L: 10e-6,
+    C: 100e-12,
+    mode: 'series',
+    view: 'impedance'
+  };
+  var hoverFreq = null;
+
+  /* ── DOM ────────────────────────────────────── */
+  var magCanvas  = document.getElementById('magCanvas');
+  var phaseCanvas = document.getElementById('phaseCanvas');
+  var magTip     = document.getElementById('magTip');
+  var phaseTip   = document.getElementById('phaseTip');
+  var rSlider    = document.getElementById('rSlider');
+  var lSlider    = document.getElementById('lSlider');
+  var cSlider    = document.getElementById('cSlider');
+  var rVal       = document.getElementById('rVal');
+  var lVal       = document.getElementById('lVal');
+  var cVal       = document.getElementById('cVal');
+  var calcPanel  = document.getElementById('calcPanel');
+  var magLabel   = document.getElementById('magLabel');
+  var phaseLabel = document.getElementById('phaseLabel');
+  var regionBelow = document.getElementById('regionBelow');
+  var regionAbove = document.getElementById('regionAbove');
+
+  /* ── Utility ────────────────────────────────── */
+  var PI2 = 2 * Math.PI;
+
+  function logMap(s, lo, hi) { return lo * Math.pow(hi / lo, s / 1000); }
+  function logUnmap(v, lo, hi) { return 1000 * Math.log(v / lo) / Math.log(hi / lo); }
+
+  function engFmt(v, unit) {
+    if (v === 0) return '0 ' + unit;
+    var pfx = [
+      {e:-12,s:'p'},{e:-9,s:'n'},{e:-6,s:'µ'},{e:-3,s:'m'},
+      {e:0,s:''},{e:3,s:'k'},{e:6,s:'M'},{e:9,s:'G'}
+    ];
+    var abs = Math.abs(v), best = pfx[0];
+    for (var i = 0; i < pfx.length; i++) {
+      if (abs >= Math.pow(10, pfx[i].e) * 0.9999) best = pfx[i];
+    }
+    var sc = v / Math.pow(10, best.e);
+    var str;
+    if (sc >= 99.95) str = Math.round(sc).toString();
+    else if (sc >= 9.995) str = sc.toFixed(1);
+    else str = sc.toFixed(2);
+    return str + ' ' + best.s + unit;
+  }
+
+  function freqFmt(f) {
+    if (f >= 1e9) return (f/1e9).toPrecision(4) + ' GHz';
+    if (f >= 1e6) return (f/1e6).toPrecision(4) + ' MHz';
+    if (f >= 1e3) return (f/1e3).toPrecision(4) + ' kHz';
+    return f.toPrecision(4) + ' Hz';
+  }
+
+  function freqLabel(f) {
+    if (f >= 1e9) { var v=f/1e9; return (v>=10?v.toFixed(0):v.toFixed(1))+'G'; }
+    if (f >= 1e6) { var v=f/1e6; return (v>=10?v.toFixed(0):v.toFixed(1))+'M'; }
+    if (f >= 1e3) { var v=f/1e3; return (v>=10?v.toFixed(0):v.toFixed(1))+'k'; }
+    return f.toFixed(0);
+  }
+
+  function css(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  /* ── Computation ────────────────────────────── */
+  function f0() { return 1 / (PI2 * Math.sqrt(S.L * S.C)); }
+  function w0() { return 1 / Math.sqrt(S.L * S.C); }
+
+  function qFactor() {
+    var ww = w0();
+    return S.mode === 'series' ? ww * S.L / S.R : S.R / (ww * S.L);
+  }
+
+  function computePoint(f) {
+    var w = PI2 * f;
+    var XL = w * S.L;
+    var XC = 1 / (w * S.C);
+    var mag, phase;
+
+    if (S.mode === 'series') {
+      var Zre = S.R, Zim = XL - XC;
+      var Zmag = Math.sqrt(Zre*Zre + Zim*Zim);
+      var Zph  = Math.atan2(Zim, Zre) * 180 / Math.PI;
+
+      switch (S.view) {
+        case 'impedance':
+          mag = Zmag; phase = Zph; break;
+        case 'bandpass':
+          mag = S.R / Zmag; phase = -Zph; break;
+        case 'lowpass':
+          mag = XC / Zmag; phase = -90 - Zph; break;
+        case 'highpass':
+          mag = XL / Zmag; phase = 90 - Zph; break;
+      }
+    } else {
+      /* parallel: Y = 1/R + j(wC - 1/(wL)) */
+      var G = 1 / S.R;
+      var B = w * S.C - 1 / (w * S.L);
+      var Ym2 = G*G + B*B;
+      var Zmag = 1 / Math.sqrt(Ym2);
+      var Zph  = -Math.atan2(B, G) * 180 / Math.PI;
+
+      switch (S.view) {
+        case 'impedance':
+          mag = Zmag; phase = Zph; break;
+        case 'bandpass': {
+          /* Z_par / (50 + Z_par) */
+          var Zr = G / Ym2, Zi = -B / Ym2;
+          var Dr = 50 + Zr, Di = Zi;
+          var Dm = Math.sqrt(Dr*Dr + Di*Di);
+          mag = Zmag / Dm;
+          phase = Math.atan2(Zi, Zr) * 180/Math.PI - Math.atan2(Di, Dr) * 180/Math.PI;
+          break;
+        }
+        default:
+          mag = 0; phase = 0;
+      }
+    }
+    /* normalize phase to [-180,180] */
+    while (phase > 180) phase -= 360;
+    while (phase < -180) phase += 360;
+    return { mag: mag, phase: phase };
+  }
+
+  function sweep() {
+    var ff = f0();
+    var fMin = ff / 100, fMax = ff * 100;
+    var N = 1200;
+    var freqs = [], mags = [], phases = [], magDB = [];
+    var isDB = S.view !== 'impedance';
+
+    for (var i = 0; i < N; i++) {
+      var fr = fMin * Math.pow(fMax / fMin, i / (N - 1));
+      freqs.push(fr);
+      var p = computePoint(fr);
+      mags.push(p.mag);
+      phases.push(p.phase);
+      magDB.push(isDB ? 20 * Math.log10(Math.max(p.mag, 1e-30)) : 0);
+    }
+    return { freqs:freqs, mags:mags, phases:phases, magDB:magDB, fMin:fMin, fMax:fMax, f0:ff, isDB:isDB };
+  }
+
+  /* ── 3 dB search ────────────────────────────── */
+  function find3dB(freqs, vals, isMinPeak) {
+    /* find peak index */
+    var pi = 0;
+    if (isMinPeak) {
+      var mn = Infinity;
+      for (var i=0;i<vals.length;i++) if (vals[i]<mn){mn=vals[i];pi=i;}
+    } else {
+      var mx = -Infinity;
+      for (var i=0;i<vals.length;i++) if (vals[i]>mx){mx=vals[i];pi=i;}
+    }
+    var pk = vals[pi];
+    var thr = isMinPeak ? pk * Math.SQRT2 : pk / Math.SQRT2;
+    var fl = null, fu = null;
+
+    for (var i=pi; i>0; i--) {
+      var cross = isMinPeak ? (vals[i-1]>=thr && vals[i]<thr) : (vals[i-1]<=thr && vals[i]>thr);
+      if (cross) {
+        var t = (thr - vals[i-1]) / (vals[i] - vals[i-1]);
+        fl = Math.pow(10, Math.log10(freqs[i-1]) + t*(Math.log10(freqs[i])-Math.log10(freqs[i-1])));
+        break;
+      }
+    }
+    for (var i=pi; i<freqs.length-1; i++) {
+      var cross = isMinPeak ? (vals[i+1]>=thr && vals[i]<thr) : (vals[i+1]<=thr && vals[i]>thr);
+      if (cross) {
+        var t = (thr - vals[i]) / (vals[i+1] - vals[i]);
+        fu = Math.pow(10, Math.log10(freqs[i]) + t*(Math.log10(freqs[i+1])-Math.log10(freqs[i])));
+        break;
+      }
+    }
+    return {pi:pi, pk:pk, thr:thr, fl:fl, fu:fu};
+  }
+
+  function find3dBdb(freqs, db) {
+    var pi=0, mx=-Infinity;
+    for(var i=0;i<db.length;i++) if(db[i]>mx){mx=db[i];pi=i;}
+    var thr = mx - 3;
+    var fl=null, fu=null;
+    for(var i=pi;i>0;i--) {
+      if(db[i-1]<=thr && db[i]>thr) {
+        var t=(thr-db[i-1])/(db[i]-db[i-1]);
+        fl=Math.pow(10,Math.log10(freqs[i-1])+t*(Math.log10(freqs[i])-Math.log10(freqs[i-1])));
+        break;
+      }
+    }
+    for(var i=pi;i<freqs.length-1;i++){
+      if(db[i+1]<=thr && db[i]>thr){
+        var t=(thr-db[i])/(db[i+1]-db[i]);
+        fu=Math.pow(10,Math.log10(freqs[i])+t*(Math.log10(freqs[i+1])-Math.log10(freqs[i])));
+        break;
+      }
+    }
+    return {pi:pi, pk:mx, thr:thr, fl:fl, fu:fu};
+  }
+
+  /* ── Canvas setup ───────────────────────────── */
+  function setupCanvas(cv) {
+    var dpr = window.devicePixelRatio || 1;
+    var r = cv.getBoundingClientRect();
+    cv.width = Math.round(r.width * dpr);
+    cv.height = Math.round(r.height * dpr);
+  }
+
+  /* ── Drawing helpers ────────────────────────── */
+  var M = { top:26, right:22, bottom:38, left:68 };
+
+  function plotRect(cv) {
+    var dpr = window.devicePixelRatio || 1;
+    var W = cv.width/dpr, H = cv.height/dpr;
+    return { l:M.left, r:W-M.right, t:M.top, b:H-M.bottom, w:W, h:H };
+  }
+
+  function fToX(f, d, p) {
+    return p.l + (Math.log10(f)-Math.log10(d.fMin)) / (Math.log10(d.fMax)-Math.log10(d.fMin)) * (p.r-p.l);
+  }
+  function xToF(x, d, p) {
+    var frac = (x - p.l) / (p.r - p.l);
+    return d.fMin * Math.pow(d.fMax/d.fMin, frac);
+  }
+  function logToY(v, lo, hi, p) {
+    return p.b - (Math.log10(v)-Math.log10(lo)) / (Math.log10(hi)-Math.log10(lo)) * (p.b-p.t);
+  }
+  function linToY(v, lo, hi, p) {
+    return p.b - (v-lo)/(hi-lo) * (p.b-p.t);
+  }
+
+  function autoLogRange(vals) {
+    var mn=Infinity, mx=-Infinity;
+    for(var i=0;i<vals.length;i++){
+      if(vals[i]>0 && isFinite(vals[i])){
+        if(vals[i]<mn) mn=vals[i];
+        if(vals[i]>mx) mx=vals[i];
+      }
+    }
+    var lm = Math.floor(Math.log10(mn)-0.25);
+    var lx = Math.ceil(Math.log10(mx)+0.25);
+    if(lx-lm<2) { lm--; lx++; }
+    return { lo: Math.pow(10,lm), hi: Math.pow(10,lx) };
+  }
+
+  function autoDBRange(db) {
+    var mn=Infinity, mx=-Infinity;
+    for(var i=0;i<db.length;i++){
+      if(isFinite(db[i]) && db[i]>-120){
+        if(db[i]<mn) mn=db[i];
+        if(db[i]>mx) mx=db[i];
+      }
+    }
+    var lo = Math.floor(mn/10)*10-10;
+    var hi = Math.ceil(mx/10)*10+10;
+    if(hi-lo<30){lo-=10;hi+=10;}
+    return {lo:lo,hi:hi};
+  }
+
+  function drawFreqGrid(ctx, d, p) {
+    var gridC = css('--grid');
+    var gridM = css('--grid-minor');
+    var mutedC = css('--text-muted');
+    var logMin = Math.floor(Math.log10(d.fMin));
+    var logMax = Math.ceil(Math.log10(d.fMax));
+
+    for (var dec = logMin; dec <= logMax; dec++) {
+      var subs = [1,2,3,5];
+      for (var si = 0; si < subs.length; si++) {
+        var ff = Math.pow(10, dec) * subs[si];
+        if (ff < d.fMin*0.99 || ff > d.fMax*1.01) continue;
+        var x = fToX(ff, d, p);
+        var major = subs[si] === 1;
+        ctx.strokeStyle = major ? gridC : gridM;
+        ctx.lineWidth = major ? 0.8 : 0.4;
+        ctx.beginPath(); ctx.moveTo(x, p.t); ctx.lineTo(x, p.b); ctx.stroke();
+      }
+    }
+  }
+
+  function drawFreqLabels(ctx, d, p) {
+    var mutedC = css('--text-muted');
+    ctx.font = '10px "JetBrains Mono", monospace';
+    ctx.fillStyle = mutedC;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    var logMin = Math.floor(Math.log10(d.fMin));
+    var logMax = Math.ceil(Math.log10(d.fMax));
+    for (var dec = logMin; dec <= logMax; dec++) {
+      var ff = Math.pow(10, dec);
+      if (ff < d.fMin*0.8 || ff > d.fMax*1.2) continue;
+      var x = fToX(ff, d, p);
+      if (x < p.l+10 || x > p.r-10) continue;
+      ctx.fillText(freqLabel(ff), x, p.b + 5);
+    }
+    ctx.textAlign = 'center';
+    ctx.fillText('Frequency (Hz)', (p.l+p.r)/2, p.b + 22);
+  }
+
+  function drawLogYGrid(ctx, lo, hi, p) {
+    var gridC = css('--grid');
+    var gridM = css('--grid-minor');
+    var mutedC = css('--text-muted');
+    var lm = Math.round(Math.log10(lo));
+    var lx = Math.round(Math.log10(hi));
+    ctx.font = '10px "JetBrains Mono", monospace';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+
+    for (var dec = lm; dec <= lx; dec++) {
+      var subs = [1,2,5];
+      for (var si = 0; si < subs.length; si++) {
+        var val = Math.pow(10, dec) * subs[si];
+        if (val < lo*0.99 || val > hi*1.01) continue;
+        var y = logToY(val, lo, hi, p);
+        var major = subs[si] === 1;
+        ctx.strokeStyle = major ? gridC : gridM;
+        ctx.lineWidth = major ? 0.8 : 0.4;
+        ctx.beginPath(); ctx.moveTo(p.l, y); ctx.lineTo(p.r, y); ctx.stroke();
+        if (major) {
+          ctx.fillStyle = mutedC;
+          ctx.fillText(engFmt(val, 'Ω'), p.l - 6, y);
+        }
+      }
+    }
+  }
+
+  function drawLinYGrid(ctx, lo, hi, step, p, suffix) {
+    var gridC = css('--grid');
+    var mutedC = css('--text-muted');
+    ctx.font = '10px "JetBrains Mono", monospace';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+
+    for (var v = lo; v <= hi + 0.001; v += step) {
+      var y = linToY(v, lo, hi, p);
+      ctx.strokeStyle = gridC;
+      ctx.lineWidth = (Math.abs(v) < 0.01) ? 1.0 : 0.5;
+      ctx.beginPath(); ctx.moveTo(p.l, y); ctx.lineTo(p.r, y); ctx.stroke();
+      ctx.fillStyle = mutedC;
+      ctx.fillText(Math.round(v) + suffix, p.l - 6, y);
+    }
+  }
+
+  /* ── Draw magnitude plot ────────────────────── */
+  function drawMag(d) {
+    setupCanvas(magCanvas);
+    var ctx = magCanvas.getContext('2d');
+    var dpr = window.devicePixelRatio || 1;
+    var p = plotRect(magCanvas);
+
+    ctx.save();
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, p.w, p.h);
+
+    /* plot area bg */
+    ctx.fillStyle = css('--bg-plot');
+    ctx.fillRect(p.l, p.t, p.r-p.l, p.b-p.t);
+
+    /* Y range */
+    var yLo, yHi, useLog;
+    if (!d.isDB) {
+      var ar = autoLogRange(d.mags);
+      yLo = ar.lo; yHi = ar.hi; useLog = true;
+    } else {
+      var ar = autoDBRange(d.magDB);
+      yLo = ar.lo; yHi = ar.hi; useLog = false;
+    }
+
+    /* grids */
+    drawFreqGrid(ctx, d, p);
+    if (useLog) {
+      drawLogYGrid(ctx, yLo, yHi, p);
+    } else {
+      var span = yHi - yLo;
+      var step = span <= 60 ? 10 : 20;
+      drawLinYGrid(ctx, yLo, yHi, step, p, ' dB');
+    }
+
+    /* resonance line */
+    var annC = css('--annotation');
+    var xRes = fToX(d.f0, d, p);
+    if (xRes > p.l && xRes < p.r) {
+      ctx.save();
+      ctx.setLineDash([6, 4]);
+      ctx.strokeStyle = annC;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(xRes, p.t); ctx.lineTo(xRes, p.b); ctx.stroke();
+      ctx.restore();
+      /* label */
+      ctx.font = 'bold 10px "JetBrains Mono", monospace';
+      ctx.fillStyle = annC;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+      ctx.fillText('f₀ = ' + freqFmt(d.f0), xRes, p.t - 3);
+    }
+
+    /* 3 dB markers */
+    var db3;
+    if (!d.isDB) {
+      var isMin = (S.mode === 'series');
+      db3 = find3dB(d.freqs, d.mags, isMin);
+    } else {
+      db3 = find3dBdb(d.freqs, d.magDB);
+    }
+
+    /* 3 dB horizontal line */
+    if (db3.fl != null || db3.fu != null) {
+      var thrY;
+      if (useLog) {
+        thrY = logToY(db3.thr, yLo, yHi, p);
+      } else {
+        thrY = linToY(db3.thr, yLo, yHi, p);
+      }
+      if (thrY > p.t && thrY < p.b) {
+        ctx.save();
+        ctx.setLineDash([3, 3]);
+        ctx.strokeStyle = annC;
+        ctx.lineWidth = 0.8;
+        ctx.beginPath(); ctx.moveTo(p.l, thrY); ctx.lineTo(p.r, thrY); ctx.stroke();
+        ctx.restore();
+        /* -3 dB label */
+        ctx.font = '9px "JetBrains Mono", monospace';
+        ctx.fillStyle = annC;
+        ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+        ctx.fillText(d.isDB ? '-3 dB' : '×√2', p.r - 42, thrY - 2);
+      }
+    }
+
+    /* draw 3 dB marker diamonds */
+    function diamond(fx) {
+      if (fx == null) return;
+      var x = fToX(fx, d, p);
+      var yv;
+      if (useLog) yv = logToY(db3.thr, yLo, yHi, p);
+      else yv = linToY(db3.thr, yLo, yHi, p);
+      if (x<p.l||x>p.r||yv<p.t||yv>p.b) return;
+      ctx.fillStyle = annC;
+      ctx.beginPath();
+      ctx.moveTo(x, yv-5); ctx.lineTo(x+4, yv);
+      ctx.lineTo(x, yv+5); ctx.lineTo(x-4, yv);
+      ctx.closePath(); ctx.fill();
+      ctx.font = '9px "JetBrains Mono", monospace';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillText(freqFmt(fx), x, yv + 7);
+    }
+    diamond(db3.fl);
+    diamond(db3.fu);
+
+    /* BW and Q annotation */
+    if (db3.fl != null && db3.fu != null) {
+      var bw = db3.fu - db3.fl;
+      var q = qFactor();
+      ctx.font = 'bold 10px "JetBrains Mono", monospace';
+      ctx.fillStyle = css('--text');
+      ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+      ctx.fillText('Q = ' + q.toFixed(2), p.r - 4, p.t + 4);
+      ctx.font = '10px "JetBrains Mono", monospace';
+      ctx.fillStyle = css('--text-muted');
+      ctx.fillText('BW = ' + freqFmt(bw), p.r - 4, p.t + 18);
+    }
+
+    /* curve */
+    ctx.beginPath();
+    ctx.strokeStyle = css('--trace-mag');
+    ctx.lineWidth = 2;
+    ctx.setLineDash([]);
+    for (var i = 0; i < d.freqs.length; i++) {
+      var x = fToX(d.freqs[i], d, p);
+      var y;
+      if (useLog) y = logToY(d.mags[i], yLo, yHi, p);
+      else y = linToY(d.magDB[i], yLo, yHi, p);
+      if (y < p.t - 10) y = p.t - 10;
+      if (y > p.b + 10) y = p.b + 10;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    /* direct label on curve */
+    var lblIdx = Math.round(d.freqs.length * 0.12);
+    var lblX = fToX(d.freqs[lblIdx], d, p);
+    var lblY = useLog ? logToY(d.mags[lblIdx], yLo, yHi, p) : linToY(d.magDB[lblIdx], yLo, yHi, p);
+    lblY = Math.max(p.t + 12, Math.min(p.b - 5, lblY - 10));
+    ctx.font = 'bold 10px "JetBrains Mono", monospace';
+    ctx.fillStyle = css('--trace-mag');
+    ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    var curveLbl = d.isDB ? '|H| (solid)' : '|Z| (solid)';
+    ctx.fillText(curveLbl, lblX + 3, lblY);
+
+    /* hover cursor */
+    if (hoverFreq != null && hoverFreq >= d.fMin && hoverFreq <= d.fMax) {
+      var hx = fToX(hoverFreq, d, p);
+      ctx.save();
+      ctx.setLineDash([2,2]);
+      ctx.strokeStyle = css('--text-muted');
+      ctx.lineWidth = 0.8;
+      ctx.beginPath(); ctx.moveTo(hx, p.t); ctx.lineTo(hx, p.b); ctx.stroke();
+      ctx.restore();
+
+      var hp = computePoint(hoverFreq);
+      var hval = d.isDB ? (20*Math.log10(Math.max(hp.mag,1e-30))).toFixed(1)+' dB'
+                        : engFmt(hp.mag, 'Ω');
+      magTip.innerHTML = 'f = ' + freqFmt(hoverFreq) + '<br>' +
+        (d.isDB ? '|H|' : '|Z|') + ' = ' + hval;
+      magTip.style.display = 'block';
+      var tipW = magTip.offsetWidth;
+      var cvRect = magCanvas.getBoundingClientRect();
+      var tipLeft = hx + 12;
+      if (tipLeft + tipW > p.r) tipLeft = hx - tipW - 12;
+      magTip.style.left = tipLeft + 'px';
+      magTip.style.top = (p.t + 8) + 'px';
+    } else {
+      magTip.style.display = 'none';
+    }
+
+    /* border */
+    ctx.strokeStyle = css('--grid');
+    ctx.lineWidth = 1;
+    ctx.setLineDash([]);
+    ctx.strokeRect(p.l, p.t, p.r-p.l, p.b-p.t);
+
+    /* Y-axis title */
+    ctx.save();
+    ctx.translate(12, (p.t+p.b)/2);
+    ctx.rotate(-Math.PI/2);
+    ctx.font = '10px "JetBrains Mono", monospace';
+    ctx.fillStyle = css('--text-muted');
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(d.isDB ? '|H(f)| (dB)' : '|Z| (Ω)', 0, 0);
+    ctx.restore();
+
+    drawFreqLabels(ctx, d, p);
+    ctx.restore();
+
+    /* store for hover interp */
+    magCanvas._plot = { d:d, p:p, yLo:yLo, yHi:yHi, useLog:useLog };
+  }
+
+  /* ── Draw phase plot ────────────────────────── */
+  function drawPhase(d) {
+    setupCanvas(phaseCanvas);
+    var ctx = phaseCanvas.getContext('2d');
+    var dpr = window.devicePixelRatio || 1;
+    var p = plotRect(phaseCanvas);
+
+    ctx.save();
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, p.w, p.h);
+
+    ctx.fillStyle = css('--bg-plot');
+    ctx.fillRect(p.l, p.t, p.r-p.l, p.b-p.t);
+
+    /* phase range */
+    var phMin, phMax, phStep;
+    switch(S.view) {
+      case 'lowpass':
+        phMin = -200; phMax = 20; phStep = 45; break;
+      case 'highpass':
+        phMin = -20; phMax = 200; phStep = 45; break;
+      default:
+        phMin = -100; phMax = 100; phStep = 45;
+    }
+
+    /* grids */
+    drawFreqGrid(ctx, d, p);
+    drawLinYGrid(ctx, phMin, phMax, phStep, p, '°');
+
+    /* resonance line */
+    var annC = css('--annotation');
+    var xRes = fToX(d.f0, d, p);
+    if (xRes > p.l && xRes < p.r) {
+      ctx.save();
+      ctx.setLineDash([6, 4]);
+      ctx.strokeStyle = annC;
+      ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(xRes, p.t); ctx.lineTo(xRes, p.b); ctx.stroke();
+      ctx.restore();
+    }
+
+    /* curve - DASHED for phase, with triangle markers */
+    ctx.beginPath();
+    ctx.strokeStyle = css('--trace-phase');
+    ctx.lineWidth = 2;
+    ctx.setLineDash([8, 4]);
+    for (var i = 0; i < d.freqs.length; i++) {
+      var x = fToX(d.freqs[i], d, p);
+      var y = linToY(d.phases[i], phMin, phMax, p);
+      y = Math.max(p.t-10, Math.min(p.b+10, y));
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    /* triangle markers every ~100 points */
+    ctx.fillStyle = css('--trace-phase');
+    for (var i = 80; i < d.freqs.length; i += 120) {
+      var x = fToX(d.freqs[i], d, p);
+      var y = linToY(d.phases[i], phMin, phMax, p);
+      if (y > p.t+4 && y < p.b-4) {
+        ctx.beginPath();
+        ctx.moveTo(x, y-4); ctx.lineTo(x+4, y+3); ctx.lineTo(x-4, y+3);
+        ctx.closePath(); ctx.fill();
+      }
+    }
+
+    /* direct label */
+    var lblIdx = Math.round(d.freqs.length * 0.85);
+    var lblX = fToX(d.freqs[lblIdx], d, p);
+    var lblY = linToY(d.phases[lblIdx], phMin, phMax, p);
+    lblY = Math.max(p.t + 12, Math.min(p.b - 5, lblY - 10));
+    ctx.font = 'bold 10px "JetBrains Mono", monospace';
+    ctx.fillStyle = css('--trace-phase');
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+    ctx.fillText('Phase (dashed △)', lblX - 3, lblY);
+
+    /* hover cursor */
+    if (hoverFreq != null && hoverFreq >= d.fMin && hoverFreq <= d.fMax) {
+      var hx = fToX(hoverFreq, d, p);
+      ctx.save();
+      ctx.setLineDash([2,2]);
+      ctx.strokeStyle = css('--text-muted');
+      ctx.lineWidth = 0.8;
+      ctx.beginPath(); ctx.moveTo(hx, p.t); ctx.lineTo(hx, p.b); ctx.stroke();
+      ctx.restore();
+
+      var hp = computePoint(hoverFreq);
+      phaseTip.innerHTML = 'f = ' + freqFmt(hoverFreq) + '<br>∠ = ' + hp.phase.toFixed(1) + '°';
+      phaseTip.style.display = 'block';
+      var tipW = phaseTip.offsetWidth;
+      var tipLeft = hx + 12;
+      if (tipLeft + tipW > p.r) tipLeft = hx - tipW - 12;
+      phaseTip.style.left = tipLeft + 'px';
+      phaseTip.style.top = (p.t + 8) + 'px';
+    } else {
+      phaseTip.style.display = 'none';
+    }
+
+    /* border */
+    ctx.strokeStyle = css('--grid');
+    ctx.lineWidth = 1;
+    ctx.strokeRect(p.l, p.t, p.r-p.l, p.b-p.t);
+
+    /* Y-axis title */
+    ctx.save();
+    ctx.translate(12, (p.t+p.b)/2);
+    ctx.rotate(-Math.PI/2);
+    ctx.font = '10px "JetBrains Mono", monospace';
+    ctx.fillStyle = css('--text-muted');
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('Phase (°)', 0, 0);
+    ctx.restore();
+
+    drawFreqLabels(ctx, d, p);
+    ctx.restore();
+  }
+
+  /* ── Update calculations panel ──────────────── */
+  function updateCalcPanel() {
+    var ff = f0();
+    var ww = w0();
+    var Q = qFactor();
+    var BW = ff / Q;
+    var XL = ww * S.L;
+    var XC = 1 / (ww * S.C);
+    var Zres = S.R;
+
+    var qFormula = S.mode === 'series'
+      ? 'ω₀L / R'
+      : 'R / (ω₀L)';
+
+    var zNote = S.mode === 'series'
+      ? 'Z₀ = R (minimum)'
+      : 'Z₀ = R (maximum)';
+
+    calcPanel.innerHTML =
+      '<h2>Key Calculations</h2>' +
+      '<div class="calc-row">' +
+        '<div class="calc-label">Resonant Frequency</div>' +
+        '<div class="calc-formula">f₀ = 1 / (2π√(LC))</div>' +
+        '<div class="calc-value">' + freqFmt(ff) + '</div>' +
+      '</div>' +
+      '<div class="calc-row">' +
+        '<div class="calc-label">Quality Factor (' + S.mode + ')</div>' +
+        '<div class="calc-formula">Q = ' + qFormula + '</div>' +
+        '<div class="calc-value">' + Q.toFixed(2) + '</div>' +
+      '</div>' +
+      '<div class="calc-row">' +
+        '<div class="calc-label">Bandwidth</div>' +
+        '<div class="calc-formula">BW = f₀ / Q</div>' +
+        '<div class="calc-value">' + freqFmt(BW) + '</div>' +
+      '</div>' +
+      '<div class="calc-row">' +
+        '<div class="calc-label">Impedance at Resonance</div>' +
+        '<div class="calc-formula">' + zNote + '</div>' +
+        '<div class="calc-value">' + engFmt(Zres, 'Ω') + '</div>' +
+      '</div>' +
+      '<div class="calc-row">' +
+        '<div class="calc-label">Reactances at Resonance</div>' +
+        '<div class="calc-formula">X<sub>L</sub> = X<sub>C</sub> (equal!)</div>' +
+        '<div class="calc-value">' + engFmt(XL, 'Ω') + '</div>' +
+      '</div>' +
+      '<div class="calc-row">' +
+        '<div class="calc-label">Individual Reactances</div>' +
+        '<div class="calc-formula">' +
+          'X<sub>L</sub> = 2πf₀L &nbsp; X<sub>C</sub> = 1/(2πf₀C)' +
+        '</div>' +
+        '<div class="calc-value" style="font-size:0.82rem;">' +
+          'X<sub>L</sub> = ' + engFmt(XL, 'Ω') +
+          ' &nbsp; X<sub>C</sub> = ' + engFmt(XC, 'Ω') +
+        '</div>' +
+      '</div>';
+  }
+
+  /* ── Update exam annotations ────────────────── */
+  function updateAnnotations() {
+    if (S.mode === 'series') {
+      regionBelow.innerHTML =
+        '<div class="region-title">&larr; Below f₀</div>' +
+        '<div class="region-text">Capacitive<br>(X<sub>C</sub> &gt; X<sub>L</sub>)<br>Phase negative</div>';
+      regionAbove.innerHTML =
+        '<div class="region-title">Above f₀ &rarr;</div>' +
+        '<div class="region-text">Inductive<br>(X<sub>L</sub> &gt; X<sub>C</sub>)<br>Phase positive</div>';
+    } else {
+      regionBelow.innerHTML =
+        '<div class="region-title">&larr; Below f₀</div>' +
+        '<div class="region-text">Inductive<br>(X<sub>L</sub> &lt; X<sub>C</sub>)<br>Phase positive</div>';
+      regionAbove.innerHTML =
+        '<div class="region-title">Above f₀ &rarr;</div>' +
+        '<div class="region-text">Capacitive<br>(X<sub>C</sub> &lt; X<sub>L</sub>)<br>Phase negative</div>';
+    }
+  }
+
+  /* ── Update labels ──────────────────────────── */
+  function updateLabels() {
+    var vName;
+    switch (S.view) {
+      case 'impedance': vName = '|Z| (Ω)'; break;
+      case 'bandpass':  vName = '|H| Bandpass (dB)'; break;
+      case 'lowpass':   vName = '|H| Low-pass (dB)'; break;
+      case 'highpass':  vName = '|H| High-pass (dB)'; break;
+    }
+    magLabel.textContent = 'Magnitude: ' + vName;
+
+    var pName = S.view === 'impedance' ? '∠Z' : '∠H';
+    phaseLabel.textContent = 'Phase: ' + pName + ' (degrees)';
+  }
+
+  /* ── Master draw ────────────────────────────── */
+  var rafPending = false;
+  function requestDraw() {
+    if (!rafPending) {
+      rafPending = true;
+      requestAnimationFrame(function() {
+        rafPending = false;
+        var d = sweep();
+        drawMag(d);
+        drawPhase(d);
+        updateCalcPanel();
+        updateAnnotations();
+        updateLabels();
+      });
+    }
+  }
+
+  /* ── Slider wiring ──────────────────────────── */
+  var R_MIN=1, R_MAX=10000;
+  var L_MIN=100e-9, L_MAX=100e-3;
+  var C_MIN=1e-12, C_MAX=100e-6;
+
+  function syncSliders() {
+    rSlider.value = Math.round(logUnmap(S.R, R_MIN, R_MAX));
+    lSlider.value = Math.round(logUnmap(S.L, L_MIN, L_MAX));
+    cSlider.value = Math.round(logUnmap(S.C, C_MIN, C_MAX));
+    rVal.textContent = engFmt(S.R, 'Ω');
+    lVal.textContent = engFmt(S.L, 'H');
+    cVal.textContent = engFmt(S.C, 'F');
+  }
+
+  rSlider.addEventListener('input', function() {
+    S.R = logMap(+this.value, R_MIN, R_MAX);
+    rVal.textContent = engFmt(S.R, 'Ω');
+    requestDraw();
+  });
+  lSlider.addEventListener('input', function() {
+    S.L = logMap(+this.value, L_MIN, L_MAX);
+    lVal.textContent = engFmt(S.L, 'H');
+    requestDraw();
+  });
+  cSlider.addEventListener('input', function() {
+    S.C = logMap(+this.value, C_MIN, C_MAX);
+    cVal.textContent = engFmt(S.C, 'F');
+    requestDraw();
+  });
+
+  /* ── Toggle wiring ──────────────────────────── */
+  document.getElementById('circuitMode').addEventListener('click', function(e) {
+    var btn = e.target.closest('button');
+    if (!btn || btn.classList.contains('active')) return;
+    this.querySelectorAll('button').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    S.mode = btn.dataset.v;
+
+    /* disable LP/HP for parallel */
+    var fvBtns = document.querySelectorAll('#filterView button');
+    fvBtns.forEach(function(b) {
+      if (b.dataset.v === 'lowpass' || b.dataset.v === 'highpass') {
+        b.disabled = (S.mode === 'parallel');
+      }
+    });
+    if (S.mode === 'parallel' && (S.view === 'lowpass' || S.view === 'highpass')) {
+      S.view = 'impedance';
+      fvBtns.forEach(function(b) {
+        b.classList.toggle('active', b.dataset.v === 'impedance');
+      });
+    }
+    requestDraw();
+  });
+
+  document.getElementById('filterView').addEventListener('click', function(e) {
+    var btn = e.target.closest('button');
+    if (!btn || btn.classList.contains('active') || btn.disabled) return;
+    this.querySelectorAll('button').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    S.view = btn.dataset.v;
+    requestDraw();
+  });
+
+  /* ── Hover ──────────────────────────────────── */
+  function hoverHandler(cv) {
+    cv.addEventListener('mousemove', function(e) {
+      var r = cv.getBoundingClientRect();
+      var x = e.clientX - r.left;
+      var pp = plotRect(cv);
+      if (x < pp.l || x > pp.r) { hoverFreq = null; }
+      else {
+        var dpr = window.devicePixelRatio || 1;
+        /* plotRect uses css pixels, x is already css pixels from getBoundingClientRect */
+        var sd = sweep();
+        hoverFreq = xToF(x, sd, pp);
+        if (hoverFreq < sd.fMin || hoverFreq > sd.fMax) hoverFreq = null;
+      }
+      requestDraw();
+    });
+    cv.addEventListener('mouseleave', function() {
+      hoverFreq = null;
+      requestDraw();
+    });
+  }
+  hoverHandler(magCanvas);
+  hoverHandler(phaseCanvas);
+
+  /* touch support */
+  function touchHandler(cv) {
+    cv.addEventListener('touchmove', function(e) {
+      e.preventDefault();
+      var t = e.touches[0];
+      var r = cv.getBoundingClientRect();
+      var x = t.clientX - r.left;
+      var pp = plotRect(cv);
+      var sd = sweep();
+      hoverFreq = xToF(x, sd, pp);
+      if (hoverFreq < sd.fMin || hoverFreq > sd.fMax) hoverFreq = null;
+      requestDraw();
+    }, {passive: false});
+    cv.addEventListener('touchend', function() {
+      hoverFreq = null;
+      requestDraw();
+    });
+  }
+  touchHandler(magCanvas);
+  touchHandler(phaseCanvas);
+
+  /* ── Resize ─────────────────────────────────── */
+  var resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(requestDraw, 60);
+  });
+
+  /* theme change */
+  try {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', requestDraw);
+  } catch(e) {}
+
+  /* localStorage persistence */
+  function saveState() {
+    try {
+      localStorage.setItem('rlc-state', JSON.stringify({
+        R: S.R, L: S.L, C: S.C, mode: S.mode, view: S.view
+      }));
+    } catch(e) {}
+  }
+  function loadState() {
+    try {
+      var s = localStorage.getItem('rlc-state');
+      if (s) {
+        var o = JSON.parse(s);
+        if (o.R) S.R = o.R;
+        if (o.L) S.L = o.L;
+        if (o.C) S.C = o.C;
+        if (o.mode) S.mode = o.mode;
+        if (o.view) S.view = o.view;
+      }
+    } catch(e) {}
+  }
+
+  /* ── Init ───────────────────────────────────── */
+  loadState();
+
+  /* apply loaded state to UI */
+  document.querySelectorAll('#circuitMode button').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.v === S.mode);
+  });
+  var fvBtns = document.querySelectorAll('#filterView button');
+  fvBtns.forEach(function(b) {
+    b.classList.toggle('active', b.dataset.v === S.view);
+    if (b.dataset.v === 'lowpass' || b.dataset.v === 'highpass') {
+      b.disabled = (S.mode === 'parallel');
+    }
+  });
+
+  /* If parallel mode had LP/HP stored, fix */
+  if (S.mode === 'parallel' && (S.view === 'lowpass' || S.view === 'highpass')) {
+    S.view = 'impedance';
+    fvBtns.forEach(function(b) {
+      b.classList.toggle('active', b.dataset.v === 'impedance');
+    });
+  }
+
+  syncSliders();
+  requestDraw();
+
+  /* save state on changes */
+  var origDraw = requestDraw;
+  requestDraw = function() {
+    saveState();
+    origDraw();
+  };
+  /* re-bind event listeners that used the old requestDraw — they captured the closure,
+     so the override above already takes effect via the variable reference. */
+
+})();
+</script>
+
+</body></html>

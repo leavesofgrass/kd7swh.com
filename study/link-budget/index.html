@@ -1,0 +1,1128 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex, nofollow"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>RF Link Budget</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap">
+<style>
+:root {
+  --bg: #f7f6f3;
+  --text: #2d3436;
+  --text-muted: #636e72;
+  --gain: #2563eb;
+  --gain-light: rgba(37,99,235,0.12);
+  --loss: #d97706;
+  --loss-light: rgba(217,119,6,0.12);
+  --accent: #2980b9;
+  --accent-light: rgba(41,128,185,0.12);
+  --warning: #f39c12;
+  --warning-light: rgba(243,156,18,0.12);
+  --section-bg: #ffffff;
+  --section-border: #dfe6e9;
+  --input-bg: #ffffff;
+  --input-border: #b2bec3;
+  --input-focus: #2980b9;
+  --pick-bg: #edf0f2;
+  --pick-hover: #dfe6e9;
+  --pick-active-bg: #2980b9;
+  --pick-active-text: #ffffff;
+  --chart-bg: #ffffff;
+  --grid: #e8e8e8;
+  --connector: #b2bec3;
+  --margin-positive: #2563eb;
+  --margin-warn: #f39c12;
+  --margin-negative: #d97706;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1a1d21;
+    --text: #e0ddd5;
+    --text-muted: #8d9196;
+    --gain: #60a5fa;
+    --gain-light: rgba(96,165,250,0.1);
+    --loss: #fbbf24;
+    --loss-light: rgba(251,191,36,0.1);
+    --accent: #3498db;
+    --accent-light: rgba(52,152,219,0.1);
+    --warning: #f1c40f;
+    --warning-light: rgba(241,196,15,0.1);
+    --section-bg: #22262b;
+    --section-border: #3a3f45;
+    --input-bg: #2c3138;
+    --input-border: #4a5058;
+    --input-focus: #3498db;
+    --pick-bg: #2c3138;
+    --pick-hover: #3a3f45;
+    --pick-active-bg: #2980b9;
+    --pick-active-text: #ffffff;
+    --chart-bg: #22262b;
+    --grid: #3a3f45;
+    --connector: #4a5058;
+    --margin-positive: #60a5fa;
+    --margin-warn: #f1c40f;
+    --margin-negative: #fbbf24;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1a1d21;
+  --text: #e0ddd5;
+  --text-muted: #8d9196;
+  --gain: #60a5fa;
+  --gain-light: rgba(96,165,250,0.1);
+  --loss: #fbbf24;
+  --loss-light: rgba(251,191,36,0.1);
+  --accent: #3498db;
+  --accent-light: rgba(52,152,219,0.1);
+  --warning: #f1c40f;
+  --warning-light: rgba(241,196,15,0.1);
+  --section-bg: #22262b;
+  --section-border: #3a3f45;
+  --input-bg: #2c3138;
+  --input-border: #4a5058;
+  --input-focus: #3498db;
+  --pick-bg: #2c3138;
+  --pick-hover: #3a3f45;
+  --pick-active-bg: #2980b9;
+  --pick-active-text: #ffffff;
+  --chart-bg: #22262b;
+  --grid: #3a3f45;
+  --connector: #4a5058;
+  --margin-positive: #60a5fa;
+  --margin-warn: #f1c40f;
+  --margin-negative: #fbbf24;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  margin: 0;
+  padding: 16px;
+  line-height: 1.5;
+}
+*, *::before, *::after { box-sizing: border-box; }
+
+.container { max-width: 840px; margin: 0 auto; }
+
+h1 {
+  font-size: 1.35rem;
+  margin: 0 0 2px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.subtitle {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin: 0 0 6px;
+  font-family: 'Space Mono', monospace;
+}
+.equation-ref {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  padding: 6px 10px;
+  background: var(--section-bg);
+  border: 1px solid var(--section-border);
+  border-radius: 6px;
+  margin-bottom: 12px;
+  display: inline-block;
+}
+.equation-ref sub { font-size: 0.7em; }
+
+/* Presets */
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 14px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 2px;
+}
+.presets-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+  margin-right: 2px;
+}
+.preset-btn {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border: 1px solid var(--section-border);
+  border-radius: 20px;
+  background: var(--pick-bg);
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s;
+}
+.preset-btn:hover { background: var(--pick-hover); }
+.preset-btn.active {
+  background: var(--pick-active-bg);
+  color: var(--pick-active-text);
+  border-color: var(--pick-active-bg);
+}
+
+/* Margin display */
+.margin-panel {
+  background: var(--section-bg);
+  border: 2px solid var(--section-border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  text-align: center;
+  margin-bottom: 16px;
+  transition: border-color 0.3s;
+}
+.margin-panel.positive { border-color: var(--margin-positive); }
+.margin-panel.warn { border-color: var(--margin-warn); }
+.margin-panel.negative { border-color: var(--margin-negative); }
+.margin-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+.margin-value {
+  font-family: 'Space Mono', monospace;
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 4px;
+  transition: color 0.3s;
+}
+.margin-panel.positive .margin-value { color: var(--margin-positive); }
+.margin-panel.warn .margin-value { color: var(--margin-warn); }
+.margin-panel.negative .margin-value { color: var(--margin-negative); }
+.margin-status {
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.margin-detail {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* Sections */
+.section {
+  background: var(--section-bg);
+  border: 1px solid var(--section-border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+.section h2 {
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin: 0 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.eq-term {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.76rem;
+  color: var(--accent);
+  background: var(--accent-light);
+  padding: 2px 7px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.eq-term sub { font-size: 0.65em; }
+
+.field-group { margin-bottom: 10px; }
+.field-group:last-child { margin-bottom: 0; }
+.field-group > label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.input-with-unit {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+input[type="number"], select {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85rem;
+  padding: 5px 8px;
+  border: 1px solid var(--input-border);
+  border-radius: 5px;
+  background: var(--input-bg);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s;
+}
+input[type="number"]:focus, select:focus {
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 2px rgba(41,128,185,0.15);
+}
+input[type="number"] { width: 100px; }
+select { min-width: 80px; }
+
+.unit {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.computed {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--accent);
+  white-space: nowrap;
+  margin-top: 3px;
+}
+.hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Quick-pick buttons */
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 5px;
+}
+.pick-btn {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border: 1px solid var(--section-border);
+  border-radius: 12px;
+  background: var(--pick-bg);
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.12s;
+}
+.pick-btn:hover { background: var(--pick-hover); }
+
+/* Waterfall */
+.waterfall-wrap {
+  background: var(--section-bg);
+  border: 1px solid var(--section-border);
+  border-radius: 8px;
+  padding: 14px 8px 8px;
+  margin-bottom: 10px;
+}
+.waterfall-wrap h2 {
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin: 0 0 8px 8px;
+}
+.waterfall-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+#waterfall {
+  width: 100%;
+  min-width: 560px;
+  height: auto;
+  display: block;
+}
+
+/* Summary */
+.summary-wrap {
+  background: var(--section-bg);
+  border: 1px solid var(--section-border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+.summary-wrap h2 {
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+#summary {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+#summary th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-bottom: 2px solid var(--section-border);
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+#summary td {
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--section-border);
+}
+#summary td:nth-child(2),
+#summary td:nth-child(3) {
+  font-family: 'Space Mono', monospace;
+  text-align: right;
+  white-space: nowrap;
+}
+#summary tr.sep td {
+  border-bottom: 2px solid var(--section-border);
+  height: 4px;
+  padding: 0;
+}
+#summary tr.result td {
+  font-weight: 700;
+  border-bottom: 2px solid var(--section-border);
+}
+.val-gain { color: var(--gain); }
+.val-loss { color: var(--loss); }
+.val-accent { color: var(--accent); }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+@media (max-width: 640px) {
+  .two-col { grid-template-columns: 1fr; }
+  .margin-value { font-size: 2rem; }
+  h1 { font-size: 1.15rem; }
+}
+</style>
+
+<div class="container" id="app">
+  <header>
+    <h1>RF Link Budget Calculator</h1>
+    <p class="subtitle">KD7SWH &mdash; Portland, OR</p>
+    <div class="equation-ref">
+      P<sub>rx</sub> = P<sub>tx</sub> + G<sub>tx</sub> &minus; L<sub>tx</sub> &minus; FSPL &minus; L<sub>path</sub> + G<sub>rx</sub> &minus; L<sub>rx</sub> &emsp;|&emsp; Margin = P<sub>rx</sub> &minus; S<sub>min</sub>
+    </div>
+  </header>
+
+  <nav class="presets" id="presets">
+    <span class="presets-label">Scenarios:</span>
+    <button class="preset-btn active" data-preset="ht-repeater">HT &rarr; K7RPT</button>
+    <button class="preset-btn" data-preset="base-repeater">Base &rarr; Rptr</button>
+    <button class="preset-btn" data-preset="mesh-los">Mesh Hilltop</button>
+    <button class="preset-btn" data-preset="mesh-urban">Mesh Urban</button>
+    <button class="preset-btn" data-preset="40m-nvis">40m NVIS</button>
+    <button class="preset-btn" data-preset="20m-dx">20m DX</button>
+  </nav>
+
+  <div class="margin-panel positive" id="margin-panel">
+    <div class="margin-label">Link Margin</div>
+    <div class="margin-value" id="margin-value">+0.0 dB</div>
+    <div class="margin-status" id="margin-status"></div>
+    <div class="margin-detail" id="margin-detail">Received &mdash; dBm &middot; Sensitivity &mdash; dBm</div>
+  </div>
+
+  <!-- TRANSMITTER -->
+  <section class="section">
+    <h2><span class="eq-term">P<sub>tx</sub></span> Transmitter</h2>
+    <div class="field-group">
+      <label for="txPower">Power</label>
+      <div class="input-with-unit">
+        <input type="number" id="txPower" step="any" min="0">
+        <span class="unit">W</span>
+        <span class="computed" id="txPowerDbm"></span>
+      </div>
+      <div class="picks">
+        <button class="pick-btn" data-set="txPower:100">100W</button>
+        <button class="pick-btn" data-set="txPower:50">50W</button>
+        <button class="pick-btn" data-set="txPower:10">10W</button>
+        <button class="pick-btn" data-set="txPower:5">5W</button>
+        <button class="pick-btn" data-set="txPower:1">1W</button>
+        <button class="pick-btn" data-set="txPower:0.158">158mW</button>
+        <button class="pick-btn" data-set="txPower:0.1">100mW</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TX ANTENNA & FEEDLINE -->
+  <section class="section">
+    <h2><span class="eq-term">G<sub>tx</sub> &minus; L<sub>tx</sub></span> TX Antenna &amp; Feedline</h2>
+    <div class="field-group">
+      <label for="txGain">Antenna gain</label>
+      <div class="input-with-unit">
+        <input type="number" id="txGain" step="0.1">
+        <span class="unit">dBi</span>
+      </div>
+      <div class="picks">
+        <button class="pick-btn" data-set="txGain:0">Rubber duck</button>
+        <button class="pick-btn" data-set="txGain:2">&frac14;&lambda; vert</button>
+        <button class="pick-btn" data-set="txGain:2.15">Dipole</button>
+        <button class="pick-btn" data-set="txGain:8">Yagi 3-el</button>
+        <button class="pick-btn" data-set="txGain:11">Yagi 5-el</button>
+        <button class="pick-btn" data-set="txGain:8.5">LPDA</button>
+        <button class="pick-btn" data-set="txGain:6">Collinear</button>
+      </div>
+    </div>
+    <div class="field-group">
+      <label>Feedline</label>
+      <div class="input-row">
+        <select id="txCableType">
+          <option value="none">None (direct)</option>
+          <option value="rg58">RG-58</option>
+          <option value="rg8x">RG-8X</option>
+          <option value="lmr400">LMR-400</option>
+        </select>
+        <input type="number" id="txCableLength" min="0" step="1" placeholder="len">
+        <select id="txLengthUnit">
+          <option value="ft">ft</option>
+          <option value="m">m</option>
+        </select>
+      </div>
+      <div class="computed" id="txFeedLoss">Feedline loss: 0.0 dB</div>
+    </div>
+    <div class="field-group">
+      <label for="txExtraLoss">Other TX losses <span class="hint">(connectors, duplexer)</span></label>
+      <div class="input-with-unit">
+        <input type="number" id="txExtraLoss" step="0.1" min="0">
+        <span class="unit">dB</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PATH -->
+  <section class="section">
+    <h2><span class="eq-term">FSPL + L<sub>path</sub></span> Path</h2>
+    <div class="field-group">
+      <label for="frequency">Frequency</label>
+      <div class="input-with-unit">
+        <input type="number" id="frequency" step="any" min="0.1">
+        <span class="unit">MHz</span>
+      </div>
+      <div class="picks">
+        <button class="pick-btn" data-set="frequency:3.5">80m</button>
+        <button class="pick-btn" data-set="frequency:7.2">40m</button>
+        <button class="pick-btn" data-set="frequency:14.2">20m</button>
+        <button class="pick-btn" data-set="frequency:21.3">15m</button>
+        <button class="pick-btn" data-set="frequency:28.4">10m</button>
+        <button class="pick-btn" data-set="frequency:50">6m</button>
+        <button class="pick-btn" data-set="frequency:144">2m</button>
+        <button class="pick-btn" data-set="frequency:440">70cm</button>
+        <button class="pick-btn" data-set="frequency:915">33cm</button>
+      </div>
+    </div>
+    <div class="field-group">
+      <label for="distance">Distance</label>
+      <div class="input-row">
+        <input type="number" id="distance" step="any" min="0">
+        <select id="distUnit">
+          <option value="km">km</option>
+          <option value="mi">miles</option>
+        </select>
+      </div>
+      <div class="computed" id="fsplDisplay">FSPL: 0.0 dB</div>
+    </div>
+    <div class="field-group">
+      <label for="extraPathLoss">Extra path loss</label>
+      <div class="input-with-unit">
+        <input type="number" id="extraPathLoss" step="1" min="0">
+        <span class="unit">dB</span>
+      </div>
+      <div class="picks">
+        <button class="pick-btn" data-set="extraPathLoss:0">LOS</button>
+        <button class="pick-btn" data-set="extraPathLoss:5">Rural</button>
+        <button class="pick-btn" data-set="extraPathLoss:10">Suburban</button>
+        <button class="pick-btn" data-set="extraPathLoss:15">Urban</button>
+        <button class="pick-btn" data-set="extraPathLoss:25">Dense urban</button>
+        <button class="pick-btn" data-set="extraPathLoss:20">Indoor pen.</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- RX ANTENNA & FEEDLINE -->
+  <section class="section">
+    <h2><span class="eq-term">G<sub>rx</sub> &minus; L<sub>rx</sub></span> RX Antenna &amp; Feedline</h2>
+    <div class="field-group">
+      <label for="rxGain">Antenna gain</label>
+      <div class="input-with-unit">
+        <input type="number" id="rxGain" step="0.1">
+        <span class="unit">dBi</span>
+      </div>
+      <div class="picks">
+        <button class="pick-btn" data-set="rxGain:0">Rubber duck</button>
+        <button class="pick-btn" data-set="rxGain:2">&frac14;&lambda; vert</button>
+        <button class="pick-btn" data-set="rxGain:2.15">Dipole</button>
+        <button class="pick-btn" data-set="rxGain:8">Yagi 3-el</button>
+        <button class="pick-btn" data-set="rxGain:11">Yagi 5-el</button>
+        <button class="pick-btn" data-set="rxGain:8.5">LPDA</button>
+        <button class="pick-btn" data-set="rxGain:6">Collinear</button>
+      </div>
+    </div>
+    <div class="field-group">
+      <label>Feedline</label>
+      <div class="input-row">
+        <select id="rxCableType">
+          <option value="none">None (direct)</option>
+          <option value="rg58">RG-58</option>
+          <option value="rg8x">RG-8X</option>
+          <option value="lmr400">LMR-400</option>
+        </select>
+        <input type="number" id="rxCableLength" min="0" step="1" placeholder="len">
+        <select id="rxLengthUnit">
+          <option value="ft">ft</option>
+          <option value="m">m</option>
+        </select>
+      </div>
+      <div class="computed" id="rxFeedLoss">Feedline loss: 0.0 dB</div>
+    </div>
+    <div class="field-group">
+      <label for="rxExtraLoss">Other RX losses <span class="hint">(connectors, duplexer)</span></label>
+      <div class="input-with-unit">
+        <input type="number" id="rxExtraLoss" step="0.1" min="0">
+        <span class="unit">dB</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECEIVER SENSITIVITY -->
+  <section class="section">
+    <h2><span class="eq-term">S<sub>min</sub></span> Receiver Sensitivity</h2>
+    <div class="field-group">
+      <div class="input-with-unit">
+        <input type="number" id="sensitivity" step="1">
+        <span class="unit">dBm</span>
+      </div>
+      <div class="picks">
+        <button class="pick-btn" data-set="sensitivity:-120">FM 25k</button>
+        <button class="pick-btn" data-set="sensitivity:-122">FM 12.5k</button>
+        <button class="pick-btn" data-set="sensitivity:-135">SSB</button>
+        <button class="pick-btn" data-set="sensitivity:-140">CW</button>
+        <button class="pick-btn" data-set="sensitivity:-140">FT8</button>
+        <button class="pick-btn" data-set="sensitivity:-123">LoRa SF7</button>
+        <button class="pick-btn" data-set="sensitivity:-131">LoRa SF11</button>
+        <button class="pick-btn" data-set="sensitivity:-137">LoRa SF12</button>
+        <button class="pick-btn" data-set="sensitivity:-119">APRS</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- WATERFALL -->
+  <div class="waterfall-wrap">
+    <h2>Signal Waterfall</h2>
+    <div class="waterfall-scroll">
+      <svg id="waterfall" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="summary-wrap">
+    <h2>Budget Summary</h2>
+    <table id="summary">
+      <thead>
+        <tr><th>Term</th><th>Value</th><th>Cumulative</th></tr>
+      </thead>
+      <tbody id="summary-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  /* ---- helpers ---- */
+  function el(id) { return document.getElementById(id); }
+  function num(id) { var v = parseFloat(el(id).value); return isNaN(v) ? 0 : v; }
+  function fmt(v, d) { d = d === undefined ? 1 : d; return (v >= 0 ? '+' : '') + v.toFixed(d); }
+  function fmtU(v, d) { return v.toFixed(d === undefined ? 1 : d); }
+
+  /* ---- cable loss data: [freq_MHz, dB_per_100ft] ---- */
+  var CABLE = {
+    none:   [[1, 0], [1000, 0]],
+    rg58:   [[30, 1.4], [146, 2.5], [440, 3.8], [915, 6.9]],
+    rg8x:   [[30, 1.0], [146, 2.0], [440, 3.3], [915, 5.5]],
+    lmr400: [[30, 0.4], [146, 0.7], [440, 1.2], [915, 2.0]]
+  };
+
+  function lossPerHundredFt(type, fMHz) {
+    if (type === 'none') return 0;
+    var d = CABLE[type];
+    if (!d) return 0;
+    if (fMHz <= 0) return 0;
+    if (fMHz <= d[0][0]) return d[0][1] * Math.sqrt(fMHz / d[0][0]);
+    if (fMHz >= d[d.length-1][0]) return d[d.length-1][1] * Math.sqrt(fMHz / d[d.length-1][0]);
+    for (var i = 0; i < d.length - 1; i++) {
+      if (fMHz >= d[i][0] && fMHz <= d[i+1][0]) {
+        var t = (fMHz - d[i][0]) / (d[i+1][0] - d[i][0]);
+        return d[i][1] + t * (d[i+1][1] - d[i][1]);
+      }
+    }
+    return 0;
+  }
+
+  function calcCableLoss(type, fMHz, length, unit) {
+    var lphf = lossPerHundredFt(type, fMHz);
+    var ft = unit === 'm' ? length * 3.28084 : length;
+    return lphf * ft / 100;
+  }
+
+  function wattsToDbm(w) {
+    if (w <= 0) return -999;
+    return 10 * Math.log10(w * 1000);
+  }
+
+  function calcFSPL(dKm, fMHz) {
+    if (dKm <= 0 || fMHz <= 0) return 0;
+    return 20 * Math.log10(dKm) + 20 * Math.log10(fMHz) + 32.44;
+  }
+
+  /* ---- presets ---- */
+  var PRESETS = {
+    'ht-repeater': {
+      txPower: 5, txGain: 0, txCableType: 'none', txCableLength: 0, txLengthUnit: 'ft', txExtraLoss: 0,
+      frequency: 146.84, distance: 8, distUnit: 'km', extraPathLoss: 5,
+      rxGain: 6, rxCableType: 'lmr400', rxCableLength: 50, rxLengthUnit: 'ft', rxExtraLoss: 1,
+      sensitivity: -120
+    },
+    'base-repeater': {
+      txPower: 50, txGain: 8.5, txCableType: 'rg8x', txCableLength: 25, txLengthUnit: 'ft', txExtraLoss: 0.5,
+      frequency: 146.84, distance: 8, distUnit: 'km', extraPathLoss: 3,
+      rxGain: 6, rxCableType: 'lmr400', rxCableLength: 50, rxLengthUnit: 'ft', rxExtraLoss: 1,
+      sensitivity: -120
+    },
+    'mesh-los': {
+      txPower: 0.158, txGain: 2, txCableType: 'none', txCableLength: 0, txLengthUnit: 'ft', txExtraLoss: 0,
+      frequency: 915, distance: 10, distUnit: 'km', extraPathLoss: 0,
+      rxGain: 2, rxCableType: 'none', rxCableLength: 0, rxLengthUnit: 'ft', rxExtraLoss: 0,
+      sensitivity: -131
+    },
+    'mesh-urban': {
+      txPower: 0.158, txGain: 2, txCableType: 'none', txCableLength: 0, txLengthUnit: 'ft', txExtraLoss: 0,
+      frequency: 915, distance: 3, distUnit: 'km', extraPathLoss: 25,
+      rxGain: 2, rxCableType: 'none', rxCableLength: 0, rxLengthUnit: 'ft', rxExtraLoss: 0,
+      sensitivity: -131
+    },
+    '40m-nvis': {
+      txPower: 50, txGain: 2.15, txCableType: 'rg8x', txCableLength: 50, txLengthUnit: 'ft', txExtraLoss: 0,
+      frequency: 7.2, distance: 200, distUnit: 'km', extraPathLoss: 20,
+      rxGain: 2.15, rxCableType: 'rg8x', rxCableLength: 50, rxLengthUnit: 'ft', rxExtraLoss: 0,
+      sensitivity: -135
+    },
+    '20m-dx': {
+      txPower: 100, txGain: 2.15, txCableType: 'rg8x', txCableLength: 50, txLengthUnit: 'ft', txExtraLoss: 0,
+      frequency: 14.2, distance: 5000, distUnit: 'km', extraPathLoss: 10,
+      rxGain: 2.15, rxCableType: 'rg8x', rxCableLength: 50, rxLengthUnit: 'ft', rxExtraLoss: 0,
+      sensitivity: -135
+    }
+  };
+
+  /* ---- read all inputs ---- */
+  function readInputs() {
+    return {
+      txPower: num('txPower'),
+      txGain: num('txGain'),
+      txCableType: el('txCableType').value,
+      txCableLength: num('txCableLength'),
+      txLengthUnit: el('txLengthUnit').value,
+      txExtraLoss: num('txExtraLoss'),
+      frequency: num('frequency'),
+      distance: num('distance'),
+      distUnit: el('distUnit').value,
+      extraPathLoss: num('extraPathLoss'),
+      rxGain: num('rxGain'),
+      rxCableType: el('rxCableType').value,
+      rxCableLength: num('rxCableLength'),
+      rxLengthUnit: el('rxLengthUnit').value,
+      rxExtraLoss: num('rxExtraLoss'),
+      sensitivity: num('sensitivity')
+    };
+  }
+
+  /* ---- calculate budget ---- */
+  function calculate(inp) {
+    var f = inp.frequency;
+    var dKm = inp.distUnit === 'mi' ? inp.distance * 1.60934 : inp.distance;
+    var txPowerDbm = wattsToDbm(inp.txPower);
+    var txFeedLoss = calcCableLoss(inp.txCableType, f, inp.txCableLength, inp.txLengthUnit);
+    var rxFeedLoss = calcCableLoss(inp.rxCableType, f, inp.rxCableLength, inp.rxLengthUnit);
+    var fspl = calcFSPL(dKm, f);
+
+    var pRx = txPowerDbm + inp.txGain - txFeedLoss - inp.txExtraLoss
+              - fspl - inp.extraPathLoss
+              + inp.rxGain - rxFeedLoss - inp.rxExtraLoss;
+    var margin = pRx - inp.sensitivity;
+
+    return {
+      txPowerDbm: txPowerDbm,
+      txGain: inp.txGain,
+      txFeedLoss: txFeedLoss,
+      txExtraLoss: inp.txExtraLoss,
+      fspl: fspl,
+      extraPathLoss: inp.extraPathLoss,
+      rxGain: inp.rxGain,
+      rxFeedLoss: rxFeedLoss,
+      rxExtraLoss: inp.rxExtraLoss,
+      pRx: pRx,
+      sensitivity: inp.sensitivity,
+      margin: margin
+    };
+  }
+
+  /* ---- update displays ---- */
+  function updateDisplay(budget) {
+    /* margin panel */
+    var mp = el('margin-panel');
+    var cls = budget.margin > 10 ? 'positive' : budget.margin >= 0 ? 'warn' : 'negative';
+    mp.className = 'margin-panel ' + cls;
+    el('margin-value').textContent = fmt(budget.margin) + ' dB';
+    var statusLabels = {positive: '✓ Link closes', warn: '⚠ Marginal', negative: '✗ No link'};
+    el('margin-status').textContent = statusLabels[cls];
+    el('margin-detail').textContent =
+      'Received ' + fmt(budget.pRx) + ' dBm  ·  Sensitivity ' +
+      fmt(budget.sensitivity) + ' dBm';
+
+    /* inline computed values */
+    el('txPowerDbm').textContent = '= ' + fmt(budget.txPowerDbm) + ' dBm';
+    el('txFeedLoss').textContent = 'Feedline loss: ' + fmtU(budget.txFeedLoss) + ' dB';
+    el('rxFeedLoss').textContent = 'Feedline loss: ' + fmtU(budget.rxFeedLoss) + ' dB';
+    el('fsplDisplay').textContent = 'FSPL: ' + fmtU(budget.fspl) + ' dB';
+
+    renderWaterfall(budget);
+    renderSummary(budget);
+    saveState();
+  }
+
+  /* ---- waterfall SVG ---- */
+  function renderWaterfall(b) {
+    var terms = [
+      { label: 'TX Power',      delta:  b.txPowerDbm,    kind: 'start' },
+      { label: 'TX Ant Gain',   delta:  b.txGain,        kind: 'gain' },
+      { label: 'TX Feed Loss',  delta: -b.txFeedLoss,    kind: 'loss' },
+      { label: 'TX Other Loss', delta: -b.txExtraLoss,   kind: 'loss' },
+      { label: 'FSPL',          delta: -b.fspl,           kind: 'loss' },
+      { label: 'Path Extra',    delta: -b.extraPathLoss,  kind: 'loss' },
+      { label: 'RX Ant Gain',   delta:  b.rxGain,        kind: 'gain' },
+      { label: 'RX Feed Loss',  delta: -b.rxFeedLoss,    kind: 'loss' },
+      { label: 'RX Other Loss', delta: -b.rxExtraLoss,   kind: 'loss' }
+    ];
+
+    var cum = 0;
+    for (var i = 0; i < terms.length; i++) {
+      terms[i].before = cum;
+      cum += terms[i].delta;
+      terms[i].after = cum;
+    }
+
+    /* axis range */
+    var vals = [0, b.sensitivity];
+    for (var i = 0; i < terms.length; i++) {
+      vals.push(terms[i].before, terms[i].after);
+    }
+    var dMin = Math.min.apply(null, vals);
+    var dMax = Math.max.apply(null, vals);
+    var pad = Math.max((dMax - dMin) * 0.08, 8);
+    var axMin = Math.floor((dMin - pad) / 10) * 10;
+    var axMax = Math.ceil((dMax + pad) / 10) * 10;
+    if (axMax - axMin < 20) { axMin -= 10; axMax += 10; }
+
+    /* SVG geometry */
+    var W = 900, ML = 130, MR = 70, MT = 12, MB = 34;
+    var N = terms.length;
+    var rowH = 34, barH = 22;
+    var annotH = 44;
+    var plotH = N * rowH + annotH;
+    var H = MT + plotH + MB;
+    var plotW = W - ML - MR;
+
+    function xScale(dbm) { return ML + (dbm - axMin) / (axMax - axMin) * plotW; }
+    function yRow(r) { return MT + r * rowH; }
+
+    var svg = [];
+
+    /* defs: arrow markers */
+    svg.push('<defs>');
+    svg.push('<marker id="arr-l" markerWidth="7" markerHeight="7" refX="7" refY="3.5" orient="auto">');
+    svg.push('<path d="M7,0 L0,3.5 L7,7" fill="none" stroke="var(--accent)" stroke-width="1.5"/>');
+    svg.push('</marker>');
+    svg.push('<marker id="arr-r" markerWidth="7" markerHeight="7" refX="0" refY="3.5" orient="auto">');
+    svg.push('<path d="M0,0 L7,3.5 L0,7" fill="none" stroke="var(--accent)" stroke-width="1.5"/>');
+    svg.push('</marker>');
+    svg.push('</defs>');
+
+    /* background */
+    svg.push('<rect x="' + ML + '" y="' + MT + '" width="' + plotW + '" height="' + (N * rowH) +
+             '" fill="var(--chart-bg)" rx="4"/>');
+
+    /* grid lines + labels */
+    var gridStep = (axMax - axMin) > 150 ? 20 : (axMax - axMin) > 60 ? 10 : 5;
+    for (var g = axMin; g <= axMax; g += gridStep) {
+      var gx = xScale(g);
+      svg.push('<line x1="' + gx + '" y1="' + MT + '" x2="' + gx + '" y2="' + (MT + N * rowH) +
+               '" stroke="var(--grid)" stroke-width="0.5"/>');
+      svg.push('<text x="' + gx + '" y="' + (MT + N * rowH + 16) +
+               '" text-anchor="middle" font-size="9.5" fill="var(--text-muted)" ' +
+               'font-family="\'Space Mono\',monospace">' + g + '</text>');
+    }
+
+    /* 0 dBm reference */
+    if (axMin <= 0 && axMax >= 0) {
+      var zx = xScale(0);
+      svg.push('<line x1="' + zx + '" y1="' + MT + '" x2="' + zx + '" y2="' + (MT + N * rowH) +
+               '" stroke="var(--text-muted)" stroke-width="0.8" stroke-dasharray="4,4" opacity="0.5"/>');
+    }
+
+    /* bars */
+    for (var i = 0; i < N; i++) {
+      var t = terms[i];
+      var ry = yRow(i);
+      var barY = ry + (rowH - barH) / 2;
+
+      /* row label */
+      svg.push('<text x="' + (ML - 8) + '" y="' + (ry + rowH / 2 + 4) +
+               '" text-anchor="end" font-size="11" fill="var(--text)" ' +
+               'font-family="-apple-system,system-ui,sans-serif">' + t.label + '</text>');
+
+      /* bar or tick */
+      var x1 = xScale(Math.min(t.before, t.after));
+      var x2 = xScale(Math.max(t.before, t.after));
+      var bw = x2 - x1;
+      var isGain = t.delta >= 0;
+      var color = t.kind === 'start' ? 'var(--accent)' : isGain ? 'var(--gain)' : 'var(--loss)';
+
+      if (Math.abs(t.delta) > 0.05) {
+        svg.push('<rect x="' + x1 + '" y="' + barY + '" width="' + Math.max(bw, 2) +
+                 '" height="' + barH + '" rx="3" fill="' + color + '" opacity="0.75"/>');
+      } else {
+        var zx2 = xScale(t.before);
+        svg.push('<line x1="' + zx2 + '" y1="' + barY + '" x2="' + zx2 + '" y2="' + (barY + barH) +
+                 '" stroke="' + color + '" stroke-width="2" opacity="0.35"/>');
+      }
+
+      /* delta label */
+      var dText = (t.kind === 'start') ? fmtU(t.delta, 1) + ' dBm' :
+                  (isGain ? '+' : '') + t.delta.toFixed(1) + ' dB';
+      var labelOnRight = true;
+      var labelX = x2 + 5;
+      if (labelX + 70 > W) {
+        labelX = x1 - 5;
+        labelOnRight = false;
+      }
+      svg.push('<text x="' + labelX + '" y="' + (ry + rowH / 2 + 4) +
+               '" text-anchor="' + (labelOnRight ? 'start' : 'end') +
+               '" font-size="10" fill="var(--text)" font-family="\'Space Mono\',monospace">' +
+               dText + '</text>');
+
+      /* connector to next row */
+      if (i < N - 1) {
+        var cx = xScale(t.after);
+        svg.push('<line x1="' + cx + '" y1="' + (barY + barH) + '" x2="' + cx + '" y2="' +
+                 (yRow(i + 1) + (rowH - barH) / 2) +
+                 '" stroke="var(--connector)" stroke-width="1" stroke-dasharray="2,2"/>');
+      }
+    }
+
+    /* sensitivity line */
+    var sMinX = xScale(b.sensitivity);
+    svg.push('<line x1="' + sMinX + '" y1="' + (MT - 2) + '" x2="' + sMinX + '" y2="' + (MT + N * rowH + 28) +
+             '" stroke="var(--warning)" stroke-width="1.5" stroke-dasharray="6,3"/>');
+    svg.push('<text x="' + sMinX + '" y="' + (MT + N * rowH + 30) +
+             '" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--warning)" ' +
+             'font-family="\'Space Mono\',monospace">Sₘᵢₙ ' + b.sensitivity.toFixed(0) + '</text>');
+
+    /* P_rx marker */
+    var pRxX = xScale(b.pRx);
+    var mrkY = MT + N * rowH + 6;
+    svg.push('<circle cx="' + pRxX + '" cy="' + mrkY + '" r="4.5" fill="var(--accent)"/>');
+    svg.push('<text x="' + pRxX + '" y="' + (mrkY + 14) +
+             '" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--accent)" ' +
+             'font-family="\'Space Mono\',monospace">Pᵣₓ ' + fmt(b.pRx) + '</text>');
+
+    /* margin arrow between P_rx and S_min */
+    if (Math.abs(pRxX - sMinX) > 30) {
+      var aL = Math.min(pRxX, sMinX) + 8;
+      var aR = Math.max(pRxX, sMinX) - 8;
+      svg.push('<line x1="' + aL + '" y1="' + mrkY + '" x2="' + aR + '" y2="' + mrkY +
+               '" stroke="var(--accent)" stroke-width="1.5" marker-start="url(#arr-l)" marker-end="url(#arr-r)"/>');
+      svg.push('<text x="' + ((pRxX + sMinX) / 2) + '" y="' + (mrkY - 7) +
+               '" text-anchor="middle" font-size="10" font-weight="700" fill="var(--accent)" ' +
+               'font-family="\'Space Mono\',monospace">margin ' + fmt(b.margin) + ' dB</text>');
+    }
+
+    /* axis label */
+    svg.push('<text x="' + (ML + plotW / 2) + '" y="' + (H - 3) +
+             '" text-anchor="middle" font-size="9.5" fill="var(--text-muted)" ' +
+             'font-family="-apple-system,system-ui,sans-serif">dBm</text>');
+
+    el('waterfall').setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    el('waterfall').innerHTML = svg.join('');
+  }
+
+  /* ---- summary table ---- */
+  function renderSummary(b) {
+    var rows = [
+      ['TX Power',       b.txPowerDbm,      'dBm', 'gain'],
+      ['TX Antenna Gain', b.txGain,          'dBi', 'gain'],
+      ['TX Feedline Loss', -b.txFeedLoss,    'dB',  'loss'],
+      ['TX Other Losses', -b.txExtraLoss,    'dB',  'loss'],
+      ['sep'],
+      ['Free Space Path Loss', -b.fspl,      'dB',  'loss'],
+      ['Extra Path Loss', -b.extraPathLoss,  'dB',  'loss'],
+      ['sep'],
+      ['RX Antenna Gain', b.rxGain,          'dBi', 'gain'],
+      ['RX Feedline Loss', -b.rxFeedLoss,    'dB',  'loss'],
+      ['RX Other Losses', -b.rxExtraLoss,    'dB',  'loss'],
+      ['sep'],
+      ['Received Power',  b.pRx,             'dBm', 'result'],
+      ['Rx Sensitivity',  b.sensitivity,     'dBm', 'neutral'],
+      ['Link Margin',     b.margin,          'dB',  'result-margin']
+    ];
+
+    var cum = 0;
+    var html = '';
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i];
+      if (r[0] === 'sep') {
+        html += '<tr class="sep"><td colspan="3"></td></tr>';
+        continue;
+      }
+      var cls = '';
+      var valCls = '';
+      if (r[3] === 'result' || r[3] === 'result-margin') cls = ' class="result"';
+      if (r[3] === 'gain' && r[1] > 0) valCls = ' class="val-gain"';
+      else if (r[3] === 'loss' && r[1] < 0) valCls = ' class="val-loss"';
+      else if (r[3] === 'result-margin') {
+        valCls = r[1] > 10 ? ' class="val-gain"' : r[1] >= 0 ? ' class="val-accent"' : ' class="val-loss"';
+      } else if (r[3] === 'result') valCls = ' class="val-accent"';
+
+      /* cumulative tracking */
+      if (r[3] !== 'neutral' && r[3] !== 'result-margin') {
+        if (r[3] === 'result') {
+          /* skip cum update */
+        } else {
+          cum += r[1];
+        }
+      }
+      var cumText = '';
+      if (r[3] !== 'neutral' && r[3] !== 'result-margin' && r[3] !== 'result') {
+        cumText = fmt(cum);
+      } else if (r[3] === 'result') {
+        cumText = fmt(b.pRx);
+      }
+
+      html += '<tr' + cls + '>';
+      html += '<td>' + r[0] + '</td>';
+      html += '<td' + valCls + '>' + fmt(r[1]) + ' ' + r[2] + '</td>';
+      html += '<td>' + cumText + '</td>';
+      html += '</tr>';
+    }
+    el('summary-body').innerHTML = html;
+  }
+
+  /* ---- preset application ---- */
+  function applyPreset(name) {
+    var p = PRESETS[name];
+    if (!p) return;
+    var fields = ['txPower','txGain','txCableLength','txExtraLoss',
+                  'frequency','distance','extraPathLoss',
+                  'rxGain','rxCableLength','rxExtraLoss','sensitivity'];
+    for (var i = 0; i < fields.length; i++) {
+      var e = el(fields[i]);
+      if (e && p[fields[i]] !== undefined) e.value = p[fields[i]];
+    }
+    var selects = ['txCableType','txLengthUnit','distUnit','rxCableType','rxLengthUnit'];
+    for (var i = 0; i < selects.length; i++) {
+      var e = el(selects[i]);
+      if (e && p[selects[i]] !== undefined) e.value = p[selects[i]];
+    }
+
+    /* update active button */
+    var btns = document.querySelectorAll('.preset-btn');
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].classList.toggle('active', btns[i].dataset.preset === name);
+    }
+    recalc();
+  }
+
+  /* ---- localStorage ---- */
+  function saveState() {
+    try {
+      var s = readInputs();
+      localStorage.setItem('rf-link-budget-state', JSON.stringify(s));
+    } catch(e) { /* ignore */ }
+  }
+
+  function loadState() {
+    try {
+      var raw = localStorage.getItem('rf-link-budget-state');
+      if (!raw) return false;
+      var s = JSON.parse(raw);
+      if (!s || typeof s !== 'object') return false;
+      var fields = ['txPower','txGain','txCableLength','txExtraLoss',
+                    'frequency','distance','extraPathLoss',
+                    'rxGain','rxCableLength','rxExtraLoss','sensitivity'];
+      for (var i = 0; i < fields.length; i++) {
+        var e = el(fields[i]);
+        if (e && s[fields[i]] !== undefined) e.value = s[fields[i]];
+      }
+      var selects = ['txCableType','txLengthUnit','distUnit','rxCableType','rxLengthUnit'];
+      for (var i = 0; i < selects.length; i++) {
+        var e = el(selects[i]);
+        if (e && s[selects[i]] !== undefined) e.value = s[selects[i]];
+      }
+      /* clear preset highlight */
+      var btns = document.querySelectorAll('.preset-btn');
+      for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+      return true;
+    } catch(e) { return false; }
+  }
+
+  /* ---- recalculate ---- */
+  function recalc() {
+    var inp = readInputs();
+    var budget = calculate(inp);
+    updateDisplay(budget);
+  }
+
+  /* ---- events ---- */
+  document.addEventListener('click', function(e) {
+    /* quick-pick buttons */
+    var pick = e.target.closest('.pick-btn[data-set]');
+    if (pick) {
+      var parts = pick.dataset.set.split(':');
+      var field = parts[0];
+      var val = parts[1];
+      var target = el(field);
+      if (target) {
+        if (target.tagName === 'SELECT') {
+          target.value = val;
+        } else {
+          target.value = val;
+        }
+        recalc();
+      }
+      return;
+    }
+
+    /* preset buttons */
+    var preset = e.target.closest('.preset-btn[data-preset]');
+    if (preset) {
+      applyPreset(preset.dataset.preset);
+      return;
+    }
+  });
+
+  el('app').addEventListener('input', recalc);
+  el('app').addEventListener('change', recalc);
+
+  /* ---- init ---- */
+  if (!loadState()) {
+    applyPreset('ht-repeater');
+  } else {
+    recalc();
+  }
+})();
+</script>
+
+</body></html>

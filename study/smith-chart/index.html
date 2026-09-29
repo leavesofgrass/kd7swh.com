@@ -1,0 +1,797 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex, nofollow"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Smith Chart</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff;
+  --surface: #f5f7fa;
+  --chart-fill: #edf1f7;
+  --grid-r: #4a6785;
+  --grid-x: #8aadc4;
+  --grid-fine: #b8ccd8;
+  --grid-outer: #2a4a6a;
+  --axis: #1e3a5f;
+  --label: #2a4a6a;
+  --label-dim: #6a8a9e;
+  --point: #c2410c;
+  --admit: #1d4ed8;
+  --text: #1a1a2e;
+  --text-dim: #4a5568;
+  --text-muted: #8a94a0;
+  --border: #d0d5dd;
+  --border-light: #e8ecf0;
+  --input-bg: #ffffff;
+  --input-border: #c0c5cd;
+  --input-focus: #4a6785;
+  --btn-bg: #4a6785;
+  --btn-text: #ffffff;
+  --btn-hover: #3a5a72;
+  --font-mono: 'IBM Plex Mono', 'Consolas', 'Monaco', monospace;
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1b2a;
+    --surface: #152535;
+    --chart-fill: #111e30;
+    --grid-r: #5a7a99;
+    --grid-x: #3f5f7f;
+    --grid-fine: #2a3e52;
+    --grid-outer: #7a9ab9;
+    --axis: #8ab0d0;
+    --label: #8aacca;
+    --label-dim: #506878;
+    --point: #ff9d5c;
+    --admit: #a8c7fa;
+    --text: #e0e8f0;
+    --text-dim: #a0b0c0;
+    --text-muted: #607080;
+    --border: #2a3a4a;
+    --border-light: #1e2e3e;
+    --input-bg: #1a2a3a;
+    --input-border: #3a4a5a;
+    --input-focus: #6a8aaa;
+    --btn-bg: #4a6785;
+    --btn-text: #e0e8f0;
+    --btn-hover: #5a7a95;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1b2a;
+  --surface: #152535;
+  --chart-fill: #111e30;
+  --grid-r: #5a7a99;
+  --grid-x: #3f5f7f;
+  --grid-fine: #2a3e52;
+  --grid-outer: #7a9ab9;
+  --axis: #8ab0d0;
+  --label: #8aacca;
+  --label-dim: #506878;
+  --point: #ff9d5c;
+  --admit: #a8c7fa;
+  --text: #e0e8f0;
+  --text-dim: #a0b0c0;
+  --text-muted: #607080;
+  --border: #2a3a4a;
+  --border-light: #1e2e3e;
+  --input-bg: #1a2a3a;
+  --input-border: #3a4a5a;
+  --input-focus: #6a8aaa;
+  --btn-bg: #4a6785;
+  --btn-text: #e0e8f0;
+  --btn-hover: #5a7a95;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  margin: 0;
+  padding: 16px;
+  line-height: 1.5;
+}
+.smith-app { max-width: 1100px; margin: 0 auto; }
+.smith-header { text-align: center; margin-bottom: 16px; }
+.smith-header h1 {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+.smith-header p {
+  font-size: 0.85em;
+  color: var(--text-muted);
+  margin: 4px 0 0;
+}
+.smith-main {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+.chart-col { flex: 3; min-width: 0; }
+.panel-col { flex: 2; min-width: 260px; max-width: 360px; }
+#chart {
+  width: 100%;
+  height: auto;
+  display: block;
+  cursor: crosshair;
+  user-select: none;
+  -webkit-user-select: none;
+}
+#chart text {
+  font-family: var(--font-sans);
+  pointer-events: none;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+.card-title {
+  font-size: 0.7em;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin: 0 0 10px;
+}
+.z0-toggle {
+  display: flex;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  margin-bottom: 10px;
+}
+.z0-btn {
+  flex: 1;
+  padding: 7px 12px;
+  border: none;
+  background: var(--input-bg);
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font-mono);
+}
+.z0-btn + .z0-btn { border-left: 1px solid var(--border); }
+.z0-btn.active {
+  background: var(--btn-bg);
+  color: var(--btn-text);
+}
+.z0-btn:hover:not(.active) { background: var(--border-light); }
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-dim);
+  cursor: pointer;
+}
+.toggle-row input { margin: 0; cursor: pointer; }
+.input-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.input-field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}
+.input-field input {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid var(--input-border);
+  border-radius: 5px;
+  background: var(--input-bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.input-field input:focus { border-color: var(--input-focus); }
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none; margin: 0;
+}
+input[type="number"] { -moz-appearance: textfield; }
+.btn-row { display: flex; gap: 8px; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 16px;
+  border: none;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: var(--font-sans);
+}
+.btn-plot { background: var(--btn-bg); color: var(--btn-text); flex: 1; }
+.btn-plot:hover { background: var(--btn-hover); }
+.btn-clear {
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+.btn-clear:hover { background: var(--border-light); }
+.ro-z0 {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-light);
+}
+.ro-group { margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid var(--border-light); }
+.ro-group:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.ro-group-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin: 2px 0 2px;
+}
+.ro-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 3px 0;
+}
+.ro-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  margin-right: 10px;
+}
+.ro-val {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text);
+  text-align: right;
+  white-space: nowrap;
+}
+.ro-val.gamma { color: var(--point); font-weight: 500; }
+.ro-val.admittance { color: var(--admit); font-weight: 500; }
+.ro-empty {
+  font-style: italic;
+  color: var(--text-muted);
+  font-size: 13px;
+  padding: 8px 0;
+  text-align: center;
+}
+@media (max-width: 768px) {
+  .smith-main { flex-direction: column; gap: 16px; }
+  .panel-col { max-width: none; width: 100%; }
+}
+</style>
+
+<div class="smith-app">
+  <div class="smith-header">
+    <h1>Smith Chart</h1>
+    <p>Interactive RF impedance tool</p>
+  </div>
+  <div class="smith-main">
+    <div class="chart-col">
+      <svg id="chart" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+        <defs></defs>
+        <g id="grid-group"></g>
+        <g id="label-group"></g>
+        <g id="plot-group"></g>
+      </svg>
+    </div>
+    <aside class="panel-col">
+      <div class="card">
+        <div class="card-title">Settings</div>
+        <div class="z0-toggle">
+          <button class="z0-btn active" data-z0="50">50 &#8486;</button>
+          <button class="z0-btn" data-z0="75">75 &#8486;</button>
+        </div>
+        <label class="toggle-row">
+          <input type="checkbox" id="fine-grid">
+          <span>Fine grid lines</span>
+        </label>
+      </div>
+      <div class="card">
+        <div class="card-title">Plot Impedance</div>
+        <div class="input-grid">
+          <div class="input-field">
+            <label for="in-r">R (&#8486;)</label>
+            <input type="number" id="in-r" value="25" step="any">
+          </div>
+          <div class="input-field">
+            <label for="in-x">X (&#8486;)</label>
+            <input type="number" id="in-x" value="-30" step="any">
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-plot" id="btn-plot">Plot</button>
+          <button class="btn btn-clear" id="btn-clear">Clear</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Readout</div>
+        <div id="readout-body" aria-live="polite">
+          <div class="ro-empty">Loading...</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ── Constants ──────────────────────────────────────────
+  var CX = 300, CY = 300, CR = 240;
+  var NS = 'http://www.w3.org/2000/svg';
+  var R_MAJOR = [0.2, 0.5, 1, 2, 5];
+  var X_MAJOR = [0.2, 0.5, 1, 2, 5];
+  var R_FINE = [0.1, 0.3, 0.4, 0.6, 0.7, 0.8, 0.9, 1.2, 1.4, 1.6, 1.8, 3, 4, 10];
+  var X_FINE = [0.1, 0.3, 0.4, 0.6, 0.7, 0.8, 0.9, 1.2, 1.4, 1.6, 1.8, 3, 4, 10];
+
+  // ── State ──────────────────────────────────────────────
+  var z0 = 50;
+  var activePoint = null; // { gr, gi }
+
+  // ── DOM refs ───────────────────────────────────────────
+  var chart = document.getElementById('chart');
+  var gridGroup = document.getElementById('grid-group');
+  var labelGroup = document.getElementById('label-group');
+  var plotGroup = document.getElementById('plot-group');
+  var readoutEl = document.getElementById('readout-body');
+  var inputR = document.getElementById('in-r');
+  var inputX = document.getElementById('in-x');
+
+  // ── SVG helper ─────────────────────────────────────────
+  function el(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    if (attrs) {
+      var keys = Object.keys(attrs);
+      for (var i = 0; i < keys.length; i++) {
+        e.setAttribute(keys[i], String(attrs[keys[i]]));
+      }
+    }
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+
+  // ── Math ───────────────────────────────────────────────
+  function zToGamma(r, x) {
+    var d = (r + 1) * (r + 1) + x * x;
+    return { re: (r * r + x * x - 1) / d, im: (2 * x) / d };
+  }
+
+  function gammaToZ(gr, gi) {
+    var d = (1 - gr) * (1 - gr) + gi * gi;
+    if (d < 1e-15) return { r: 1e9, x: 0 };
+    return { r: (1 - gr * gr - gi * gi) / d, x: (2 * gi) / d };
+  }
+
+  function toSVG(gr, gi) {
+    return { x: CX + gr * CR, y: CY - gi * CR };
+  }
+
+  function fromSVG(sx, sy) {
+    return { re: (sx - CX) / CR, im: -(sy - CY) / CR };
+  }
+
+  function svgCoords(e) {
+    try {
+      var pt = new DOMPoint(e.clientX, e.clientY);
+      var ctm = chart.getScreenCTM().inverse();
+      var sp = pt.matrixTransform(ctm);
+      return { x: sp.x, y: sp.y };
+    } catch (err) {
+      var rect = chart.getBoundingClientRect();
+      return {
+        x: (e.clientX - rect.left) / rect.width * 600,
+        y: (e.clientY - rect.top) / rect.height * 600
+      };
+    }
+  }
+
+  // ── Draw Grid ──────────────────────────────────────────
+  function drawGrid() {
+    var defs = chart.querySelector('defs');
+
+    // ClipPath for unit circle
+    var clip = el('clipPath', { id: 'uc' }, defs);
+    el('circle', { cx: CX, cy: CY, r: CR }, clip);
+
+    // Background fill
+    el('circle', {
+      cx: CX, cy: CY, r: CR,
+      fill: 'var(--chart-fill)', stroke: 'none'
+    }, gridGroup);
+
+    // ── Fine grid (hidden by default) ──
+    var fineGroup = el('g', { id: 'fine-grid-group' }, gridGroup);
+    fineGroup.style.display = 'none';
+
+    // Fine reactance arcs
+    var fineXGroup = el('g', { 'clip-path': 'url(#uc)' }, fineGroup);
+    for (var fi = 0; fi < X_FINE.length; fi++) {
+      var fx = X_FINE[fi];
+      el('circle', {
+        cx: CX + CR, cy: CY - (1 / fx) * CR, r: CR / fx,
+        fill: 'none', stroke: 'var(--grid-fine)', 'stroke-width': 0.35
+      }, fineXGroup);
+      el('circle', {
+        cx: CX + CR, cy: CY + (1 / fx) * CR, r: CR / fx,
+        fill: 'none', stroke: 'var(--grid-fine)', 'stroke-width': 0.35
+      }, fineXGroup);
+    }
+
+    // Fine resistance circles
+    for (var fri = 0; fri < R_FINE.length; fri++) {
+      var fr = R_FINE[fri];
+      el('circle', {
+        cx: CX + (fr / (1 + fr)) * CR, cy: CY, r: CR / (1 + fr),
+        fill: 'none', stroke: 'var(--grid-fine)', 'stroke-width': 0.35
+      }, fineGroup);
+    }
+
+    // ── Major reactance arcs (clipped) ──
+    var xGroup = el('g', { 'clip-path': 'url(#uc)' }, gridGroup);
+    for (var xi = 0; xi < X_MAJOR.length; xi++) {
+      var xv = X_MAJOR[xi];
+      // Positive (upper, inductive)
+      el('circle', {
+        cx: CX + CR, cy: CY - (1 / xv) * CR, r: CR / xv,
+        fill: 'none', stroke: 'var(--grid-x)', 'stroke-width': 0.6
+      }, xGroup);
+      // Negative (lower, capacitive)
+      el('circle', {
+        cx: CX + CR, cy: CY + (1 / xv) * CR, r: CR / xv,
+        fill: 'none', stroke: 'var(--grid-x)', 'stroke-width': 0.6
+      }, xGroup);
+    }
+
+    // ── Major resistance circles ──
+    for (var ri = 0; ri < R_MAJOR.length; ri++) {
+      var rv = R_MAJOR[ri];
+      el('circle', {
+        cx: CX + (rv / (1 + rv)) * CR, cy: CY, r: CR / (1 + rv),
+        fill: 'none', stroke: 'var(--grid-r)', 'stroke-width': 0.7
+      }, gridGroup);
+    }
+
+    // ── Horizontal axis ──
+    el('line', {
+      x1: CX - CR, y1: CY, x2: CX + CR, y2: CY,
+      stroke: 'var(--axis)', 'stroke-width': 0.8
+    }, gridGroup);
+
+    // ── Outer circle ──
+    el('circle', {
+      cx: CX, cy: CY, r: CR,
+      fill: 'none', stroke: 'var(--grid-outer)', 'stroke-width': 1.5
+    }, gridGroup);
+
+    // ── Labels ───────────────────────────────────────────
+    drawLabels();
+  }
+
+  function drawLabels() {
+    // Resistance labels along horizontal axis
+    var rLabels = [0, 0.2, 0.5, 1, 2, 5];
+    for (var i = 0; i < rLabels.length; i++) {
+      var r = rLabels[i];
+      var gx = (r - 1) / (r + 1);
+      var sx = CX + gx * CR;
+
+      // Tick mark
+      el('line', {
+        x1: sx, y1: CY - 5, x2: sx, y2: CY + 5,
+        stroke: 'var(--axis)', 'stroke-width': 0.7
+      }, labelGroup);
+
+      // Label below axis
+      var txt = el('text', {
+        x: sx, y: CY + 18,
+        'text-anchor': 'middle', 'font-size': '10',
+        fill: 'var(--label)'
+      }, labelGroup);
+      txt.textContent = String(r);
+    }
+
+    // Reactance labels around perimeter
+    for (var j = 0; j < X_MAJOR.length; j++) {
+      var xv = X_MAJOR[j];
+      placeReactanceLabel(xv, 1);   // positive (upper)
+      placeReactanceLabel(xv, -1);  // negative (lower)
+    }
+
+    // Region labels
+    var indTxt = el('text', {
+      x: CX - CR * 0.52, y: CY - CR * 0.52,
+      'text-anchor': 'middle', 'font-size': '11',
+      fill: 'var(--label-dim)', 'font-style': 'italic', opacity: '0.6'
+    }, labelGroup);
+    indTxt.textContent = 'Inductive';
+
+    var capTxt = el('text', {
+      x: CX - CR * 0.52, y: CY + CR * 0.55,
+      'text-anchor': 'middle', 'font-size': '11',
+      fill: 'var(--label-dim)', 'font-style': 'italic', opacity: '0.6'
+    }, labelGroup);
+    capTxt.textContent = 'Capacitive';
+  }
+
+  function placeReactanceLabel(xv, sign) {
+    var gx = (xv * xv - 1) / (xv * xv + 1);
+    var gy = sign * 2 * xv / (xv * xv + 1);
+    var angle = Math.atan2(gy, gx);
+
+    var tickInner = CR - 5;
+    var tickOuter = CR + 5;
+
+    // Tick mark on perimeter
+    el('line', {
+      x1: CX + tickInner * Math.cos(angle),
+      y1: CY - tickInner * Math.sin(angle),
+      x2: CX + tickOuter * Math.cos(angle),
+      y2: CY - tickOuter * Math.sin(angle),
+      stroke: 'var(--grid-outer)', 'stroke-width': 0.7
+    }, labelGroup);
+
+    // Label position
+    var labelR = CR + 16;
+    var lx = CX + labelR * Math.cos(angle);
+    var ly = CY - labelR * Math.sin(angle);
+
+    // Text anchor based on angle
+    var cosA = Math.cos(angle);
+    var anchor;
+    if (cosA < -0.3) anchor = 'end';
+    else if (cosA > 0.3) anchor = 'start';
+    else anchor = 'middle';
+
+    // Vertical nudge
+    var sinA = Math.sin(angle);
+    var dy = 4;
+    if (sinA > 0.7) dy = 0;
+    else if (sinA < -0.7) dy = 8;
+
+    var prefix = sign > 0 ? '+j' : '−j';
+    var txt = el('text', {
+      x: lx, y: ly + dy,
+      'text-anchor': anchor, 'font-size': '9',
+      fill: 'var(--label-dim)'
+    }, labelGroup);
+    txt.textContent = prefix + xv;
+  }
+
+  // ── Plot point ─────────────────────────────────────────
+  function plotGamma(gr, gi, label) {
+    activePoint = { gr: gr, gi: gi };
+
+    // Clear plot group
+    while (plotGroup.firstChild) plotGroup.removeChild(plotGroup.firstChild);
+
+    var mag = Math.sqrt(gr * gr + gi * gi);
+    var pt = toSVG(gr, gi);
+
+    // SWR circle
+    if (mag > 0.005 && mag < 0.999) {
+      el('circle', {
+        cx: CX, cy: CY, r: mag * CR,
+        fill: 'none', stroke: 'var(--point)',
+        'stroke-width': 1.5, 'stroke-dasharray': '8 4', opacity: 0.45
+      }, plotGroup);
+    }
+
+    // Point marker
+    el('circle', {
+      cx: pt.x, cy: pt.y, r: 6,
+      fill: 'var(--point)', stroke: 'var(--bg)', 'stroke-width': 2
+    }, plotGroup);
+
+    // Point label (if provided)
+    if (label) {
+      // Position label to avoid going off-chart
+      var lx = pt.x + 12;
+      var ly = pt.y - 12;
+      if (lx > CX + CR - 40) lx = pt.x - 12;
+      if (ly < CY - CR + 10) ly = pt.y + 18;
+
+      var anch = lx > pt.x ? 'start' : 'end';
+      var labelEl = el('text', {
+        x: lx, y: ly,
+        'text-anchor': anch, 'font-size': '10',
+        fill: 'var(--point)', 'font-weight': '500'
+      }, plotGroup);
+      labelEl.textContent = label;
+    }
+
+    updateReadout();
+  }
+
+  function clearPlot() {
+    activePoint = null;
+    while (plotGroup.firstChild) plotGroup.removeChild(plotGroup.firstChild);
+    updateReadout();
+  }
+
+  // ── Readout ────────────────────────────────────────────
+  function updateReadout() {
+    if (!activePoint) {
+      readoutEl.innerHTML = '<div class="ro-empty">Click the chart or enter R, X values to plot</div>';
+      return;
+    }
+
+    var gr = activePoint.gr;
+    var gi = activePoint.gi;
+    var mag = Math.sqrt(gr * gr + gi * gi);
+    var angle = Math.atan2(gi, gr) * 180 / Math.PI;
+    var z = gammaToZ(gr, gi);
+    var R = z.r * z0;
+    var X = z.x * z0;
+    var swr = mag < 0.9999 ? (1 + mag) / (1 - mag) : 1 / 0;
+    var rl = mag > 1e-10 ? -20 * Math.log10(mag) : 1 / 0;
+
+    // Admittance
+    var yDenom = z.r * z.r + z.x * z.x;
+    var yG, yB, YG, YB;
+    if (yDenom > 1e-15) {
+      yG = z.r / yDenom;
+      yB = -z.x / yDenom;
+      YG = yG / z0 * 1000;
+      YB = yB / z0 * 1000;
+    } else {
+      yG = 1e9; yB = 0; YG = 1e9; YB = 0;
+    }
+
+    readoutEl.innerHTML =
+      '<div class="ro-z0">Z₀ = ' + z0 + ' Ω</div>' +
+      '<div class="ro-group">' +
+        '<div class="ro-group-title">Impedance</div>' +
+        roRow('Normalized', 'z = ' + fc(z.r, z.x, 3), '') +
+        roRow('Impedance', 'Z = ' + fc(R, X, 1) + ' Ω', '') +
+      '</div>' +
+      '<div class="ro-group">' +
+        '<div class="ro-group-title">Reflection (Γ)</div>' +
+        roRow('|Γ|', fv(mag, 4), 'gamma') +
+        roRow('∠Γ', fv(angle, 1) + '°', 'gamma') +
+        roRow('SWR', fmtSWR(swr), 'gamma') +
+        roRow('Return Loss', fv(rl, 1) + ' dB', 'gamma') +
+      '</div>' +
+      '<div class="ro-group">' +
+        '<div class="ro-group-title">Admittance</div>' +
+        roRow('Normalized', 'y = ' + fc(yG, yB, 3), 'admittance') +
+        roRow('Admittance', 'Y = ' + fc(YG, YB, 1) + ' mS', 'admittance') +
+      '</div>';
+  }
+
+  function roRow(label, value, cls) {
+    var valClass = 'ro-val' + (cls ? ' ' + cls : '');
+    return '<div class="ro-row"><span class="ro-label">' + label +
+           '</span><span class="' + valClass + '">' + value + '</span></div>';
+  }
+
+  function fc(re, im, prec) {
+    var reAbs = Math.abs(re);
+    var imAbs = Math.abs(im);
+    var reStr = reAbs > 1e6 ? '∞' : re.toFixed(prec);
+    var imStr = imAbs > 1e6 ? '∞' : imAbs.toFixed(prec);
+    var sign = im >= 0 ? ' + j' : ' − j';
+    return reStr + sign + imStr;
+  }
+
+  function fv(val, prec) {
+    if (!isFinite(val)) return '∞';
+    return val.toFixed(prec);
+  }
+
+  function fmtSWR(swr) {
+    if (!isFinite(swr) || swr > 999) return '∞ : 1';
+    return swr.toFixed(2) + ' : 1';
+  }
+
+  // ── Plot from inputs ───────────────────────────────────
+  function plotFromInputs() {
+    var R = parseFloat(inputR.value);
+    var X = parseFloat(inputX.value);
+    if (isNaN(R) || isNaN(X)) return;
+    if (R < 0) { inputR.value = '0'; R = 0; }
+
+    var r = R / z0;
+    var x = X / z0;
+    var g = zToGamma(r, x);
+    plotGamma(g.re, g.im);
+  }
+
+  // ── Event handlers ─────────────────────────────────────
+  chart.addEventListener('click', function(e) {
+    var sp = svgCoords(e);
+    var gamma = fromSVG(sp.x, sp.y);
+    var mag = Math.sqrt(gamma.re * gamma.re + gamma.im * gamma.im);
+
+    if (mag > 1.02) return;
+
+    // Clamp to unit circle if slightly outside
+    var gr = gamma.re, gi = gamma.im;
+    if (mag > 1) {
+      gr /= mag;
+      gi /= mag;
+    }
+
+    // Check that it gives positive resistance
+    var z = gammaToZ(gr, gi);
+    if (z.r < -0.01) return;
+
+    plotGamma(gr, gi);
+
+    // Update input fields to match
+    var R = z.r * z0;
+    var X = z.x * z0;
+    inputR.value = R.toFixed(1);
+    inputX.value = X.toFixed(1);
+  });
+
+  document.getElementById('btn-plot').addEventListener('click', plotFromInputs);
+  document.getElementById('btn-clear').addEventListener('click', function() {
+    clearPlot();
+    inputR.value = '';
+    inputX.value = '';
+  });
+
+  inputR.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') plotFromInputs();
+  });
+  inputX.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') plotFromInputs();
+  });
+
+  // Z0 toggle
+  var z0Btns = document.querySelectorAll('.z0-btn');
+  for (var bi = 0; bi < z0Btns.length; bi++) {
+    z0Btns[bi].addEventListener('click', function() {
+      var newZ0 = parseInt(this.getAttribute('data-z0'));
+      z0 = newZ0;
+      for (var k = 0; k < z0Btns.length; k++) {
+        z0Btns[k].classList.toggle('active', parseInt(z0Btns[k].getAttribute('data-z0')) === z0);
+      }
+      if (activePoint) {
+        // Re-plot (drops any label, updates readout)
+        plotGamma(activePoint.gr, activePoint.gi);
+        // Update input fields
+        var z = gammaToZ(activePoint.gr, activePoint.gi);
+        inputR.value = (z.r * z0).toFixed(1);
+        inputX.value = (z.x * z0).toFixed(1);
+      }
+    });
+  }
+
+  // Fine grid toggle
+  document.getElementById('fine-grid').addEventListener('change', function() {
+    var fg = document.getElementById('fine-grid-group');
+    if (fg) fg.style.display = this.checked ? '' : 'none';
+  });
+
+  // ── Initialize ─────────────────────────────────────────
+  drawGrid();
+
+  // Plot initial example: Z = 25 - j30, z = 0.5 - j0.6
+  var exGamma = zToGamma(0.5, -0.6);
+  plotGamma(exGamma.re, exGamma.im, 'Example: 25 − j30 Ω');
+
+})();
+</script>
+
+</body></html>
