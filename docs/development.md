@@ -61,6 +61,27 @@ Live and verified by 7:00 PM Pacific. Net at 8:10.
   matches CI only when built from the same fetch. Run
   `docker compose run --rm fetch` before building to see current conditions.
 
+## Project pages
+
+One Markdown file per project in `content/projects/`, rendered by
+`_includes/project.njk` and listed on `/projects/` under its group. The
+front matter is all required:
+
+| Field | What it holds |
+|---|---|
+| `title` | The project's name as its repository spells it |
+| `summary` | One line for the index: lowercase, no trailing period |
+| `license` | The code license, as an SPDX identifier (`MIT`, `GPL-3.0-or-later`) |
+| `language` | The primary language or technology (`Python`, `Rust`, `C++`, `Dockerfile`, `PowerShell`) |
+| `repo` | Where the source lives |
+| `group` | One of the headings listed in `content/projects/index.njk` |
+| `order` | Position in the list; sorted site-wide, then split by group |
+
+A page missing `license` or `language` renders a visible placeholder
+where the value should be, so it cannot ship quietly incomplete. Every
+page ends by naming its language and linking the repository; new pages
+follow the existing ones.
+
 ## Rehosting
 
 The archive is plain Markdown, one file per week, in `content/lun/`. The

@@ -4,7 +4,8 @@ license: GPL-2.0
 repo: https://github.com/leavesofgrass/docker-winlink
 summary: an amateur radio desktop in a container, open in any web browser
 group: Amateur radio
-order: 6
+order: 7
+language: Dockerfile
 ---
 
 **docker-winlink** puts a complete amateur radio desktop inside a

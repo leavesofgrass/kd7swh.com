@@ -4,7 +4,8 @@ license: MIT
 repo: https://github.com/leavesofgrass/brl2stl
 summary: turn braille into plastic — 3D-printable models from braille or plain text
 group: Assistive technology
-order: 2
+order: 3
+language: Python
 ---
 
 **brl2stl** turns braille into plastic. Give it a braille file (BRF, the

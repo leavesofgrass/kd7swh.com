@@ -4,7 +4,8 @@ license: MIT
 repo: https://github.com/leavesofgrass/espeidolon
 summary: two ESP32 boards bridging a Bluetooth radio to everything else
 group: Amateur radio
-order: 5
+order: 6
+language: C++
 ---
 
 **ESPeidolon** is amateur radio firmware that turns two inexpensive

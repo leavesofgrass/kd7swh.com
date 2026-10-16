@@ -5,6 +5,7 @@ repo: https://github.com/leavesofgrass/star
 summary: a document reader and writing tool that speaks, built for print disabilities
 group: Assistive technology
 order: 1
+language: Python
 ---
 
 **star** — the Speaking Terminal Access Reader — is a document reader and
@@ -19,7 +20,9 @@ dense, heavily formatted documents and need a reading tool that gets out
 of the way. It comes out of years in assistive technology and research
 interests in vision loss and text-to-speech systems, and it stands in a
 deliberate lineage: [Emacspeak](https://emacspeak.sourceforge.net/),
-Kurzweil 1000, Natural Reader, and Central Access Reader.
+Kurzweil 1000, Natural Reader, and Central Access Reader. It has a
+sibling in Rust, [textweaver](/projects/textweaver/), which grew out of
+star and is developed alongside it.
 
 The graphical interface is the primary one, with a keyboard shortcut for
 every command; a full keyboard-driven terminal interface stays one flag

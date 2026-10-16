@@ -10,9 +10,12 @@ project states its own code license on its page; the site footer's
 CC&nbsp;BY-NC-SA notice covers prose, not code.</p>
 
 {# Projects are grouped to match the about page's arc: assistive
-   technology first, then data, then radio. Every project's front matter
-   needs a `group` (one of the names below) and an `order` within it. #}
-{% set groups = ["Assistive technology", "Data", "Amateur radio"] %}
+   technology first, then data, then radio, then the everyday tools that
+   don't belong to any of those. Every project's front matter needs a
+   `group` (one of the names below), an `order` within it, and a
+   `language` — the primary language or technology, shown after the
+   summary. #}
+{% set groups = ["Assistive technology", "Data", "Amateur radio", "Tools"] %}
 {% set projects = collections.projects | sort(attribute="data.order") %}
 {% if projects.length %}
 {% for g in groups %}
@@ -21,7 +24,7 @@ CC&nbsp;BY-NC-SA notice covers prose, not code.</p>
 <h2>{{ g }}</h2>
 <ul>
 {% for p in grouped %}
-  <li><a href="{{ p.url }}">{{ p.data.title }}</a>{% if p.data.summary %} — {{ p.data.summary }}{% endif %}</li>
+  <li><a href="{{ p.url }}">{{ p.data.title }}</a>{% if p.data.summary %} — {{ p.data.summary }}{% endif %}{% if p.data.language %} · {{ p.data.language }}{% endif %}</li>
 {% endfor %}
 </ul>
 {% endif %}

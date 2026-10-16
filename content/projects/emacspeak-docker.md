@@ -4,7 +4,8 @@ license: GPL-2.0-or-later
 repo: https://github.com/leavesofgrass/emacspeak-docker
 summary: Emacspeak with the classic voices — one script or one container
 group: Assistive technology
-order: 3
+order: 4
+language: Dockerfile
 ---
 
 **emacspeak-docker** gives [Emacspeak](https://github.com/tvraman/emacspeak)
