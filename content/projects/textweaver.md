@@ -39,7 +39,10 @@ may still change between releases.
 
 textweaver grew out of [star](/projects/star/), the Python reader on
 this same page, and now stands on its own: a fresh codebase, built for
-the same people. The two are developed side by side.
+the same people. The two are developed side by side. Its rules for
+messages and accessibility carried over into
+[diroxide](/projects/diroxide/), a two-panel file manager whose quick
+view can hand a document straight to textweaver.
 
 Rust, all of it — the interface is drawn with Masonry and Vello and
 speaks to assistive technology through AccessKit — with one
