@@ -51,6 +51,10 @@ script installs the chat alone; another builds xara as well, on Arch,
 Debian, Ubuntu or Fedora; and a pretend modem in the repository lets
 you try the whole thing before a radio is connected.
 
+On a station with a Kenwood TM-D750,
+[d750ctrl](/projects/d750ctrl/) opens xarachat in a window of its own
+from the rig screen: one key to the chat, one key back.
+
 Python 3 and nothing else, no packages to install. Code and
 documentation, from the first-run setup to the man pages:
 [github.com/leavesofgrass/xarachat](https://github.com/leavesofgrass/xarachat).
