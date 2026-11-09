@@ -2,7 +2,7 @@
 title: xarachat
 license: MIT
 repo: https://github.com/leavesofgrass/xarachat
-summary: keyboard-to-keyboard chat over VARA from a terminal, with a line mode for screen readers and a radiogram writer for traffic
+summary: keyboard-to-keyboard chat over VARA from a terminal, VarAC compatible, with a line mode for screen readers and a radiogram writer for traffic
 group: Amateur radio
 order: 10
 language: Python
@@ -50,6 +50,17 @@ Windows, the same modems that
 script installs the chat alone; another builds xara as well, on Arch,
 Debian, Ubuntu or Fedora; and a pretend modem in the repository lets
 you try the whole thing before a radio is connected.
+
+Since 0.4.0 it also gets along with VarAC stations. It hears their
+CQ calls, beacons and broadcasts and shows each as one line, answers a
+VarAC station that connects in VarAC's own framing, and sends its own
+CQ, beacon and ping the way VarAC does, so a VarAC operator on the
+other end sees an ordinary contact. Plain-text peers and the line mode
+are unchanged. The compatibility was worked out from the public
+protocol notes of [OpenSlot](https://github.com/NR5P/OpenSlot), an
+independent VarAC-compatible client, and proven against it over two
+modems on one computer; the test against VarAC itself is still to
+come.
 
 On a station with a Kenwood TM-D750,
 [d750ctrl](/projects/d750ctrl/) opens xarachat in a window of its own
