@@ -28,7 +28,7 @@ frequency, squelch, power, mode, VFO or memory, a memory browser read
 from the radio, TNC, GPS output, a PTT lock, a CQ frame through the
 modem, the radio clock, raw CAT, and a scrolling log of every command
 and answer. It runs inside tmux on a server of its own, and the other
-modes get windows: x opens [xarachat](/projects/xarachat/) for
+modes get windows: x opens xarachat for
 keyboard-to-keyboard chat over VARA, r a radiogram, S the SSTV tool
 and R the RTTY tool. Each keeps running while you tune. F9 brings the
 rig screen back from anywhere, F12 steps through the windows, and a

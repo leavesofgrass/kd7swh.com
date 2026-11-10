@@ -62,10 +62,9 @@ if (!existsSync(denylistPath)) {
 
   const TEXTLIKE = /\.(html|xml|txt|css|json|svg|webmanifest)$/i;
 
-  // /nclex/ is an unlisted utility page Jon explicitly authorized on
-  // 2026-09-18, denylist terms and all. Exempting ONLY that directory
-  // keeps the denylist armed for every page that is actually the site.
-  const EXEMPT_DIRS = new Set([path.join(sitePath, "nclex")]);
+  // No directory is exempt from the denylist. /nclex/, the one exemption,
+  // was removed on 2026-11-10 at Jon's request.
+  const EXEMPT_DIRS = new Set();
 
   async function* walk(dir) {
     for (const entry of await readdir(dir, { withFileTypes: true })) {

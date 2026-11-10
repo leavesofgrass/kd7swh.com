@@ -9,12 +9,9 @@ export default function (eleventyConfig) {
   // Passthrough paths are relative to the project root, not the input dir.
   eleventyConfig.addPassthroughCopy({ "css": "css" });
   eleventyConfig.addPassthroughCopy({ "favicon.svg": "favicon.svg" });
-  // Unlisted utility page (Jon, 2026-09-18): passthrough verbatim; never
-  // in collections, the sitemap, the feeds, or the nav. Link checks and
-  // the guard denylist exempt it by path.
-  eleventyConfig.addPassthroughCopy({ "nclex": "nclex" });
-  // Unlisted Extra-class study suite (Jon, 2026-09-28): same treatment as
-  // /nclex/ — passthrough verbatim, reachable only by direct URL.
+  // Unlisted Extra-class study suite (Jon, 2026-09-28): passthrough
+  // verbatim; never in collections, the sitemap, the feeds, or the nav;
+  // reachable only by direct URL.
   eleventyConfig.addPassthroughCopy({ "study": "study" });
 
   // The machine-readable space-weather edition IS the build-time data file,

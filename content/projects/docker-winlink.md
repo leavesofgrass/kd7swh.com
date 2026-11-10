@@ -38,10 +38,6 @@ the container recipes, scripts, and documentation. Winlink Express and
 VARA are not redistributed — the build downloads them from their
 official sources.
 
-For keyboard-to-keyboard chat over VARA rather than email, see
-[xarachat](/projects/xarachat/), a terminal client with a line mode
-for screen readers and a radiogram writer for traffic.
-
 Dockerfiles and scripts. Code and documentation — including the radio
 hookup guide — at
 [github.com/leavesofgrass/docker-winlink](https://github.com/leavesofgrass/docker-winlink).
